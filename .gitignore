@@ -1,0 +1,6 @@
+dist/
+
+.eslintcache
+
+# Test output:
+.nyc_output
