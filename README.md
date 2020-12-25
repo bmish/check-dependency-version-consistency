@@ -1,5 +1,8 @@
 # check-dependency-version-consistency
 
+[![npm version](https://badge.fury.io/js/check-dependency-version-consistency.svg)](https://badge.fury.io/js/check-dependency-version-consistency)
+![CI](https://github.com/bmish/check-dependency-version-consistency/workflows/CI/badge.svg)
+
 This plugin checks to ensure that dependencies are on consistent versions across a monorepo / yarn workspace.
 
 ## Usage
