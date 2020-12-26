@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "description": "Ensures dependencies are on consistent versions across a monorepo.",
   "keywords": [
+    "dependencies",
     "linter",
     "monorepo",
     "package.json",
+    "packages",
     "workspace"
   ],
   "bin": {
