@@ -10,6 +10,7 @@
     "packages",
     "workspace"
   ],
+  "license": "MIT",
   "bin": {
     "check-dependency-version-consistency": "./dist/bin/check-dependency-version-consistency.js"
   },
