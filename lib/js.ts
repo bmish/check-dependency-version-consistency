@@ -4,7 +4,8 @@ export function flatMap(
   array: any[],
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   callback: (item: any, index: number) => any
-) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): any[] {
   return array.reduce(
     (result, item, index) => result.concat(callback(item, index)),
     []

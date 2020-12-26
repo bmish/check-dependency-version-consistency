@@ -30,7 +30,6 @@ module.exports = {
           'error',
           { ignores: ['modules'] },
         ],
-        '@typescript-eslint/explicit-module-boundary-types': 'off',
       },
     },
   ],
