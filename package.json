@@ -29,8 +29,7 @@
   },
   "dependencies": {
     "commander": "^6.2.1",
-    "globby": "^11.0.0",
-    "js-yaml": "^3.10.0"
+    "globby": "^11.0.0"
   },
   "devDependencies": {
     "@types/mocha": "^8.2.0",
