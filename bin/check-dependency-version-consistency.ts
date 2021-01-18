@@ -32,12 +32,12 @@ program
     collect,
     []
   )
-  .action(function (path) {
+  .action(function (path, options) {
     // Calculate.
     const dependencyVersions = calculateVersionsForEachDependency(path);
     const mismatchingVersions = calculateMismatchingVersions(
       dependencyVersions,
-      program.ignoreDep
+      options.ignoreDep
     );
 
     // Show output.
