@@ -1,5 +1,14 @@
 # check-dependency-version-consistency
 
+## v0.2.0 (2021-03-13)
+
+#### :rocket: Enhancement
+* [#59](https://github.com/bmish/check-dependency-version-consistency/pull/59) Show count of each mismatching version for a dependency ([@bmish](https://github.com/bmish))
+
+#### Committers: 1
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+
+
 ## 0.1.1 (2020-12-28)
 
 #### :bug: Bug Fix

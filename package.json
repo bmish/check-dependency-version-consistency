@@ -1,6 +1,6 @@
 {
   "name": "check-dependency-version-consistency",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Ensures dependencies are on consistent versions across a monorepo.",
   "keywords": [
     "dependencies",
@@ -16,7 +16,7 @@
   },
   "license": "MIT",
   "bin": {
-    "check-dependency-version-consistency": "./dist/bin/check-dependency-version-consistency.js"
+    "check-dependency-version-consistency": "dist/bin/check-dependency-version-consistency.js"
   },
   "scripts": {
     "build": "tsc",
