@@ -8,7 +8,10 @@ export type DependenciesToVersionsSeen = Map<
 
 export type MismatchingDependencyVersions = Array<{
   dependency: string;
-  versions: string[];
+  versions: {
+    version: string;
+    count: number;
+  }[];
 }>;
 
 /**
@@ -118,8 +121,13 @@ export function calculateMismatchingVersions(
       const uniqueVersions = [
         ...new Set(versionList.map((obj) => obj.version)),
       ].sort();
+      const uniqueVersionsWithCounts = uniqueVersions.map((uniqueVersion) => ({
+        version: uniqueVersion,
+        count: versionList.filter((obj) => obj.version === uniqueVersion)
+          .length,
+      }));
       if (uniqueVersions.length > 1) {
-        return { dependency, versions: uniqueVersions };
+        return { dependency, versions: uniqueVersionsWithCounts };
       }
 
       return undefined;

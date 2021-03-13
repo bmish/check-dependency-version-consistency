@@ -7,12 +7,24 @@ describe('Utils | output', function () {
     it('behaves correctly', function () {
       deepStrictEqual(
         mismatchingVersionsToOutputLines([
-          { dependency: 'foo', versions: ['1.2.3', '4.5.6'] },
-          { dependency: 'bar', versions: ['1.4.0', '2.0.0'] },
+          {
+            dependency: 'foo',
+            versions: [
+              { version: '1.2.3', count: 1 },
+              { version: '4.5.6', count: 2 },
+            ],
+          },
+          {
+            dependency: 'bar',
+            versions: [
+              { version: '1.4.0', count: 3 },
+              { version: '2.0.0', count: 4 },
+            ],
+          },
         ]),
         [
-          'foo has more than one version: 1.2.3, 4.5.6',
-          'bar has more than one version: 1.4.0, 2.0.0',
+          'foo has more than one version: 1.2.3 (1 usage), 4.5.6 (2 usages)',
+          'bar has more than one version: 1.4.0 (3 usages), 2.0.0 (4 usages)',
         ]
       );
     });
