@@ -28,11 +28,29 @@ describe('Utils | dependency-versions', function () {
       deepStrictEqual(calculateMismatchingVersions(dependencyVersions), [
         {
           dependency: 'baz',
-          versions: ['^7.8.9', '^8.0.0'],
+          versions: [
+            {
+              count: 1,
+              version: '^7.8.9',
+            },
+            {
+              count: 1,
+              version: '^8.0.0',
+            },
+          ],
         },
         {
           dependency: 'foo',
-          versions: ['1.2.0', '1.3.0'],
+          versions: [
+            {
+              count: 2,
+              version: '1.2.0',
+            },
+            {
+              count: 1,
+              version: '1.3.0',
+            },
+          ],
         },
       ]);
     });
@@ -46,7 +64,16 @@ describe('Utils | dependency-versions', function () {
         [
           {
             dependency: 'foo',
-            versions: ['1.2.0', '1.3.0'],
+            versions: [
+              {
+                count: 2,
+                version: '1.2.0',
+              },
+              {
+                count: 1,
+                version: '1.3.0',
+              },
+            ],
           },
         ]
       );

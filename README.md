@@ -32,8 +32,8 @@ If there are no dependency mismatches, the program will exit with success.
 If there are any dependency mismatches, the program will exit with failure and output the mismatching versions:
 
 ```pt
-eslint has more than one version: ^7.0.0, ^7.1.0
-sinon has more than one version: ^1.17.7, ^9.0.3
+eslint has more than one version: ^7.0.0 (1 usage), ^7.1.0 (5 usages)
+sinon has more than one version: ^1.17.7 (1 usage), ^9.0.3 (3 usages)
 ```
 
 ## Options
