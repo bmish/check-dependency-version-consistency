@@ -18,7 +18,7 @@ function getCurrentPackageVersion(): string {
 
 // Used for collecting repeated CLI options into an array.
 function collect(value: string, previous: string[]) {
-  return previous.concat([value]);
+  return [...previous, value];
 }
 
 // Setup CLI.

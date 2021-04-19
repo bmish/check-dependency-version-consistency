@@ -7,7 +7,7 @@ export function flatMap(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): any[] {
   return array.reduce(
-    (result, item, index) => result.concat(callback(item, index)),
+    (result, item, index) => result.concat(callback(item, index)), // eslint-disable-line unicorn/prefer-spread
     []
   );
 }
