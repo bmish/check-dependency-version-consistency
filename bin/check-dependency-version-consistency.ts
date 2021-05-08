@@ -6,6 +6,7 @@ import { readFileSync } from 'fs';
 import {
   calculateVersionsForEachDependency,
   calculateMismatchingVersions,
+  filterOutIgnoredDependencies,
 } from '../lib/dependency-versions';
 import { mismatchingVersionsToOutputLines } from '../lib/output';
 import { join } from 'path';
@@ -32,11 +33,11 @@ program
     collect,
     []
   )
-  .action(function (path, options) {
+  .action(function (path, options: { ignoreDep: string[] }) {
     // Calculate.
     const dependencyVersions = calculateVersionsForEachDependency(path);
-    const mismatchingVersions = calculateMismatchingVersions(
-      dependencyVersions,
+    const mismatchingVersions = filterOutIgnoredDependencies(
+      calculateMismatchingVersions(dependencyVersions),
       options.ignoreDep
     );
 
