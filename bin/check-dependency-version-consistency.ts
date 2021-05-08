@@ -10,11 +10,16 @@ import {
 } from '../lib/dependency-versions';
 import { mismatchingVersionsToOutputLines } from '../lib/output';
 import { join } from 'path';
+import type { PackageJson } from 'type-fest';
 
 function getCurrentPackageVersion(): string {
-  return JSON.parse(
+  const packageJson: PackageJson = JSON.parse(
     readFileSync(join(__dirname, '..', '..', 'package.json'), 'utf-8') // Relative to compiled version of this file in dist/bin
-  ).version;
+  );
+  if (!packageJson.version) {
+    throw new Error('Could not find package.json `version`');
+  }
+  return packageJson.version;
 }
 
 // Used for collecting repeated CLI options into an array.

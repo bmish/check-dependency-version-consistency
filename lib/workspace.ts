@@ -2,6 +2,7 @@ import { join } from 'path';
 import { existsSync, readFileSync } from 'fs';
 import { getDirectoriesInPath } from './fs';
 import { flatMap } from './js';
+import type { PackageJson } from 'type-fest';
 
 export function getPackageJsonPaths(root: string): string[] {
   return getPackages(root).map((pkg: string) =>
@@ -28,7 +29,7 @@ export function getWorkspaces(root: string): string[] {
     throw new Error('No package.json found at provided path.');
   }
 
-  const workspacePackageJson = JSON.parse(
+  const workspacePackageJson: PackageJson = JSON.parse(
     readFileSync(join(root, 'package.json'), 'utf-8')
   );
 
@@ -36,6 +37,10 @@ export function getWorkspaces(root: string): string[] {
     throw new Error(
       'package.json at provided path does not specify `workspaces`.'
     );
+  }
+
+  if (!Array.isArray(workspacePackageJson.workspaces)) {
+    throw new TypeError('package.json `workspaces` is not a string array.');
   }
 
   return workspacePackageJson.workspaces;
