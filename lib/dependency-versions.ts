@@ -101,16 +101,11 @@ function recordDependencyVersion(
 }
 
 export function calculateMismatchingVersions(
-  dependencyVersions: DependenciesToVersionsSeen,
-  ignoreDeps: string[] = []
+  dependencyVersions: DependenciesToVersionsSeen
 ): MismatchingDependencyVersions {
   return [...dependencyVersions.keys()]
     .sort()
     .map((dependency) => {
-      if (ignoreDeps.includes(dependency)) {
-        return undefined;
-      }
-
       const versionList = dependencyVersions.get(dependency);
       /* istanbul ignore if */
       if (!versionList) {
@@ -133,4 +128,26 @@ export function calculateMismatchingVersions(
       return undefined;
     })
     .filter((obj) => obj !== undefined) as MismatchingDependencyVersions;
+}
+
+export function filterOutIgnoredDependencies(
+  mismatchingVersions: MismatchingDependencyVersions,
+  ignoredDependencies: string[]
+): MismatchingDependencyVersions {
+  ignoredDependencies.forEach((ignoreDependency) => {
+    if (
+      !mismatchingVersions.some(
+        (mismatchingVersion) =>
+          mismatchingVersion.dependency === ignoreDependency
+      )
+    ) {
+      throw new Error(
+        `Specified option '--ignore-dep ${ignoreDependency}', but no mismatches detected.`
+      );
+    }
+  });
+  return mismatchingVersions.filter(
+    (mismatchingVersion) =>
+      !ignoredDependencies.includes(mismatchingVersion.dependency)
+  );
 }
