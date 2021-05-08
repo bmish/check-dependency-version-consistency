@@ -37,7 +37,8 @@
   },
   "dependencies": {
     "commander": "^7.0.0",
-    "globby": "^11.0.0"
+    "globby": "^11.0.0",
+    "type-fest": "^1.0.2"
   },
   "devDependencies": {
     "@types/mocha": "^8.2.0",

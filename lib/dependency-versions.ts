@@ -1,4 +1,5 @@
 import { readFileSync, existsSync } from 'fs';
+import type { PackageJson } from 'type-fest';
 import { getPackageJsonPaths } from './workspace';
 
 export type DependenciesToVersionsSeen = Map<
@@ -58,28 +59,34 @@ function recordDependencyVersionsForPackageJson(
   }
 
   const title = packageJsonPath.replace(`${root}/`, '');
-  const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
+  const packageJson: PackageJson = JSON.parse(
+    readFileSync(packageJsonPath, 'utf-8')
+  );
 
   if (packageJson.dependencies) {
-    Object.keys(packageJson.dependencies).forEach((dependency) => {
+    for (const [dependency, dependencyVersion] of Object.entries(
+      packageJson.dependencies
+    )) {
       recordDependencyVersion(
         dependenciesToVersionsSeen,
         dependency,
         title,
-        packageJson.dependencies[dependency]
+        dependencyVersion
       );
-    });
+    }
   }
 
   if (packageJson.devDependencies) {
-    Object.keys(packageJson.devDependencies).forEach((dependency) => {
+    for (const [dependency, dependencyVersion] of Object.entries(
+      packageJson.devDependencies
+    )) {
       recordDependencyVersion(
         dependenciesToVersionsSeen,
         dependency,
         title,
-        packageJson.devDependencies[dependency]
+        dependencyVersion
       );
-    });
+    }
   }
 }
 
