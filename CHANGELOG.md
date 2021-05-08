@@ -1,5 +1,17 @@
 # check-dependency-version-consistency
 
+## v0.3.0 (2021-05-08)
+
+#### :rocket: Enhancement
+* [#88](https://github.com/bmish/check-dependency-version-consistency/pull/88) Exit with failure when unnecessarily specifying `--ignore-dep` CLI option ([@bmish](https://github.com/bmish))
+
+#### :bug: Bug Fix
+* [#95](https://github.com/bmish/check-dependency-version-consistency/pull/95) Add real package.json types from type-fest ([@bmish](https://github.com/bmish))
+
+#### Committers: 1
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+
+
 ## v0.2.0 (2021-03-13)
 
 #### :rocket: Enhancement
