@@ -16,9 +16,8 @@ import {
 describe('Utils | dependency-versions', function () {
   describe('#calculateMismatchingVersions', function () {
     it('has no mismatches with valid fixture', function () {
-      const dependencyVersions = calculateVersionsForEachDependency(
-        FIXTURE_PATH_VALID
-      );
+      const dependencyVersions =
+        calculateVersionsForEachDependency(FIXTURE_PATH_VALID);
       deepStrictEqual(calculateMismatchingVersions(dependencyVersions), []);
     });
 

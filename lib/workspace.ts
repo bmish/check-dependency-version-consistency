@@ -14,9 +14,9 @@ function getPackages(root: string): string[] {
   return flatMap(getWorkspaces(root), (packageLocation: string) => {
     if (packageLocation.includes('*')) {
       const packageLocationWithoutStar = packageLocation.replace('*', '');
-      return getDirectoriesInPath(
-        join(root, packageLocationWithoutStar)
-      ).map((pkg) => join(packageLocationWithoutStar, pkg));
+      return getDirectoriesInPath(join(root, packageLocationWithoutStar)).map(
+        (pkg) => join(packageLocationWithoutStar, pkg)
+      );
     } else {
       return packageLocation;
     }
