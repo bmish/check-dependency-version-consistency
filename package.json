@@ -36,13 +36,13 @@
     "statements": 100
   },
   "dependencies": {
-    "commander": "^7.0.0",
+    "commander": "^8.0.0",
     "globby": "^11.0.0",
     "type-fest": "^1.0.2"
   },
   "devDependencies": {
     "@types/mocha": "^8.2.0",
-    "@types/node": "^15.0.1",
+    "@types/node": "^16.0.0",
     "@typescript-eslint/eslint-plugin": "^4.0.1",
     "@typescript-eslint/parser": "^4.0.1",
     "eslint": "^7.0.0",
