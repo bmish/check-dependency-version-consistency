@@ -41,7 +41,7 @@
     "type-fest": "^1.0.2"
   },
   "devDependencies": {
-    "@types/mocha": "^8.2.0",
+    "@types/mocha": "^9.0.0",
     "@types/node": "^16.0.0",
     "@typescript-eslint/eslint-plugin": "^4.0.1",
     "@typescript-eslint/parser": "^4.0.1",
