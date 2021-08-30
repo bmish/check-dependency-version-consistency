@@ -47,7 +47,7 @@
     "@typescript-eslint/parser": "^4.0.1",
     "eslint": "^7.0.0",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-square": "^19.0.2",
+    "eslint-plugin-square": "^20.0.2",
     "markdownlint-cli": "^0.27.1",
     "mocha": "^9.1.1",
     "npm-run-all": "^4.1.5",
