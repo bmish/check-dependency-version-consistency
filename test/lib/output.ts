@@ -1,6 +1,6 @@
 import 'mocha'; // eslint-disable-line import/no-unassigned-import -- to get Mocha types to work
-import { mismatchingVersionsToOutputLines } from '../../lib/output';
-import { deepStrictEqual } from 'assert';
+import { mismatchingVersionsToOutputLines } from '../../lib/output.js';
+import { deepStrictEqual } from 'node:assert';
 
 describe('Utils | output', function () {
   describe('#mismatchingVersionsToOutputLines', function () {

@@ -1,12 +1,12 @@
 import 'mocha'; // eslint-disable-line import/no-unassigned-import -- to get Mocha types to work
-import { getPackageJsonPaths, getWorkspaces } from '../../lib/workspace';
-import { deepStrictEqual, throws } from 'assert';
-import { join } from 'path';
+import { getPackageJsonPaths, getWorkspaces } from '../../lib/workspace.js';
+import { deepStrictEqual, throws } from 'node:assert';
+import { join } from 'node:path';
 import {
   FIXTURE_PATH_NOT_A_WORKSPACE,
   FIXTURE_PATH_NO_PACKAGE_JSON,
   FIXTURE_PATH_VALID,
-} from '../fixtures';
+} from '../fixtures/index.js';
 
 describe('Utils | workspace', function () {
   describe('#getPackageJsonPaths', function () {

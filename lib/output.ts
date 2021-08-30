@@ -1,4 +1,4 @@
-import type { MismatchingDependencyVersions } from './dependency-versions';
+import type { MismatchingDependencyVersions } from './dependency-versions.js';
 
 export function mismatchingVersionsToOutputLines(
   mismatchingDependencyVersions: MismatchingDependencyVersions

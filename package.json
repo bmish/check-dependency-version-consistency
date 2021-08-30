@@ -15,6 +15,7 @@
     "url": "https://github.com/bmish/check-dependency-version-consistency.git"
   },
   "license": "MIT",
+  "type": "module",
   "bin": {
     "check-dependency-version-consistency": "dist/bin/check-dependency-version-consistency.js"
   },
@@ -27,7 +28,7 @@
     "lint:types": "tsc",
     "prepublishOnly": "tsc",
     "release": "release-it",
-    "test": "nyc mocha -r ts-node/register 'test/**/*.ts'"
+    "test": "node --loader ts-node/esm node_modules/mocha/lib/cli/cli --extension ts --recursive test"
   },
   "nyc": {
     "branches": 100,

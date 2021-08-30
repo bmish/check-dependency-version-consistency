@@ -14,6 +14,11 @@ module.exports = {
       tryExtensions: ['.js', '.json', '.node', '.ts', '.d.ts'],
     },
   },
+  rules: {
+    'import/extensions': 'off', // extensions now recommended in ESM
+
+    'node/no-missing-import': 'off', // bug with recognizing node: prefix https://github.com/mysticatea/eslint-plugin-node/issues/275
+  },
   overrides: [
     {
       files: ['test/**/*.js'],

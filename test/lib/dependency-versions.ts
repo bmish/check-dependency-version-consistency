@@ -3,15 +3,15 @@ import {
   calculateVersionsForEachDependency,
   calculateMismatchingVersions,
   filterOutIgnoredDependencies,
-} from '../../lib/dependency-versions';
-import { deepStrictEqual, throws } from 'assert';
+} from '../../lib/dependency-versions.js';
+import { deepStrictEqual, throws } from 'node:assert';
 import {
   FIXTURE_PATH_VALID,
   FIXTURE_PATH_INCONSISTENT_VERSIONS,
   FIXTURE_PATH_NO_PACKAGES,
   FIXTURE_PATH_NO_DEPENDENCIES,
   FIXTURE_PATH_PACKAGE_MISSING_PACKAGE_JSON,
-} from '../fixtures';
+} from '../fixtures/index.js';
 
 describe('Utils | dependency-versions', function () {
   describe('#calculateMismatchingVersions', function () {

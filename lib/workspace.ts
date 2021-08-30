@@ -1,7 +1,7 @@
-import { join } from 'path';
-import { existsSync, readFileSync } from 'fs';
-import { getDirectoriesInPath } from './fs';
-import { flatMap } from './js';
+import { join } from 'node:path';
+import { existsSync, readFileSync } from 'node:fs';
+import { getDirectoriesInPath } from './fs.js';
+import { flatMap } from './js.js';
 import type { PackageJson } from 'type-fest';
 
 export function getPackageJsonPaths(root: string): string[] {
