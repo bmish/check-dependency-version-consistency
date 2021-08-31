@@ -1,7 +1,6 @@
 import { join } from 'node:path';
 import { existsSync, readFileSync } from 'node:fs';
 import { getDirectoriesInPath } from './fs.js';
-import { flatMap } from './js.js';
 import type { PackageJson } from 'type-fest';
 
 export function getPackageJsonPaths(root: string): string[] {
@@ -11,7 +10,7 @@ export function getPackageJsonPaths(root: string): string[] {
 }
 
 function getPackages(root: string): string[] {
-  return flatMap(getWorkspaces(root), (packageLocation: string) => {
+  return getWorkspaces(root).flatMap((packageLocation: string) => {
     if (packageLocation.includes('*')) {
       const packageLocationWithoutStar = packageLocation.replace('*', '');
       return getDirectoriesInPath(join(root, packageLocationWithoutStar)).map(
