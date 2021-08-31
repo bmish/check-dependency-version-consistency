@@ -1,5 +1,22 @@
 # check-dependency-version-consistency
 
+
+## v1.0.0 (2021-08-31)
+
+#### :boom: Breaking Change
+* [#159](https://github.com/bmish/check-dependency-version-consistency/pull/159) Convert to ESM ([@bmish](https://github.com/bmish))
+* [#160](https://github.com/bmish/check-dependency-version-consistency/pull/160) Drop Node 10 support ([@bmish](https://github.com/bmish))
+
+#### :rocket: Enhancement
+* [#149](https://github.com/bmish/check-dependency-version-consistency/pull/149) build(deps): bump commander from 7.2.0 to 8.1.0 ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### :bug: Bug Fix
+* [#169](https://github.com/bmish/check-dependency-version-consistency/pull/169) Remove unused dependency `globby` ([@bmish](https://github.com/bmish))
+
+#### Committers: 1
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+
+
 ## v0.3.0 (2021-05-08)
 
 #### :rocket: Enhancement
