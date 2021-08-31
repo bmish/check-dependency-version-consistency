@@ -1,4 +1,4 @@
-import { readdirSync } from 'fs';
+import { readdirSync } from 'node:fs';
 
 export function getDirectoriesInPath(path: string): string[] {
   return readdirSync(path, { withFileTypes: true })

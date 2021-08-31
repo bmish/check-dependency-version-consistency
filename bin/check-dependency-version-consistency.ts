@@ -2,15 +2,18 @@
 /* eslint node/shebang:"off" -- shebang needed so compiled code gets interpreted as JS */
 
 import { Command } from 'commander';
-import { readFileSync } from 'fs';
+import { readFileSync } from 'node:fs';
 import {
   calculateVersionsForEachDependency,
   calculateMismatchingVersions,
   filterOutIgnoredDependencies,
-} from '../lib/dependency-versions';
-import { mismatchingVersionsToOutputLines } from '../lib/output';
-import { join } from 'path';
+} from '../lib/dependency-versions.js';
+import { mismatchingVersionsToOutputLines } from '../lib/output.js';
+import { join, dirname } from 'node:path';
 import type { PackageJson } from 'type-fest';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 function getCurrentPackageVersion(): string {
   const packageJson: PackageJson = JSON.parse(

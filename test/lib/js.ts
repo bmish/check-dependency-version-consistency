@@ -1,6 +1,6 @@
 import 'mocha'; // eslint-disable-line import/no-unassigned-import -- to get Mocha types to work
-import { flatMap } from '../../lib/js';
-import { deepStrictEqual } from 'assert';
+import { flatMap } from '../../lib/js.js';
+import { deepStrictEqual } from 'node:assert';
 
 describe('Utils | js', function () {
   describe('#flatMap', function () {

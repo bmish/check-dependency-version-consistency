@@ -1,4 +1,7 @@
-import { join } from 'path';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const FIXTURE_PATH = join(__dirname, '..', '/fixtures');
 

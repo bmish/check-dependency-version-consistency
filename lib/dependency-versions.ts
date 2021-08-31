@@ -1,6 +1,6 @@
-import { readFileSync, existsSync } from 'fs';
+import { readFileSync, existsSync } from 'node:fs';
 import type { PackageJson } from 'type-fest';
-import { getPackageJsonPaths } from './workspace';
+import { getPackageJsonPaths } from './workspace.js';
 
 export type DependenciesToVersionsSeen = Map<
   string,
