@@ -34,7 +34,7 @@ function collect(value: string, previous: string[]) {
 const program = new Command();
 program
   .version(getCurrentPackageVersion())
-  .arguments('<path>')
+  .argument('<path>', 'path to workspace root')
   .option(
     '--ignore-dep <dependency>',
     'Dependency to ignore (option can be repeated)',
