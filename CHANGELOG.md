@@ -1,6 +1,24 @@
 # check-dependency-version-consistency
 
 
+
+## v1.1.0 (2021-09-04)
+
+#### :rocket: Enhancement
+* [#177](https://github.com/bmish/check-dependency-version-consistency/pull/177) Implement autofixing ([@bmish](https://github.com/bmish))
+* [#178](https://github.com/bmish/check-dependency-version-consistency/pull/178) Sort mismatching version output by version number ([@bmish](https://github.com/bmish))
+* [#174](https://github.com/bmish/check-dependency-version-consistency/pull/174) Add help description to CLI `path` argument ([@bmish](https://github.com/bmish))
+
+#### :bug: Bug Fix
+* [#171](https://github.com/bmish/check-dependency-version-consistency/pull/171) Use native JS array `flatMap` ([@bmish](https://github.com/bmish))
+
+#### :memo: Documentation
+* [#175](https://github.com/bmish/check-dependency-version-consistency/pull/175) Mention related tool `npm-package-json-lint` in README ([@bmish](https://github.com/bmish))
+
+#### Committers: 1
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+
+
 ## v1.0.0 (2021-08-31)
 
 #### :boom: Breaking Change
