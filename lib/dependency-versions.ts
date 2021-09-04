@@ -1,6 +1,8 @@
 import { readFileSync, existsSync } from 'node:fs';
 import type { PackageJson } from 'type-fest';
 import { getPackageJsonPaths } from './workspace.js';
+import semver from 'semver';
+import editJsonFile from 'edit-json-file';
 
 export type DependenciesToVersionsSeen = Map<
   string,
@@ -157,4 +159,94 @@ export function filterOutIgnoredDependencies(
     (mismatchingVersion) =>
       !ignoredDependencies.includes(mismatchingVersion.dependency)
   );
+}
+
+export function fixMismatchingVersions(
+  root: string,
+  mismatchingVersions: MismatchingDependencyVersions
+): MismatchingDependencyVersions {
+  const packageJsonPaths = getPackageJsonPaths(root);
+
+  // Return any mismatching versions that are still present after attempting fixes.
+  return mismatchingVersions
+    .map((mismatchingVersion) => {
+      const versions = mismatchingVersion.versions.map(
+        (versionAndCount) => versionAndCount.version
+      );
+      let sortedVersions;
+      try {
+        sortedVersions = versions.sort(compareRanges);
+      } catch {
+        // Unable to sort so skip this dependency (return it to indicate it was not fixed).
+        return mismatchingVersion;
+      }
+      const fixedVersion = sortedVersions[sortedVersions.length - 1]; // Highest version will be sorted to end of list.
+
+      for (const packageJsonPath of packageJsonPaths) {
+        const packageJson: PackageJson = JSON.parse(
+          readFileSync(packageJsonPath, 'utf-8')
+        );
+
+        if (
+          packageJson.devDependencies &&
+          packageJson.devDependencies[mismatchingVersion.dependency] &&
+          packageJson.devDependencies[mismatchingVersion.dependency] !==
+            fixedVersion
+        ) {
+          const packageJson = editJsonFile(packageJsonPath, { autosave: true });
+          packageJson.set(
+            `devDependencies.${mismatchingVersion.dependency}`,
+            fixedVersion
+          );
+        }
+
+        if (
+          packageJson.dependencies &&
+          packageJson.dependencies[mismatchingVersion.dependency] &&
+          packageJson.dependencies[mismatchingVersion.dependency] !==
+            fixedVersion
+        ) {
+          const packageJson = editJsonFile(packageJsonPath, { autosave: true });
+          packageJson.set(
+            `dependencies.${mismatchingVersion.dependency}`,
+            fixedVersion
+          );
+        }
+      }
+
+      // Fixed successfully.
+      return undefined;
+    })
+    .filter((item) => item !== undefined) as MismatchingDependencyVersions;
+}
+
+export function compareRanges(a: string, b: string): 0 | -1 | 1 {
+  // Strip range and coerce to normalized version.
+  const aVersion = semver.coerce(a.replace(/^[\^~]/, ''));
+  const bVersion = semver.coerce(b.replace(/^[\^~]/, ''));
+  if (!aVersion) {
+    throw new Error(`Invalid Version: ${a}`);
+  }
+  if (!bVersion) {
+    throw new Error(`Invalid Version: ${b}`);
+  }
+
+  if (semver.eq(aVersion, bVersion)) {
+    // Same version, but wider range considered higher.
+    if (a.startsWith('^') && !b.startsWith('^')) {
+      return 1;
+    } else if (!a.startsWith('^') && b.startsWith('^')) {
+      return -1;
+    } else if (a.startsWith('~') && !b.startsWith('~')) {
+      return 1;
+    } else if (!a.startsWith('~') && b.startsWith('~')) {
+      return -1;
+    }
+
+    // Same version, same range.
+    return 0;
+  }
+
+  // Greater version considered higher.
+  return semver.gt(aVersion, bVersion) ? 1 : -1;
 }

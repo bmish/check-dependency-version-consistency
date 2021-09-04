@@ -40,6 +40,7 @@ sinon has more than one version: ^1.17.7 (1 usage), ^9.0.3 (3 usages)
 
 | Name | Description |
 | --- | --- |
+| `--fix` | Whether to autofix inconsistencies (using highest version present). |
 | `--ignore-dep` | Dependency to ignore mismatches for (option can be repeated). |
 
 ## Related
