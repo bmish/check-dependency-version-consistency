@@ -7,6 +7,7 @@ import {
   calculateVersionsForEachDependency,
   calculateMismatchingVersions,
   filterOutIgnoredDependencies,
+  fixMismatchingVersions,
 } from '../lib/dependency-versions.js';
 import { mismatchingVersionsToOutputLines } from '../lib/output.js';
 import { join, dirname } from 'node:path';
@@ -36,18 +37,27 @@ program
   .version(getCurrentPackageVersion())
   .argument('<path>', 'path to workspace root')
   .option(
+    '--fix',
+    'Whether to autofix inconsistencies (using highest version present)',
+    false
+  )
+  .option(
     '--ignore-dep <dependency>',
     'Dependency to ignore (option can be repeated)',
     collect,
     []
   )
-  .action(function (path, options: { ignoreDep: string[] }) {
+  .action(function (path, options: { ignoreDep: string[]; fix: boolean }) {
     // Calculate.
     const dependencyVersions = calculateVersionsForEachDependency(path);
-    const mismatchingVersions = filterOutIgnoredDependencies(
+    let mismatchingVersions = filterOutIgnoredDependencies(
       calculateMismatchingVersions(dependencyVersions),
       options.ignoreDep
     );
+
+    if (options.fix) {
+      mismatchingVersions = fixMismatchingVersions(path, mismatchingVersions);
+    }
 
     // Show output.
     if (mismatchingVersions.length > 0) {
