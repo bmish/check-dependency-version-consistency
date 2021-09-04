@@ -41,3 +41,7 @@ sinon has more than one version: ^1.17.7 (1 usage), ^9.0.3 (3 usages)
 | Name | Description |
 | --- | --- |
 | `--ignore-dep` | Dependency to ignore mismatches for (option can be repeated). |
+
+## Related
+
+* [npm-package-json-lint](https://github.com/tclindner/npm-package-json-lint) — use this complimentary tool to enforce that your dependency versions use consistent range types (i.e. [prefer-caret-version-ranges](https://npmpackagejsonlint.org/docs/en/rules/dependencies/prefer-caret-version-dependencies), [prefer-caret-version-devDependencies](https://npmpackagejsonlint.org/docs/en/rules/dependencies/prefer-caret-version-devdependencies))
