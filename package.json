@@ -30,7 +30,7 @@
     "lint:types": "tsc",
     "prepublishOnly": "tsc",
     "release": "release-it",
-    "test": "node --loader ts-node/esm node_modules/mocha/lib/cli/cli --extension ts --recursive test"
+    "test": "node --loader ts-node/esm node_modules/mocha/lib/cli/cli --colors --extension ts --recursive test"
   },
   "nyc": {
     "branches": 100,

@@ -33,11 +33,11 @@ If there are any dependency mismatches, the program will exit with failure and o
 
 ```pt
 eslint has more than one version:
-	^7.8.9 (1 usage)
-	^8.0.0 (1 usage)
+    ^7.8.9 (1 usage)
+    ^8.0.0 (1 usage)
 sinon has more than one version:
-	1.2.0 (2 usages)
-	1.3.0 (1 usage)
+    1.2.0 (2 usages)
+    1.3.0 (1 usage)
 ```
 
 ## Options
