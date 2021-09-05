@@ -1,5 +1,4 @@
 import chalk from 'chalk';
-
 import type { MismatchingDependencyVersions } from './dependency-versions.js';
 import { compareRanges } from './dependency-versions.js';
 
