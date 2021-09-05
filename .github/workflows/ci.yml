@@ -10,12 +10,35 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
-
-    runs-on: ${{ matrix.os }}-latest
-
+build:
+    runs-on: ubuntu-latest
     strategy:
-      max-parallel: 1
+      matrix:
+        os: [ ubuntu, windows ]
+        node-version: [14.x]
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Use Node.js version ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: 14.x
+
+    - name: Install dependencies
+      run: yarn install --frozen-lockfile --non-interactive
+
+    - name: Run linters
+      run: yarn lint
+
+    - name: Run tests
+      run: yarn test
+
+
+  build-all:
+    runs-on: ${{ matrix.os }}-latest
+    needs: build
+    strategy:
       matrix:
         os: [ ubuntu, windows ]
         node-version: [12.x, 14.x, 16.x]
