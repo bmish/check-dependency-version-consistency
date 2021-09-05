@@ -35,7 +35,6 @@ function collect(value: string, previous: string[]) {
 
 // Setup CLI.
 const program = new Command();
-process.env.NODE_ENV = 'production';
 program
   .version(getCurrentPackageVersion())
   .argument('<path>', 'path to workspace root')
