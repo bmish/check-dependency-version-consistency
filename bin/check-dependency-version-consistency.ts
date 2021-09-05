@@ -32,9 +32,9 @@ function collect(value: string, previous: string[]) {
 }
 
 // Setup CLI.
-const program = new Command();
+function run() {
+  const program = new Command();
 
-try {
   program
     .version(getCurrentPackageVersion())
     .argument('<path>', 'path to workspace root')
@@ -70,7 +70,11 @@ try {
       }
     })
     .parse(process.argv);
+}
+
+try {
+  run();
 } catch (e) {
-  console.log((e as Error).message);
+  console.error((e as Error).message);
   process.exitCode = 1;
 }
