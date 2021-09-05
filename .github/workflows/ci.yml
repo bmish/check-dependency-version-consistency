@@ -23,7 +23,7 @@ jobs:
       - name: Use Node.js version ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
-          nnode-version: ${{ matrix.node-version }}
+          node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile --non-interactive
