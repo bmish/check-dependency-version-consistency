@@ -8,18 +8,15 @@ export function mismatchingVersionsToOutputLines(
 ): string[] {
   return mismatchingDependencyVersions.map(
     (obj) =>
-      `${chalk.bold(
-        obj.dependency
-      )} has more than one version:\n  ${obj.versions
+      `${chalk.bold(obj.dependency)} has more than one version:\n${obj.versions
         .sort((a, b) => compareRanges(a.version, b.version))
         .map(
           (versionObj) =>
-            // eslint-disable-next-line prettier/prettier
-            `${chalk.greenBright(versionObj.version)} (${versionObj.count} ${pluralizeUsage(
+            `\t${chalk.greenBright(versionObj.version)} (${
               versionObj.count
-            )})`
+            } ${pluralizeUsage(versionObj.count)})`
         )
-        .join('\n  ')}`
+        .join('\n')}`
   );
 }
 
