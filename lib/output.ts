@@ -14,6 +14,7 @@ export function mismatchingVersionsToOutputLines(
         .sort((a, b) => compareRanges(a.version, b.version))
         .map(
           (versionObj) =>
+            // eslint-disable-next-line prettier/prettier
             `${chalk.greenBright(versionObj.version)} (${versionObj.count} ${pluralizeUsage(
               versionObj.count
             )})`
