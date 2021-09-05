@@ -77,6 +77,6 @@ try {
 } catch (e) {
   if (e instanceof Error) {
     console.error(e.message);
-    process.exitCode = 1;
   }
+  process.exitCode = 1;
 }
