@@ -33,37 +33,44 @@ function collect(value: string, previous: string[]) {
 
 // Setup CLI.
 const program = new Command();
-program
-  .version(getCurrentPackageVersion())
-  .argument('<path>', 'path to workspace root')
-  .option(
-    '--fix',
-    'Whether to autofix inconsistencies (using highest version present)',
-    false
-  )
-  .option(
-    '--ignore-dep <dependency>',
-    'Dependency to ignore (option can be repeated)',
-    collect,
-    []
-  )
-  .action(function (path, options: { ignoreDep: string[]; fix: boolean }) {
-    // Calculate.
-    const dependencyVersions = calculateVersionsForEachDependency(path);
-    let mismatchingVersions = filterOutIgnoredDependencies(
-      calculateMismatchingVersions(dependencyVersions),
-      options.ignoreDep
-    );
 
-    if (options.fix) {
-      mismatchingVersions = fixMismatchingVersions(path, mismatchingVersions);
-    }
+try {
+  program
+    .version(getCurrentPackageVersion())
+    .argument('<path>', 'path to workspace root')
+    .option(
+      '--fix',
+      'Whether to autofix inconsistencies (using highest version present)',
+      false
+    )
+    .option(
+      '--ignore-dep <dependency>',
+      'Dependency to ignore (option can be repeated)',
+      collect,
+      []
+    )
+    .action(function (path, options: { ignoreDep: string[]; fix: boolean }) {
+      // Calculate.
+      const dependencyVersions = calculateVersionsForEachDependency(path);
+      let mismatchingVersions = filterOutIgnoredDependencies(
+        calculateMismatchingVersions(dependencyVersions),
+        options.ignoreDep
+      );
 
-    // Show output.
-    if (mismatchingVersions.length > 0) {
-      const outputLines = mismatchingVersionsToOutputLines(mismatchingVersions);
-      outputLines.forEach((line) => console.log(line));
-      process.exitCode = 1;
-    }
-  })
-  .parse(process.argv);
+      if (options.fix) {
+        mismatchingVersions = fixMismatchingVersions(path, mismatchingVersions);
+      }
+
+      // Show output.
+      if (mismatchingVersions.length > 0) {
+        const outputLines =
+          mismatchingVersionsToOutputLines(mismatchingVersions);
+        outputLines.forEach((line) => console.log(line));
+        process.exitCode = 1;
+      }
+    })
+    .parse(process.argv);
+} catch (e) {
+  console.log((e as Error).message);
+  process.exitCode = 1;
+}
