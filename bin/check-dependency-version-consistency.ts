@@ -16,6 +16,8 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+Error.stackTraceLimit = 0;
+
 function getCurrentPackageVersion(): string {
   const packageJson: PackageJson = JSON.parse(
     readFileSync(join(__dirname, '..', '..', 'package.json'), 'utf-8') // Relative to compiled version of this file in dist/bin
@@ -33,6 +35,7 @@ function collect(value: string, previous: string[]) {
 
 // Setup CLI.
 const program = new Command();
+process.env.NODE_ENV = 'production';
 program
   .version(getCurrentPackageVersion())
   .argument('<path>', 'path to workspace root')
