@@ -12,7 +12,7 @@ export function mismatchingVersionsToOutputLines(
         .sort((a, b) => compareRanges(a.version, b.version))
         .map(
           (versionObj) =>
-            `\t${chalk.greenBright(versionObj.version)} (${
+            `\t${chalk.redBright(versionObj.version)} (${
               versionObj.count
             } ${pluralizeUsage(versionObj.count)})`
         )
