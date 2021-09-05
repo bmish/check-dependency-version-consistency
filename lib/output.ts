@@ -14,7 +14,7 @@ export function mismatchingVersionsToOutputLines(
         .sort((a, b) => compareRanges(a.version, b.version))
         .map(
           (versionObj) =>
-            `${versionObj.version} (${versionObj.count} ${pluralizeUsage(
+            `${chalk.greenBright(versionObj.version)} (${versionObj.count} ${pluralizeUsage(
               versionObj.count
             )})`
         )
