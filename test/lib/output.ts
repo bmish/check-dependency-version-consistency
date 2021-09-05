@@ -31,7 +31,7 @@ describe('Utils | output', function () {
           },
         ]),
         [
-          'foo has more than one version: 1.2.3 (1 usage), 4.5.6 (2 usages)',
+          'foo has more than one version: 2.2.3 (1 usage), 4.5.6 (2 usages)',
           'bar has more than one version: 1.4.0 (3 usages), 2.0.0 (4 usages)',
           'baz has more than one version: ^1.0.0 (1 usage), ~2.0.0 (1 usage), ^2.0.0 (1 usage)',
         ]
