@@ -31,9 +31,9 @@ describe('Utils | output', function () {
           },
         ]),
         [
-          'foo has more than one version: 1.2.3 (1 usage), 4.5.6 (2 usages)',
-          'bar has more than one version: 1.4.0 (3 usages), 2.0.0 (4 usages)',
-          'baz has more than one version: ^1.0.0 (1 usage), ~2.0.0 (1 usage), ^2.0.0 (1 usage)',
+          '\u001B[1mfoo\u001B[22m has more than one version:\n  1.2.3 (1 usage)\n  4.5.6 (2 usages)',
+          '\u001B[1mbar\u001B[22m has more than one version:\n  1.4.0 (3 usages)\n  2.0.0 (4 usages)',
+          '\u001B[1mbaz\u001B[22m has more than one version:\n  ^1.0.0 (1 usage)\n  ~2.0.0 (1 usage)\n  ^2.0.0 (1 usage)',
         ]
       );
     });
