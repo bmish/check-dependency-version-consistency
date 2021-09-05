@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import type { MismatchingDependencyVersions } from './dependency-versions.js';
 import { compareRanges } from './dependency-versions.js';
 
@@ -6,15 +7,15 @@ export function mismatchingVersionsToOutputLines(
 ): string[] {
   return mismatchingDependencyVersions.map(
     (obj) =>
-      `${obj.dependency} has more than one version: ${obj.versions
+      `${chalk.bold(obj.dependency)} has more than one version:\n${obj.versions
         .sort((a, b) => compareRanges(a.version, b.version))
         .map(
           (versionObj) =>
-            `${versionObj.version} (${versionObj.count} ${pluralizeUsage(
+            `\t${chalk.redBright(versionObj.version)} (${
               versionObj.count
-            )})`
+            } ${pluralizeUsage(versionObj.count)})`
         )
-        .join(', ')}`
+        .join('\n')}`
   );
 }
 
