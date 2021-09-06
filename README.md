@@ -13,23 +13,17 @@ To install:
 yarn add --dev check-dependency-version-consistency
 ```
 
-By default, this plugin will run in the workspace root:
+To run, use this command and optionally pass the path to the workspace root:
 
 ```sh
-yarn check-dependency-version-consistency
-```
-
-An optional path can be provided to the workspace:
-
-```sh
-yarn check-dependency-version-consistency ./path/to/my/project
+yarn check-dependency-version-consistency .
 ```
 
 This can be incorporated as one of your package.json lint scripts like this:
 
 ```json
 "lint": "npm-run-all --continue-on-error --aggregate-output --parallel lint:*",
-"lint:dependency-versions": "check-dependency-version-consistency"
+"lint:dependency-versions": "check-dependency-version-consistency ."
 "lint:js": "eslint . --cache",
 ```
 
