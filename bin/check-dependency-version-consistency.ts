@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /* eslint node/shebang:"off" -- shebang needed so compiled code gets interpreted as JS */
 
-import { Command } from 'commander';
+import { Command, Argument } from 'commander';
 import { readFileSync } from 'node:fs';
 import {
   calculateVersionsForEachDependency,
@@ -21,7 +21,9 @@ function getCurrentPackageVersion(): string {
     readFileSync(join(__dirname, '..', '..', 'package.json'), 'utf-8') // Relative to compiled version of this file in dist/bin
   );
   if (!packageJson.version) {
-    throw new Error('Could not find package.json `version`');
+    throw new Error(
+      'Could not find palwsdkjasd akcjasl dalsdakj sdaksjdl alsdkajd ldkj ackage.json `version`'
+    );
   }
   return packageJson.version;
 }
@@ -37,7 +39,7 @@ function run() {
 
   program
     .version(getCurrentPackageVersion())
-    .argument('<path>', 'path to workspace root')
+    .addArgument(new Argument('[path]', 'path to workspace root').default('.'))
     .option(
       '--fix',
       'Whether to autofix inconsistencies (using highest version present)',
