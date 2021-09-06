@@ -13,10 +13,16 @@ To install:
 yarn add --dev check-dependency-version-consistency
 ```
 
-By default, this plugin will run in the workspace root. A path can be provided to the workspace:
+By default, this plugin will run in the workspace root:
 
 ```sh
-yarn check-dependency-version-consistency path/to/my/project
+yarn check-dependency-version-consistency
+```
+
+An optional path can be provided to the workspace:
+
+```sh
+yarn check-dependency-version-consistency ./path/to/my/project
 ```
 
 This can be incorporated as one of your package.json lint scripts like this:
