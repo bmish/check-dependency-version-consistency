@@ -5,11 +5,12 @@
 
 This plugin checks to ensure that dependencies are on consistent versions across a monorepo / yarn workspace. For example, every package in a workspace that has a dependency on `eslint` should specify the same version for it.
 
-## Motivation:
+## Motivation
 
-* **Supports a uniform developer experience.** Like shared code formatting standards, consistent dependency versions make it easier for developers to jump around a monorepo.
+* **Supports a uniform developer experience.** Like shared code formatting standards, consistent dependency versions make it easier for developers to jump around and work across packages in a monorepo.
 * **Discourages piecemeal upgrades.** When possible, a dependency should be upgraded everywhere it exists in a monorepo at the same time, and upgrades are simpler when fewer versions are present.
-* **Reduces bundle size.** Avoid serving excess dependency code to the browser.
+* **Reduces unexpected behavior.** Having multiple, older versions present can lead to confusion, i.e. a bug present in some parts of a monorepo but not others.
+* **Cuts down on bundle size.** Avoid serving excess dependency code to the browser.
 * **Saves disk space and installation time.** Faster local development and CI.
 
 ## Usage
