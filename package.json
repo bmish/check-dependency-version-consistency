@@ -20,13 +20,12 @@
     "check-dependency-version-consistency": "dist/bin/check-dependency-version-consistency.js"
   },
   "scripts": {
-    "build": "tsc",
     "lint": "npm-run-all --aggregate-output --continue-on-error --parallel lint:*",
+    "build": "tsc",
     "lint:docs": "markdownlint '**/*.md'",
-    "lint:js": "eslint --cache . --fix",
+    "lint:js": "eslint --cache .",
     "lint:package-json": "npmPkgJsonLint .",
     "lint:package-json-sorting": "sort-package-json --check",
-    "lint:package-json-sorting:fix": "sort-package-json --fix package.json",
     "lint:types": "tsc",
     "prepublishOnly": "tsc",
     "release": "release-it",
