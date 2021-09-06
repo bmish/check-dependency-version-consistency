@@ -20,8 +20,8 @@
     "check-dependency-version-consistency": "dist/bin/check-dependency-version-consistency.js"
   },
   "scripts": {
-    "lint": "npm-run-all --aggregate-output --continue-on-error --parallel lint:*",
     "build": "tsc",
+    "lint": "npm-run-all --aggregate-output --continue-on-error --parallel lint:*",
     "lint:docs": "markdownlint '**/*.md'",
     "lint:js": "eslint --cache .",
     "lint:package-json": "npmPkgJsonLint .",
