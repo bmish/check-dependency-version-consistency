@@ -21,9 +21,7 @@ function getCurrentPackageVersion(): string {
     readFileSync(join(__dirname, '..', '..', 'package.json'), 'utf-8') // Relative to compiled version of this file in dist/bin
   );
   if (!packageJson.version) {
-    throw new Error(
-      'Could not find palwsdkjasd akcjasl dalsdakj sdaksjdl alsdkajd ldkj ackage.json `version`'
-    );
+    throw new Error('Could not find package.json `version`');
   }
   return packageJson.version;
 }
