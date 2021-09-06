@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /* eslint node/shebang:"off" -- shebang needed so compiled code gets interpreted as JS */
 
-import { Command } from 'commander';
+import { Command, Argument } from 'commander';
 import { readFileSync } from 'node:fs';
 import {
   calculateVersionsForEachDependency,
@@ -37,7 +37,7 @@ function run() {
 
   program
     .version(getCurrentPackageVersion())
-    .argument('<path>', 'path to workspace root')
+    .addArgument(new Argument('[path]', 'path to workspace root').default('.'))
     .option(
       '--fix',
       'Whether to autofix inconsistencies (using highest version present)',

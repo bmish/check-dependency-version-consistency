@@ -13,7 +13,7 @@ To install:
 yarn add --dev check-dependency-version-consistency
 ```
 
-To run, pass the path to the workspace root:
+To run, use this command and optionally pass the path to the workspace root:
 
 ```sh
 yarn check-dependency-version-consistency .
