@@ -30,9 +30,11 @@ yarn check-dependency-version-consistency .
 This can be incorporated as one of your package.json lint scripts like this:
 
 ```json
-"lint": "npm-run-all --continue-on-error --aggregate-output --parallel lint:*",
-"lint:dependency-versions": "check-dependency-version-consistency ."
-"lint:js": "eslint . --cache",
+{
+  "lint": "npm-run-all --continue-on-error --aggregate-output --parallel lint:*",
+  "lint:dependency-versions": "check-dependency-version-consistency .",
+  "lint:js": "eslint . --cache",
+}
 ```
 
 If there are no dependency mismatches, the program will exit with success.
