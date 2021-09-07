@@ -2,6 +2,24 @@
 
 
 
+
+## v1.2.0 (2021-09-07)
+
+#### :rocket: Enhancement
+* [#194](https://github.com/bmish/check-dependency-version-consistency/pull/194) Make path argument optional ([@ddzz](https://github.com/ddzz))
+* [#185](https://github.com/bmish/check-dependency-version-consistency/pull/185) Improve output formatting for mismatched versions ([@ddzz](https://github.com/ddzz))
+
+#### :bug: Bug Fix
+* [#184](https://github.com/bmish/check-dependency-version-consistency/pull/184) Remove clutter from error message output ([@ddzz](https://github.com/ddzz))
+
+#### :memo: Documentation
+* [#192](https://github.com/bmish/check-dependency-version-consistency/pull/192) Describe motivation in README ([@bmish](https://github.com/bmish))
+
+#### Committers: 2
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+- Darius Dzien ([@ddzz](https://github.com/ddzz))
+
+
 ## v1.1.0 (2021-09-04)
 
 #### :rocket: Enhancement
