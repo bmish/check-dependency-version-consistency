@@ -41,7 +41,7 @@ If there are no dependency mismatches, the program will exit with success.
 
 If there are any dependency mismatches, the program will exit with failure and output the mismatching versions:
 
-```sh
+```pt
 eslint has more than one version:
     ^7.8.9 (1 usage)
     ^8.0.0 (1 usage)
