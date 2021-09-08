@@ -9,7 +9,7 @@ import {
   filterOutIgnoredDependencies,
   fixMismatchingVersions,
 } from '../lib/dependency-versions.js';
-import { mismatchingVersionsToOutputLines } from '../lib/output.js';
+import { mismatchingVersionsToOutput } from '../lib/output.js';
 import { join, dirname } from 'node:path';
 import type { PackageJson } from 'type-fest';
 import { fileURLToPath } from 'node:url';
@@ -63,9 +63,7 @@ function run() {
 
       // Show output.
       if (mismatchingVersions.length > 0) {
-        const outputLines =
-          mismatchingVersionsToOutputLines(mismatchingVersions);
-        outputLines.forEach((line) => console.log(line));
+        console.log(mismatchingVersionsToOutput(mismatchingVersions));
         process.exitCode = 1;
       }
     })

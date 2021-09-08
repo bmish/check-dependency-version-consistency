@@ -43,6 +43,7 @@
     "commander": "^8.1.0",
     "edit-json-file": "^1.6.0",
     "semver": "^7.3.5",
+    "table": "^6.7.1",
     "type-fest": "^2.1.0"
   },
   "devDependencies": {

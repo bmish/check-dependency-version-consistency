@@ -1,12 +1,12 @@
 import 'mocha'; // eslint-disable-line import/no-unassigned-import -- to get Mocha types to work
-import { mismatchingVersionsToOutputLines } from '../../lib/output.js';
-import { deepStrictEqual } from 'node:assert';
+import { mismatchingVersionsToOutput } from '../../lib/output.js';
+import { strictEqual, throws } from 'node:assert';
 
 describe('Utils | output', function () {
   describe('#mismatchingVersionsToOutputLines', function () {
     it('behaves correctly', function () {
-      deepStrictEqual(
-        mismatchingVersionsToOutputLines([
+      strictEqual(
+        mismatchingVersionsToOutput([
           {
             dependency: 'foo',
             versions: [
@@ -30,16 +30,39 @@ describe('Utils | output', function () {
             ],
           },
         ]),
-        [
-          '\u001B[1mfoo\u001B[22m has more than one version:\n\t\u001B[91m1.2.3\u001B[39m (1 usage)\n\t\u001B[91m4.5.6\u001B[39m (2 usages)',
-          '\u001B[1mbar\u001B[22m has more than one version:\n\t\u001B[91m1.4.0\u001B[39m (3 usages)\n\t\u001B[91m2.0.0\u001B[39m (4 usages)',
-          '\u001B[1mbaz\u001B[22m has more than one version:\n\t\u001B[91m^1.0.0\u001B[39m (1 usage)\n\t\u001B[91m~2.0.0\u001B[39m (1 usage)\n\t\u001B[91m^2.0.0\u001B[39m (1 usage)',
-        ]
+        `Found 3 dependencies with mismatching versions across the workspace.
+╔═══════╤════════╗
+║ \u001B[1mfoo\u001B[22m   │ Usages ║
+╟───────┼────────╢
+║ \u001B[91m1.2.3\u001B[39m │ 1      ║
+╟───────┼────────╢
+║ \u001B[91m4.5.6\u001B[39m │ 2      ║
+╚═══════╧════════╝
+╔═══════╤════════╗
+║ \u001B[1mbar\u001B[22m   │ Usages ║
+╟───────┼────────╢
+║ \u001B[91m1.4.0\u001B[39m │ 3      ║
+╟───────┼────────╢
+║ \u001B[91m2.0.0\u001B[39m │ 4      ║
+╚═══════╧════════╝
+╔════════╤════════╗
+║ \u001B[1mbaz\u001B[22m    │ Usages ║
+╟────────┼────────╢
+║ \u001B[91m^1.0.0\u001B[39m │ 1      ║
+╟────────┼────────╢
+║ \u001B[91m~2.0.0\u001B[39m │ 1      ║
+╟────────┼────────╢
+║ \u001B[91m^2.0.0\u001B[39m │ 1      ║
+╚════════╧════════╝
+`
       );
     });
 
     it('behaves correctly with empty input', function () {
-      deepStrictEqual(mismatchingVersionsToOutputLines([]), []);
+      throws(
+        () => mismatchingVersionsToOutput([]),
+        new Error('No mismatching versions to output.')
+      );
     });
   });
 });
