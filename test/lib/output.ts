@@ -10,50 +10,71 @@ describe('Utils | output', function () {
           {
             dependency: 'foo',
             versions: [
-              { version: '1.2.3', count: 1 },
-              { version: '4.5.6', count: 2 },
+              { version: '1.2.3', packages: ['foo'] },
+              { version: '4.5.6', packages: ['bar', 'baz'] },
             ],
           },
           {
             dependency: 'bar',
             versions: [
-              { version: '2.0.0', count: 4 },
-              { version: '1.4.0', count: 3 },
+              {
+                version: '2.0.0',
+                packages: ['package1', 'package2', 'package3', 'package4'],
+              },
+              {
+                version: '1.4.0',
+                packages: [
+                  'package5',
+                  'package6',
+                  'package7',
+                  'package8',
+                  'package9',
+                ],
+              },
             ],
           },
           {
             dependency: 'baz',
             versions: [
-              { version: '^2.0.0', count: 1 },
-              { version: '~2.0.0', count: 1 },
-              { version: '^1.0.0', count: 1 },
+              {
+                version: '^2.0.0',
+                packages: ['package1'],
+              },
+              {
+                version: '~2.0.0',
+                packages: ['package2'],
+              },
+              {
+                version: '^1.0.0',
+                packages: ['package3'],
+              },
             ],
           },
         ]),
         `Found 3 dependencies with mismatching versions across the workspace.
-╔═══════╤════════╗
-║ \u001B[1mfoo\u001B[22m   │ Usages ║
-╟───────┼────────╢
-║ \u001B[91m1.2.3\u001B[39m │ 1      ║
-╟───────┼────────╢
-║ \u001B[91m4.5.6\u001B[39m │ 2      ║
-╚═══════╧════════╝
-╔═══════╤════════╗
-║ \u001B[1mbar\u001B[22m   │ Usages ║
-╟───────┼────────╢
-║ \u001B[91m1.4.0\u001B[39m │ 3      ║
-╟───────┼────────╢
-║ \u001B[91m2.0.0\u001B[39m │ 4      ║
-╚═══════╧════════╝
-╔════════╤════════╗
-║ \u001B[1mbaz\u001B[22m    │ Usages ║
-╟────────┼────────╢
-║ \u001B[91m^1.0.0\u001B[39m │ 1      ║
-╟────────┼────────╢
-║ \u001B[91m~2.0.0\u001B[39m │ 1      ║
-╟────────┼────────╢
-║ \u001B[91m^2.0.0\u001B[39m │ 1      ║
-╚════════╧════════╝
+╔═══════╤════════╤══════════╗
+║ \u001B[1mfoo\u001B[22m   │ Usages │ Packages ║
+╟───────┼────────┼──────────╢
+║ \u001B[91m1.2.3\u001B[39m │ 1      │ foo      ║
+╟───────┼────────┼──────────╢
+║ \u001B[91m4.5.6\u001B[39m │ 2      │ bar, baz ║
+╚═══════╧════════╧══════════╝
+╔═══════╤════════╤════════════════════════════════════════════╗
+║ \u001B[1mbar\u001B[22m   │ Usages │ Packages                                   ║
+╟───────┼────────┼────────────────────────────────────────────╢
+║ \u001B[91m1.4.0\u001B[39m │ 5      │ package5, package6, package7, and 2 others ║
+╟───────┼────────┼────────────────────────────────────────────╢
+║ \u001B[91m2.0.0\u001B[39m │ 4      │ package1, package2, package3, and 1 other  ║
+╚═══════╧════════╧════════════════════════════════════════════╝
+╔════════╤════════╤══════════╗
+║ \u001B[1mbaz\u001B[22m    │ Usages │ Packages ║
+╟────────┼────────┼──────────╢
+║ \u001B[91m^1.0.0\u001B[39m │ 1      │ package3 ║
+╟────────┼────────┼──────────╢
+║ \u001B[91m~2.0.0\u001B[39m │ 1      │ package2 ║
+╟────────┼────────┼──────────╢
+║ \u001B[91m^2.0.0\u001B[39m │ 1      │ package1 ║
+╚════════╧════════╧══════════╝
 `
       );
     });

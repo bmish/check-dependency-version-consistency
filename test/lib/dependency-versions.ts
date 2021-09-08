@@ -17,6 +17,7 @@ import {
 import mockFs from 'mock-fs';
 import { readFileSync } from 'node:fs';
 import type { PackageJson } from 'type-fest';
+import { join } from 'node:path';
 
 describe('Utils | dependency-versions', function () {
   describe('#calculateMismatchingVersions', function () {
@@ -35,12 +36,12 @@ describe('Utils | dependency-versions', function () {
           dependency: 'baz',
           versions: [
             {
-              count: 1,
               version: '^7.8.9',
+              packages: [join('scope1', 'package1')],
             },
             {
-              count: 1,
               version: '^8.0.0',
+              packages: [join('scope1', 'package2')],
             },
           ],
         },
@@ -48,12 +49,15 @@ describe('Utils | dependency-versions', function () {
           dependency: 'foo',
           versions: [
             {
-              count: 2,
               version: '1.2.0',
+              packages: [
+                join('scope1', 'package2'),
+                join('scope1', 'package3'),
+              ],
             },
             {
-              count: 1,
               version: '1.3.0',
+              packages: [join('scope1', 'package1')],
             },
           ],
         },
@@ -94,12 +98,12 @@ describe('Utils | dependency-versions', function () {
             dependency: 'baz',
             versions: [
               {
-                count: 1,
                 version: '^7.8.9',
+                packages: [join('scope1', 'package1')],
               },
               {
-                count: 1,
                 version: '^8.0.0',
+                packages: [join('scope1', 'package2')],
               },
             ],
           },
@@ -185,12 +189,12 @@ describe('Utils | dependency-versions', function () {
             dependency: 'bar',
             versions: [
               {
-                count: 1,
                 version: '^3.0.0',
+                packages: [join('scope1', 'package1')],
               },
               {
-                count: 1,
                 version: 'invalidVersion',
+                packages: [join('scope1', 'package2')],
               },
             ],
           },
