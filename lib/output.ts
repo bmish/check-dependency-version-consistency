@@ -12,13 +12,22 @@ export function mismatchingVersionsToOutput(
 
   const tables = mismatchingDependencyVersions
     .map((obj) => {
-      const headers = [chalk.bold(obj.dependency), 'Usages'];
+      const headers = [chalk.bold(obj.dependency), 'Usages', 'Packages'];
       const rows = obj.versions
         .sort((a, b) => compareRanges(a.version, b.version))
-        .map((versionObj) => [
-          chalk.redBright(versionObj.version),
-          versionObj.count,
-        ]);
+        .map((versionObj) => {
+          const packages =
+            versionObj.packages.length > 3
+              ? `${versionObj.packages.slice(0, 3).join(', ')}, and ${
+                  versionObj.packages.length - 3
+                } other${versionObj.packages.length - 3 === 1 ? '' : 's'}`
+              : versionObj.packages.join(', ');
+          return [
+            chalk.redBright(versionObj.version),
+            versionObj.packages.length,
+            packages,
+          ];
+        });
       return table([headers, ...rows]);
     })
     .join('');

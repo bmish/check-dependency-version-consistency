@@ -3,17 +3,18 @@ import type { PackageJson } from 'type-fest';
 import { getPackageJsonPaths } from './workspace.js';
 import semver from 'semver';
 import editJsonFile from 'edit-json-file';
+import { dirname, relative } from 'node:path';
 
 export type DependenciesToVersionsSeen = Map<
   string,
-  { title: string; version: string }[]
+  { packageName: string; version: string }[]
 >;
 
 export type MismatchingDependencyVersions = Array<{
   dependency: string;
   versions: {
     version: string;
-    count: number;
+    packages: string[];
   }[];
 }>;
 
@@ -24,12 +25,12 @@ export type MismatchingDependencyVersions = Array<{
  *
  * {
  *  'ember-cli': [
- *     { title: '@scope/package1/package.json', version: '~3.18.0' },
- *     { title: '@scope/package2/package.json', version: '~3.18.0' }
+ *     { packageName: '@scope/package1', version: '~3.18.0' },
+ *     { packageName: '@scope/package2', version: '~3.18.0' }
  *  ]
  *  'eslint': [
- *     { title: '@scope/package1/package.json', version: '^7.0.0' },
- *     { title: '@scope/package2/package.json', version: '^7.0.0' }
+ *     { packageName: '@scope/package1', version: '^7.0.0' },
+ *     { packageName: '@scope/package2', version: '^7.0.0' }
  *  ]
  * }
  */
@@ -38,7 +39,7 @@ export function calculateVersionsForEachDependency(
 ): DependenciesToVersionsSeen {
   const dependenciesToVersionsSeen: DependenciesToVersionsSeen = new Map<
     string,
-    { title: string; version: string }[]
+    { packageName: string; version: string }[]
   >();
   getPackageJsonPaths(root).forEach((packageJsonPath) =>
     recordDependencyVersionsForPackageJson(
@@ -60,7 +61,7 @@ function recordDependencyVersionsForPackageJson(
     return;
   }
 
-  const title = packageJsonPath.replace(`${root}/`, '');
+  const packageName = dirname(relative(root, packageJsonPath));
   const packageJson: PackageJson = JSON.parse(
     readFileSync(packageJsonPath, 'utf-8')
   );
@@ -72,7 +73,7 @@ function recordDependencyVersionsForPackageJson(
       recordDependencyVersion(
         dependenciesToVersionsSeen,
         dependency,
-        title,
+        packageName,
         dependencyVersion
       );
     }
@@ -85,7 +86,7 @@ function recordDependencyVersionsForPackageJson(
       recordDependencyVersion(
         dependenciesToVersionsSeen,
         dependency,
-        title,
+        packageName,
         dependencyVersion
       );
     }
@@ -95,7 +96,7 @@ function recordDependencyVersionsForPackageJson(
 function recordDependencyVersion(
   dependenciesToVersionsSeen: DependenciesToVersionsSeen,
   dependency: string,
-  title: string,
+  packageName: string,
   version: string
 ) {
   if (!dependenciesToVersionsSeen.has(dependency)) {
@@ -105,7 +106,7 @@ function recordDependencyVersion(
   /* istanbul ignore if */
   if (list) {
     // `list` should always exist at this point, this if statement is just to please TypeScript.
-    list.push({ title, version });
+    list.push({ packageName, version });
   }
 }
 
@@ -125,13 +126,18 @@ export function calculateMismatchingVersions(
       const uniqueVersions = [
         ...new Set(versionList.map((obj) => obj.version)),
       ].sort();
-      const uniqueVersionsWithCounts = uniqueVersions.map((uniqueVersion) => ({
-        version: uniqueVersion,
-        count: versionList.filter((obj) => obj.version === uniqueVersion)
-          .length,
-      }));
+
       if (uniqueVersions.length > 1) {
-        return { dependency, versions: uniqueVersionsWithCounts };
+        const uniqueVersionsWithInfo = uniqueVersions.map((uniqueVersion) => {
+          const matchingVersions = versionList.filter(
+            (obj) => obj.version === uniqueVersion
+          );
+          return {
+            version: uniqueVersion,
+            packages: matchingVersions.map((obj) => obj.packageName).sort(),
+          };
+        });
+        return { dependency, versions: uniqueVersionsWithInfo };
       }
 
       return undefined;
@@ -170,9 +176,7 @@ export function fixMismatchingVersions(
   // Return any mismatching versions that are still present after attempting fixes.
   return mismatchingVersions
     .map((mismatchingVersion) => {
-      const versions = mismatchingVersion.versions.map(
-        (versionAndCount) => versionAndCount.version
-      );
+      const versions = mismatchingVersion.versions.map((obj) => obj.version);
       let sortedVersions;
       try {
         sortedVersions = versions.sort(compareRanges);
