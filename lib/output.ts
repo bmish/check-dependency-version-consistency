@@ -14,7 +14,7 @@ export function mismatchingVersionsToOutput(
     .map((obj) => {
       const headers = [chalk.bold(obj.dependency), 'Usages', 'Packages'];
       const rows = obj.versions
-        .sort((a, b) => compareRanges(a.version, b.version))
+        .sort((a, b) => compareRanges(b.version, a.version))
         .map((versionObj) => {
           const packages =
             versionObj.packages.length > 3
