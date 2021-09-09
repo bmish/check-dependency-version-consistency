@@ -3,6 +3,19 @@
 
 
 
+
+## v1.3.0 (2021-09-09)
+
+#### :rocket: Enhancement
+* [#198](https://github.com/bmish/check-dependency-version-consistency/pull/198) Show list of packages containing each dependency version ([@bmish](https://github.com/bmish))
+* [#197](https://github.com/bmish/check-dependency-version-consistency/pull/197) Use table to display mismatching version output ([@bmish](https://github.com/bmish))
+* [#189](https://github.com/bmish/check-dependency-version-consistency/pull/189) Display dependency versions in descending instead of ascending order ([@ddzz](https://github.com/ddzz))
+
+#### Committers: 2
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+- Darius Dzien ([@ddzz](https://github.com/ddzz))
+
+
 ## v1.2.0 (2021-09-07)
 
 #### :rocket: Enhancement
