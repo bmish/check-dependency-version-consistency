@@ -35,7 +35,7 @@ export function mismatchingVersionsToOutput(
   return [
     `Found ${mismatchingDependencyVersions.length} ${
       mismatchingDependencyVersions.length === 1 ? 'dependency' : 'dependencies'
-    } with mismatching versions across the workspace.`,
+    } with mismatching versions across the workspace. Fix with \`--fix\`.`,
     tables,
   ].join('\n');
 }
