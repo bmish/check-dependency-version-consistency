@@ -42,7 +42,7 @@ If there are no dependency mismatches, the program will exit with success.
 If there are any dependency mismatches, the program will exit with failure and output the mismatching versions:
 
 ```pt
-Found 2 dependencies with mismatching versions across the workspace.
+Found 2 dependencies with mismatching versions across the workspace. Fix with `--fix`.
 ╔════════╤════════╤═════════════════════════════╗
 ║ eslint │ Usages │ Packages                    ║
 ╟────────┼────────┼─────────────────────────────╢

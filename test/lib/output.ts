@@ -51,7 +51,7 @@ describe('Utils | output', function () {
             ],
           },
         ]),
-        `Found 3 dependencies with mismatching versions across the workspace.
+        `Found 3 dependencies with mismatching versions across the workspace. Fix with \`--fix\`.
 ╔═══════╤════════╤══════════╗
 ║ \u001B[1mfoo\u001B[22m   │ Usages │ Packages ║
 ╟───────┼────────┼──────────╢
