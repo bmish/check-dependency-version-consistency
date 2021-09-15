@@ -13,18 +13,31 @@ export function mismatchingVersionsToOutput(
   const tables = mismatchingDependencyVersions
     .map((obj) => {
       const headers = [chalk.bold(obj.dependency), 'Usages', 'Packages'];
+
+      const usageCounts = obj.versions.map(
+        (versionObj) => versionObj.packages.length
+      );
+      const highestUsageCount = Math.max(...usageCounts);
+      const hasMultipleUsageCounts = !usageCounts.every(
+        (count) => count === highestUsageCount
+      );
+
       const rows = obj.versions
         .sort((a, b) => compareRanges(b.version, a.version))
         .map((versionObj) => {
+          const usageCount = versionObj.packages.length;
           const packages =
-            versionObj.packages.length > 3
+            usageCount > 3
               ? `${versionObj.packages.slice(0, 3).join(', ')}, and ${
-                  versionObj.packages.length - 3
-                } other${versionObj.packages.length - 3 === 1 ? '' : 's'}`
+                  usageCount - 3
+                } other${usageCount - 3 === 1 ? '' : 's'}`
               : versionObj.packages.join(', ');
           return [
             chalk.redBright(versionObj.version),
-            versionObj.packages.length,
+            // Bold the usage count if it's the highest, as long as it's not the only usage count present.
+            usageCount === highestUsageCount && hasMultipleUsageCounts
+              ? chalk.bold(usageCount)
+              : usageCount,
             packages,
           ];
         });
