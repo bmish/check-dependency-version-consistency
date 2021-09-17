@@ -27,6 +27,15 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
+    - name: Cache dependencies
+      id: cache-dependencies
+      uses: actions/cache@v2
+      with:
+        path: |
+          node_modules
+        key: check-dependency-version-consistency-${{ hashFiles('yarn.lock') }}
+        restore-keys: check-dependency-version-consistency
+
     - name: Install dependencies
       run: yarn install --frozen-lockfile --non-interactive
 
