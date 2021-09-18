@@ -32,11 +32,14 @@ jobs:
       with:
         path: |
           node_modules
+          .cache/yarn
         key: check-dependency-version-consistency-${{ hashFiles('yarn.lock') }}
         restore-keys: check-dependency-version-consistency
 
     - name: Install dependencies
       run: yarn install --frozen-lockfile --non-interactive
+      env:
+        YARN_CACHE_FOLDER: .cache/yarn
 
     - name: Run linters
       run: yarn lint
