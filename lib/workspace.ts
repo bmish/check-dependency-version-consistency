@@ -2,14 +2,9 @@ import { join } from 'node:path';
 import { existsSync, readFileSync } from 'node:fs';
 import type { PackageJson } from 'type-fest';
 import { globbySync } from 'globby';
+import { Package } from './package.js';
 
-export function getPackageJsonPaths(root: string): string[] {
-  return getPackages(root)
-    .map((package_: string) => join(package_, 'package.json'))
-    .filter((packageJsonPath) => existsSync(packageJsonPath));
-}
-
-function getPackages(root: string): string[] {
+export function getPackages(root: string, ignorePackages: string[]): Package[] {
   const workspacePackages = getWorkspaces(root).flatMap((workspace) => {
     if (!workspace.includes('*')) {
       return workspace;
@@ -19,7 +14,32 @@ function getPackages(root: string): string[] {
     return globbySync(workspace, { onlyDirectories: true, cwd: root });
   });
 
-  return ['.', ...workspacePackages].map((path) => join(root, path)); // Include workspace root.
+  const paths = [
+    '.', // Include workspace root.
+    ...workspacePackages,
+  ].map((path) => join(root, path));
+
+  const packages = paths
+    .filter((path) => Package.exists(path))
+    .map((path) => new Package(path));
+
+  for (const ignoredPackage of ignorePackages) {
+    if (
+      !Package.some(packages, (package_) => package_.name === ignoredPackage) // eslint-disable-line unicorn/no-array-method-this-argument,unicorn/no-array-callback-reference -- false positive
+    ) {
+      throw new Error(
+        `Specified option '--ignore-package ${ignoredPackage}', but no such package detected in workspace.`
+      );
+    }
+  }
+
+  if (ignorePackages.length > 0) {
+    return packages.filter(
+      (package_) => !ignorePackages.includes(package_.name)
+    );
+  }
+
+  return packages;
 }
 
 export function getWorkspaces(root: string): string[] {

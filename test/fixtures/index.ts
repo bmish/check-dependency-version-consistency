@@ -27,3 +27,16 @@ export const FIXTURE_PATH_PACKAGE_MISSING_PACKAGE_JSON = join(
   FIXTURE_PATH,
   'package-missing-package-json'
 );
+export const FIXTURE_PATH_TESTING_OUTPUT = join(FIXTURE_PATH, 'testing-output');
+export const FIXTURE_PATH_NAMES_NOT_MATCHING_LOCATIONS = join(
+  FIXTURE_PATH,
+  'names-not-matching-locations'
+);
+export const FIXTURE_PATH_WORKSPACE_NOT_AN_ARRAY = join(
+  FIXTURE_PATH,
+  'workspace-not-an-array'
+);
+export const FIXTURE_PATH_PACKAGE_MISSING_NAME = join(
+  FIXTURE_PATH,
+  'package-missing-name'
+);

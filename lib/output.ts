@@ -32,8 +32,8 @@ export function mismatchingVersionsToOutput(
         })
         .map((versionObject) => {
           const usageCount = versionObject.packages.length;
-          const packageNames = versionObject.packages.map((package_) =>
-            package_ === '.' ? '(Root)' : package_
+          const packageNames = versionObject.packages.map(
+            (package_) => package_.name
           );
           const packageListSentence =
             usageCount > 3

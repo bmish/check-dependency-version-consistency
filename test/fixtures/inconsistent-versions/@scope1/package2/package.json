@@ -1,10 +1,10 @@
 {
-    "name": "package1",
+    "name": "@scope1/package2",
     "dependencies": {
-      "foo": "1.2.3",
+      "foo": "1.2.0",
       "bar": "^4.5.6"
     },
     "devDependencies": {
-      "baz": "^7.8.9"
+      "baz": "^8.0.0"
     }
 }

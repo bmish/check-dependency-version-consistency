@@ -1,5 +1,5 @@
 {
-    "name": "package1",
+    "name": "@scope1/package1",
     "dependencies": {
       "foo": "1.2.3",
       "bar": "^4.5.6"

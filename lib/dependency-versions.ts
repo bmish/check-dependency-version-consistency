@@ -1,20 +1,17 @@
-import { readFileSync, existsSync } from 'node:fs';
-import type { PackageJson } from 'type-fest';
-import { getPackageJsonPaths } from './workspace.js';
 import semver from 'semver';
 import editJsonFile from 'edit-json-file';
-import { dirname, relative } from 'node:path';
+import { Package } from './package.js';
 
 export type DependenciesToVersionsSeen = Map<
   string,
-  { packageName: string; version: string }[]
+  { package: Package; version: string }[]
 >;
 
 export type MismatchingDependencyVersions = Array<{
   dependency: string;
   versions: {
     version: string;
-    packages: string[];
+    packages: Package[];
   }[];
 }>;
 
@@ -25,27 +22,26 @@ export type MismatchingDependencyVersions = Array<{
  *
  * {
  *  'ember-cli': [
- *     { packageName: '@scope/package1', version: '~3.18.0' },
- *     { packageName: '@scope/package2', version: '~3.18.0' }
+ *     { package: Package...'@scope/package1', version: '~3.18.0' },
+ *     { package: Package...'@scope/package2', version: '~3.18.0' }
  *  ]
  *  'eslint': [
- *     { packageName: '@scope/package1', version: '^7.0.0' },
- *     { packageName: '@scope/package2', version: '^7.0.0' }
+ *     { package: Package...'@scope/package1', version: '^7.0.0' },
+ *     { package: Package...'@scope/package2', version: '^7.0.0' }
  *  ]
  * }
  */
 export function calculateVersionsForEachDependency(
-  root: string
+  packages: Package[]
 ): DependenciesToVersionsSeen {
   const dependenciesToVersionsSeen: DependenciesToVersionsSeen = new Map<
     string,
-    { packageName: string; version: string }[]
+    { package: Package; version: string }[]
   >();
-  for (const packageJsonPath of getPackageJsonPaths(root)) {
+  for (const package_ of packages) {
     recordDependencyVersionsForPackageJson(
       dependenciesToVersionsSeen,
-      packageJsonPath,
-      root
+      package_
     );
   }
   return dependenciesToVersionsSeen;
@@ -53,41 +49,30 @@ export function calculateVersionsForEachDependency(
 
 function recordDependencyVersionsForPackageJson(
   dependenciesToVersionsSeen: DependenciesToVersionsSeen,
-  packageJsonPath: string,
-  root: string
+  package_: Package
 ) {
-  if (!existsSync(packageJsonPath)) {
-    // Ignore empty package.
-    return;
-  }
-
-  const packageName = dirname(relative(root, packageJsonPath));
-  const packageJson: PackageJson = JSON.parse(
-    readFileSync(packageJsonPath, 'utf-8')
-  );
-
-  if (packageJson.dependencies) {
+  if (package_.packageJson.dependencies) {
     for (const [dependency, dependencyVersion] of Object.entries(
-      packageJson.dependencies
+      package_.packageJson.dependencies
     )) {
       recordDependencyVersion(
         dependenciesToVersionsSeen,
         dependency,
-        packageName,
-        dependencyVersion
+        dependencyVersion,
+        package_
       );
     }
   }
 
-  if (packageJson.devDependencies) {
+  if (package_.packageJson.devDependencies) {
     for (const [dependency, dependencyVersion] of Object.entries(
-      packageJson.devDependencies
+      package_.packageJson.devDependencies
     )) {
       recordDependencyVersion(
         dependenciesToVersionsSeen,
         dependency,
-        packageName,
-        dependencyVersion
+        dependencyVersion,
+        package_
       );
     }
   }
@@ -96,8 +81,8 @@ function recordDependencyVersionsForPackageJson(
 function recordDependencyVersion(
   dependenciesToVersionsSeen: DependenciesToVersionsSeen,
   dependency: string,
-  packageName: string,
-  version: string
+  version: string,
+  package_: Package
 ) {
   if (!dependenciesToVersionsSeen.has(dependency)) {
     dependenciesToVersionsSeen.set(dependency, []);
@@ -106,7 +91,7 @@ function recordDependencyVersion(
   /* istanbul ignore if */
   if (list) {
     // `list` should always exist at this point, this if statement is just to please TypeScript.
-    list.push({ packageName, version });
+    list.push({ package: package_, version });
   }
 }
 
@@ -135,8 +120,8 @@ export function calculateMismatchingVersions(
           return {
             version: uniqueVersion,
             packages: matchingVersions
-              .map((object) => object.packageName)
-              .sort(),
+              .map((object) => object.package)
+              .sort(Package.comparator),
           };
         });
         return { dependency, versions: uniqueVersionsWithInfo };
@@ -174,11 +159,9 @@ export function filterOutIgnoredDependencies(
 }
 
 export function fixMismatchingVersions(
-  root: string,
+  packages: Package[],
   mismatchingVersions: MismatchingDependencyVersions
 ): MismatchingDependencyVersions {
-  const packageJsonPaths = getPackageJsonPaths(root);
-
   // Return any mismatching versions that are still present after attempting fixes.
   return mismatchingVersions
     .map((mismatchingVersion) => {
@@ -194,20 +177,17 @@ export function fixMismatchingVersions(
       }
       const fixedVersion = sortedVersions[sortedVersions.length - 1]; // Highest version will be sorted to end of list.
 
-      for (const packageJsonPath of packageJsonPaths) {
-        const packageJsonContents = readFileSync(packageJsonPath, 'utf-8');
-        const packageJsonEndsInNewline = packageJsonContents.endsWith('\n');
-        const packageJson: PackageJson = JSON.parse(packageJsonContents);
-
+      for (const package_ of packages) {
         if (
-          packageJson.devDependencies &&
-          packageJson.devDependencies[mismatchingVersion.dependency] &&
-          packageJson.devDependencies[mismatchingVersion.dependency] !==
-            fixedVersion
+          package_.packageJson.devDependencies &&
+          package_.packageJson.devDependencies[mismatchingVersion.dependency] &&
+          package_.packageJson.devDependencies[
+            mismatchingVersion.dependency
+          ] !== fixedVersion
         ) {
-          const packageJsonEditor = editJsonFile(packageJsonPath, {
+          const packageJsonEditor = editJsonFile(package_.packageJsonPath, {
             autosave: true,
-            stringify_eol: packageJsonEndsInNewline, // If a newline at end of file exists, keep it.
+            stringify_eol: package_.packageJsonEndsInNewline, // If a newline at end of file exists, keep it.
           });
 
           packageJsonEditor.set(
@@ -223,14 +203,14 @@ export function fixMismatchingVersions(
         }
 
         if (
-          packageJson.dependencies &&
-          packageJson.dependencies[mismatchingVersion.dependency] &&
-          packageJson.dependencies[mismatchingVersion.dependency] !==
+          package_.packageJson.dependencies &&
+          package_.packageJson.dependencies[mismatchingVersion.dependency] &&
+          package_.packageJson.dependencies[mismatchingVersion.dependency] !==
             fixedVersion
         ) {
-          const packageJsonEditor = editJsonFile(packageJsonPath, {
+          const packageJsonEditor = editJsonFile(package_.packageJsonPath, {
             autosave: true,
-            stringify_eol: packageJsonEndsInNewline, // If a newline at end of file exists, keep it.
+            stringify_eol: package_.packageJsonEndsInNewline, // If a newline at end of file exists, keep it.
           });
           packageJsonEditor.set(
             `dependencies.${mismatchingVersion.dependency.replace(
