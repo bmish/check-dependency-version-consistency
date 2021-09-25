@@ -68,4 +68,4 @@ Found 2 dependencies with mismatching versions across the workspace. Fix with `-
 
 ## Related
 
-* [npm-package-json-lint](https://github.com/tclindner/npm-package-json-lint) — use this complimentary tool to enforce that your dependency versions use consistent range types (i.e. [prefer-caret-version-ranges](https://npmpackagejsonlint.org/docs/en/rules/dependencies/prefer-caret-version-dependencies), [prefer-caret-version-devDependencies](https://npmpackagejsonlint.org/docs/en/rules/dependencies/prefer-caret-version-devdependencies))
+* [npm-package-json-lint](https://github.com/tclindner/npm-package-json-lint) — use this complementary tool to enforce that your dependency versions use consistent range types (i.e. [prefer-caret-version-ranges](https://npmpackagejsonlint.org/docs/en/rules/dependencies/prefer-caret-version-dependencies), [prefer-caret-version-devDependencies](https://npmpackagejsonlint.org/docs/en/rules/dependencies/prefer-caret-version-devdependencies))
