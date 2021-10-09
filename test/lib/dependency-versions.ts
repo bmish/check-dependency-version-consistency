@@ -46,7 +46,7 @@ describe('Utils | dependency-versions', function () {
           ],
         },
         {
-          dependency: 'foo',
+          dependency: 'foo.js',
           versions: [
             {
               version: '1.2.0',
@@ -92,7 +92,7 @@ describe('Utils | dependency-versions', function () {
         calculateVersionsForEachDependency(FIXTURE_PATH_INCONSISTENT_VERSIONS)
       );
       deepStrictEqual(
-        filterOutIgnoredDependencies(dependencyVersions, ['foo']),
+        filterOutIgnoredDependencies(dependencyVersions, ['foo.js']),
         [
           {
             dependency: 'baz',
@@ -132,11 +132,11 @@ describe('Utils | dependency-versions', function () {
         'package.json': '{"workspaces": ["scope1/*"]}',
         'scope1/package1': {
           'package.json':
-            '{"dependencies": {"foo": "^1.0.0", "bar": "^3.0.0" }}',
+            '{"dependencies": {"foo.js": "^1.0.0", "bar": "^3.0.0" }}',
         },
         'scope1/package2': {
           'package.json':
-            '{"dependencies": {"foo": "^2.0.0", "bar": "invalidVersion" }}',
+            '{"dependencies": {"foo.js": "^2.0.0", "bar": "invalidVersion" }}',
         },
       });
     });
@@ -162,9 +162,9 @@ describe('Utils | dependency-versions', function () {
       );
 
       strictEqual(
-        packageJson1.dependencies && packageJson1.dependencies.foo,
+        packageJson1.dependencies && packageJson1.dependencies['foo.js'],
         '^2.0.0',
-        'updates the package1 `foo` version to the highest version'
+        'updates the package1 `foo.js` version to the highest version'
       );
       strictEqual(
         packageJson1.dependencies && packageJson1.dependencies.bar,
@@ -172,9 +172,9 @@ describe('Utils | dependency-versions', function () {
         'does not change package1 `bar` version due to abnormal version present'
       );
       strictEqual(
-        packageJson2.dependencies && packageJson2.dependencies.foo,
+        packageJson2.dependencies && packageJson2.dependencies['foo.js'],
         '^2.0.0',
-        'does not change package1 `foo` version since already at highest version'
+        'does not change package1 `foo.js` version since already at highest version'
       );
       strictEqual(
         packageJson2.dependencies && packageJson2.dependencies.bar,
@@ -235,12 +235,12 @@ describe('Utils | dependency-versions', function () {
 
     it('throws with invalid ranges', function () {
       throws(
-        () => compareRanges('foo', '~6.0.0'),
-        new Error('Invalid Version: foo')
+        () => compareRanges('foo.js', '~6.0.0'),
+        new Error('Invalid Version: foo.js')
       );
       throws(
-        () => compareRanges('~6.0.0', 'foo'),
-        new Error('Invalid Version: foo')
+        () => compareRanges('~6.0.0', 'foo.js'),
+        new Error('Invalid Version: foo.js')
       );
     });
   });

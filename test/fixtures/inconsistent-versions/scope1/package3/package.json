@@ -1,5 +1,5 @@
 {
     "dependencies": {
-      "foo": "1.2.0"
+      "foo.js": "1.2.0"
     }
 }

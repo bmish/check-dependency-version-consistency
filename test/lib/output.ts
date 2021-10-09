@@ -8,9 +8,9 @@ describe('Utils | output', function () {
       strictEqual(
         mismatchingVersionsToOutput([
           {
-            dependency: 'foo',
+            dependency: 'foo.js',
             versions: [
-              { version: '1.2.3', packages: ['foo'] },
+              { version: '1.2.3', packages: ['foo.js'] },
               { version: '4.5.6', packages: ['bar', 'baz'] },
             ],
           },
@@ -52,13 +52,13 @@ describe('Utils | output', function () {
           },
         ]),
         `Found 3 dependencies with mismatching versions across the workspace. Fix with \`--fix\`.
-╔═══════╤════════╤══════════╗
-║ \u001B[1mfoo\u001B[22m   │ Usages │ Packages ║
-╟───────┼────────┼──────────╢
-║ \u001B[91m4.5.6\u001B[39m │ \u001B[1m2\u001B[22m      │ bar, baz ║
-╟───────┼────────┼──────────╢
-║ \u001B[91m1.2.3\u001B[39m │ 1      │ foo      ║
-╚═══════╧════════╧══════════╝
+╔════════╤════════╤══════════╗
+║ \u001B[1mfoo.js\u001B[22m │ Usages │ Packages ║
+╟────────┼────────┼──────────╢
+║ \u001B[91m4.5.6\u001B[39m  │ \u001B[1m2\u001B[22m      │ bar, baz ║
+╟────────┼────────┼──────────╢
+║ \u001B[91m1.2.3\u001B[39m  │ 1      │ foo.js   ║
+╚════════╧════════╧══════════╝
 ╔═══════╤════════╤════════════════════════════════════════════╗
 ║ \u001B[1mbar\u001B[22m   │ Usages │ Packages                                   ║
 ╟───────┼────────┼────────────────────────────────────────────╢

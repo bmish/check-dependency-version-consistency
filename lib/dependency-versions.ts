@@ -212,7 +212,7 @@ export function fixMismatchingVersions(
         ) {
           const packageJson = editJsonFile(packageJsonPath, { autosave: true });
           packageJson.set(
-            `dependencies.${mismatchingVersion.dependency}`,
+            `dependencies.${mismatchingVersion.dependency.replace('.', '\\.')}`,
             fixedVersion
           );
         }
