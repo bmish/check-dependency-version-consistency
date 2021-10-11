@@ -57,7 +57,7 @@
     "eslint": "^7.0.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-square": "^20.0.2",
-    "markdownlint-cli": "^0.28.1",
+    "markdownlint-cli": "^0.29.0",
     "mocha": "^9.1.1",
     "mock-fs": "^5.0.0",
     "npm-package-json-lint": "^5.2.3",
