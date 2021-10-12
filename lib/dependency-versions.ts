@@ -201,7 +201,10 @@ export function fixMismatchingVersions(
             autosave: true,
           });
           packageJsonEditor.set(
-            `devDependencies.${mismatchingVersion.dependency}`,
+            `devDependencies.${mismatchingVersion.dependency.replace(
+              /\./g, // Escape dots.
+              '\\.'
+            )}`,
             fixedVersion
           );
         }
@@ -216,7 +219,10 @@ export function fixMismatchingVersions(
             autosave: true,
           });
           packageJsonEditor.set(
-            `dependencies.${mismatchingVersion.dependency}`,
+            `dependencies.${mismatchingVersion.dependency.replace(
+              /\./g, // Escape dots.
+              '\\.'
+            )}`,
             fixedVersion
           );
         }
