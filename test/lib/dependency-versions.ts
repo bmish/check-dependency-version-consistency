@@ -129,14 +129,22 @@ describe('Utils | dependency-versions', function () {
     beforeEach(function () {
       // Create a mock workspace filesystem for temporary usage in this test because changes will be written to some files.
       mockFs({
-        'package.json': '{"workspaces": ["scope1/*"]}',
+        'package.json': JSON.stringify({ workspaces: ['scope1/*'] }),
         'scope1/package1': {
-          'package.json':
-            '{"dependencies": {"foo": "^1.0.0", "bar": "^3.0.0"}, "devDependencies": {"baz": "^4.1.0"}}',
+          'package.json': JSON.stringify({
+            dependencies: { foo: '^1.0.0', bar: '^3.0.0', 'a.b.c': '5.0.0' },
+            devDependencies: { 'one.two.three': '^4.1.0' },
+          }),
         },
         'scope1/package2': {
-          'package.json':
-            '{"dependencies": {"foo": "^2.0.0", "bar": "invalidVersion"}, "devDependencies": {"baz": "^4.0.0"}}',
+          'package.json': JSON.stringify({
+            dependencies: {
+              foo: '^2.0.0',
+              bar: 'invalidVersion',
+              'a.b.c': '~5.5.0',
+            },
+            devDependencies: { 'one.two.three': '^4.0.0' },
+          }),
         },
       });
     });
@@ -185,16 +193,30 @@ describe('Utils | dependency-versions', function () {
         'does not change package2 `bar` version due to abnormal version present'
       );
 
-      // baz
+      // a.b.c
       strictEqual(
-        packageJson1.devDependencies && packageJson1.devDependencies.baz,
-        '^4.1.0',
-        'does not change package1 `baz` version since already at highest version'
+        packageJson1.dependencies && packageJson1.dependencies['a.b.c'],
+        '~5.5.0',
+        'updates the package1 `a.b.c` version to the highest version'
       );
       strictEqual(
-        packageJson2.devDependencies && packageJson2.devDependencies.baz,
+        packageJson2.dependencies && packageJson2.dependencies['a.b.c'],
+        '~5.5.0',
+        'does not change package2 `a.b.c` version since already at highest version'
+      );
+
+      // one.two.three
+      strictEqual(
+        packageJson1.devDependencies &&
+          packageJson1.devDependencies['one.two.three'],
         '^4.1.0',
-        'updates the package2 `baz` version to the highest version'
+        'does not change package1 `one.two.three` version since already at highest version'
+      );
+      strictEqual(
+        packageJson2.devDependencies &&
+          packageJson2.devDependencies['one.two.three'],
+        '^4.1.0',
+        'updates the package2 `one.two.three` version to the highest version'
       );
 
       // Check return value.
