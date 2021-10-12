@@ -4,6 +4,25 @@
 
 
 
+
+## v1.4.0 (2021-10-12)
+
+#### :rocket: Enhancement
+* [#206](https://github.com/bmish/check-dependency-version-consistency/pull/206) Bold maximum usage count for each mismatched dependency ([@bmish](https://github.com/bmish))
+* [#205](https://github.com/bmish/check-dependency-version-consistency/pull/205) Improve discoverability of `fix` option ([@bmish](https://github.com/bmish))
+
+#### :bug: Bug Fix
+* [#238](https://github.com/bmish/check-dependency-version-consistency/pull/238) Fix autofixer when dots are present in dependency name ([@bmish](https://github.com/bmish))
+
+#### :house: Internal
+* [#237](https://github.com/bmish/check-dependency-version-consistency/pull/237) Improve autofixer test coverage ([@bmish](https://github.com/bmish))
+* [#214](https://github.com/bmish/check-dependency-version-consistency/pull/214) Add dependency caching to CI ([@ddzz](https://github.com/ddzz))
+
+#### Committers: 2
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+- Darius Dzien ([@ddzz](https://github.com/ddzz))
+
+
 ## v1.3.0 (2021-09-09)
 
 #### :rocket: Enhancement
