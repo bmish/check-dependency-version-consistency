@@ -197,8 +197,10 @@ export function fixMismatchingVersions(
           packageJson.devDependencies[mismatchingVersion.dependency] !==
             fixedVersion
         ) {
-          const packageJson = editJsonFile(packageJsonPath, { autosave: true });
-          packageJson.set(
+          const packageJsonEditor = editJsonFile(packageJsonPath, {
+            autosave: true,
+          });
+          packageJsonEditor.set(
             `devDependencies.${mismatchingVersion.dependency}`,
             fixedVersion
           );
@@ -210,8 +212,10 @@ export function fixMismatchingVersions(
           packageJson.dependencies[mismatchingVersion.dependency] !==
             fixedVersion
         ) {
-          const packageJson = editJsonFile(packageJsonPath, { autosave: true });
-          packageJson.set(
+          const packageJsonEditor = editJsonFile(packageJsonPath, {
+            autosave: true,
+          });
+          packageJsonEditor.set(
             `dependencies.${mismatchingVersion.dependency}`,
             fixedVersion
           );
