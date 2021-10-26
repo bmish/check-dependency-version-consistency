@@ -26,19 +26,22 @@ export function mismatchingVersionsToOutput(
         .sort((a, b) => compareRanges(b.version, a.version))
         .map((versionObj) => {
           const usageCount = versionObj.packages.length;
-          const packages =
+          const packageNames = versionObj.packages.map((pkg) =>
+            pkg === '.' ? '(Root)' : pkg
+          );
+          const packageListSentence =
             usageCount > 3
-              ? `${versionObj.packages.slice(0, 3).join(', ')}, and ${
+              ? `${packageNames.slice(0, 3).join(', ')}, and ${
                   usageCount - 3
                 } other${usageCount - 3 === 1 ? '' : 's'}`
-              : versionObj.packages.join(', ');
+              : packageNames.join(', ');
           return [
             chalk.redBright(versionObj.version),
             // Bold the usage count if it's the highest, as long as it's not the only usage count present.
             usageCount === highestUsageCount && hasMultipleUsageCounts
               ? chalk.bold(usageCount)
               : usageCount,
-            packages,
+            packageListSentence,
           ];
         });
       return table([headers, ...rows]);

@@ -14,6 +14,7 @@ describe('Utils | workspace', function () {
       deepStrictEqual(
         getPackageJsonPaths(FIXTURE_PATH_VALID),
         [
+          'package.json',
           'scope1/package1/package.json',
           'scope1/package2/package.json',
           'scope2/deps-only/package.json',
