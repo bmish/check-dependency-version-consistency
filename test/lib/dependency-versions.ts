@@ -6,7 +6,7 @@ import {
   fixMismatchingVersions,
   compareRanges,
 } from '../../lib/dependency-versions.js';
-import { strictEqual, deepStrictEqual, throws } from 'node:assert';
+import { ok, strictEqual, deepStrictEqual, throws } from 'node:assert';
 import {
   FIXTURE_PATH_VALID,
   FIXTURE_PATH_INCONSISTENT_VERSIONS,
@@ -137,14 +137,14 @@ describe('Utils | dependency-versions', function () {
           }),
         },
         'scope1/package2': {
-          'package.json': JSON.stringify({
+          'package.json': `${JSON.stringify({
             dependencies: {
               foo: '^2.0.0',
               bar: 'invalidVersion',
               'a.b.c': '~5.5.0',
             },
             devDependencies: { 'one.two.three': '^4.0.0' },
-          }),
+          })}\n`, // Ends in newline.
         },
       });
     });
@@ -162,12 +162,17 @@ describe('Utils | dependency-versions', function () {
         mismatchingVersions
       );
 
-      const packageJson1: PackageJson = JSON.parse(
-        readFileSync('scope1/package1/package.json', 'utf-8')
+      const packageJson1Contents = readFileSync(
+        'scope1/package1/package.json',
+        'utf-8'
       );
-      const packageJson2: PackageJson = JSON.parse(
-        readFileSync('scope1/package2/package.json', 'utf-8')
+      const packageJson1: PackageJson = JSON.parse(packageJson1Contents);
+
+      const packageJson2Contents = readFileSync(
+        'scope1/package2/package.json',
+        'utf-8'
       );
+      const packageJson2: PackageJson = JSON.parse(packageJson2Contents);
 
       // foo
       strictEqual(
@@ -239,6 +244,13 @@ describe('Utils | dependency-versions', function () {
         ],
         'should return only the dependency that could not be fixed due to the abnormal version present'
       );
+
+      // Existing newline at end of file should be maintained.
+      ok(
+        !packageJson1Contents.endsWith('\n'),
+        'package1 should not end in newline'
+      );
+      ok(packageJson2Contents.endsWith('\n'), 'package2 should end in newline');
     });
   });
 
