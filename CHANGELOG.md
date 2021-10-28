@@ -5,6 +5,20 @@
 
 
 
+
+## v1.4.1 (2021-10-28)
+
+#### :bug: Bug Fix
+* [#241](https://github.com/bmish/check-dependency-version-consistency/pull/241) Don't ignore workspace root package.json ([@bmish](https://github.com/bmish))
+* [#242](https://github.com/bmish/check-dependency-version-consistency/pull/242) Maintain newline at end of package.json file ([@bmish](https://github.com/bmish))
+
+#### :house: Internal
+* [#243](https://github.com/bmish/check-dependency-version-consistency/pull/243) Test under Node 17 ([@bmish](https://github.com/bmish))
+
+#### Committers: 1
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+
+
 ## v1.4.0 (2021-10-12)
 
 #### :rocket: Enhancement
