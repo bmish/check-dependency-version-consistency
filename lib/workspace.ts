@@ -10,16 +10,19 @@ export function getPackageJsonPaths(root: string): string[] {
 }
 
 function getPackages(root: string): string[] {
-  return getWorkspaces(root).flatMap((packageLocation: string) => {
-    if (packageLocation.includes('*')) {
-      const packageLocationWithoutStar = packageLocation.replace('*', '');
-      return getDirectoriesInPath(join(root, packageLocationWithoutStar)).map(
-        (pkg) => join(packageLocationWithoutStar, pkg)
-      );
-    } else {
-      return packageLocation;
+  const workspacePackages = getWorkspaces(root).flatMap(
+    (packageLocation: string) => {
+      if (packageLocation.includes('*')) {
+        const packageLocationWithoutStar = packageLocation.replace('*', '');
+        return getDirectoriesInPath(join(root, packageLocationWithoutStar)).map(
+          (pkg) => join(packageLocationWithoutStar, pkg)
+        );
+      } else {
+        return packageLocation;
+      }
     }
-  });
+  );
+  return ['.', ...workspacePackages]; // Include workspace root.
 }
 
 export function getWorkspaces(root: string): string[] {

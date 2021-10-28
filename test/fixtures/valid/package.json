@@ -3,5 +3,8 @@
         "scope1/*",
         "scope2/*",
         "package1"
-    ]
+    ],
+    "devDependencies": {
+        "foo": "1.2.3"
+    }
 }

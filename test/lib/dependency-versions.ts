@@ -51,6 +51,7 @@ describe('Utils | dependency-versions', function () {
             {
               version: '1.2.0',
               packages: [
+                '.',
                 join('scope1', 'package2'),
                 join('scope1', 'package3'),
               ],
@@ -129,7 +130,10 @@ describe('Utils | dependency-versions', function () {
     beforeEach(function () {
       // Create a mock workspace filesystem for temporary usage in this test because changes will be written to some files.
       mockFs({
-        'package.json': JSON.stringify({ workspaces: ['scope1/*'] }),
+        'package.json': JSON.stringify({
+          workspaces: ['scope1/*'],
+          devDependencies: { foo: '^1.0.0' },
+        }),
         'scope1/package1': {
           'package.json': JSON.stringify({
             dependencies: { foo: '^1.0.0', bar: '^3.0.0', 'a.b.c': '5.0.0' },
@@ -162,16 +166,18 @@ describe('Utils | dependency-versions', function () {
         mismatchingVersions
       );
 
+      // Read in package.json files.
+      const packageJsonRootContents = readFileSync('package.json', 'utf-8');
       const packageJson1Contents = readFileSync(
         'scope1/package1/package.json',
         'utf-8'
       );
-      const packageJson1: PackageJson = JSON.parse(packageJson1Contents);
-
       const packageJson2Contents = readFileSync(
         'scope1/package2/package.json',
         'utf-8'
       );
+      const packageJsonRoot: PackageJson = JSON.parse(packageJsonRootContents);
+      const packageJson1: PackageJson = JSON.parse(packageJson1Contents);
       const packageJson2: PackageJson = JSON.parse(packageJson2Contents);
 
       // foo
@@ -184,6 +190,11 @@ describe('Utils | dependency-versions', function () {
         packageJson2.dependencies && packageJson2.dependencies.foo,
         '^2.0.0',
         'does not change package2 `foo` version since already at highest version'
+      );
+      strictEqual(
+        packageJsonRoot.devDependencies && packageJsonRoot.devDependencies.foo,
+        '^2.0.0',
+        'updates the root package `foo` version to the highest version'
       );
 
       // bar
