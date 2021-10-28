@@ -187,9 +187,9 @@ export function fixMismatchingVersions(
       const fixedVersion = sortedVersions[sortedVersions.length - 1]; // Highest version will be sorted to end of list.
 
       for (const packageJsonPath of packageJsonPaths) {
-        const packageJson: PackageJson = JSON.parse(
-          readFileSync(packageJsonPath, 'utf-8')
-        );
+        const packageJsonContents = readFileSync(packageJsonPath, 'utf-8');
+        const packageJsonEndsInNewline = packageJsonContents.endsWith('\n');
+        const packageJson: PackageJson = JSON.parse(packageJsonContents);
 
         if (
           packageJson.devDependencies &&
@@ -199,6 +199,7 @@ export function fixMismatchingVersions(
         ) {
           const packageJsonEditor = editJsonFile(packageJsonPath, {
             autosave: true,
+            stringify_eol: packageJsonEndsInNewline, // If a newline at end of file exists, keep it.
           });
           packageJsonEditor.set(
             `devDependencies.${mismatchingVersion.dependency.replace(
@@ -217,6 +218,7 @@ export function fixMismatchingVersions(
         ) {
           const packageJsonEditor = editJsonFile(packageJsonPath, {
             autosave: true,
+            stringify_eol: packageJsonEndsInNewline, // If a newline at end of file exists, keep it.
           });
           packageJsonEditor.set(
             `dependencies.${mismatchingVersion.dependency.replace(
