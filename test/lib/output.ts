@@ -50,8 +50,21 @@ describe('Utils | output', function () {
               },
             ],
           },
+          {
+            dependency: 'biz',
+            versions: [
+              {
+                version: '^1.0.0',
+                packages: ['package1'],
+              },
+              {
+                version: 'workspace:*', // Invalid/abnormal version.
+                packages: ['package2'],
+              },
+            ],
+          },
         ]),
-        `Found 3 dependencies with mismatching versions across the workspace. Fix with \`--fix\`.
+        `Found 4 dependencies with mismatching versions across the workspace. Fix with \`--fix\`.
 ╔═══════╤════════╤══════════════════╗
 ║ \u001B[1mfoo\u001B[22m   │ Usages │ Packages         ║
 ╟───────┼────────┼──────────────────╢
@@ -75,6 +88,13 @@ describe('Utils | output', function () {
 ╟────────┼────────┼──────────╢
 ║ \u001B[91m^1.0.0\u001B[39m │ 1      │ package3 ║
 ╚════════╧════════╧══════════╝
+╔═════════════╤════════╤══════════╗
+║ \u001B[1mbiz\u001B[22m         │ Usages │ Packages ║
+╟─────────────┼────────┼──────────╢
+║ \u001B[91m^1.0.0\u001B[39m      │ 1      │ package1 ║
+╟─────────────┼────────┼──────────╢
+║ \u001B[91mworkspace:*\u001B[39m │ 1      │ package2 ║
+╚═════════════╧════════╧══════════╝
 `
       );
     });
