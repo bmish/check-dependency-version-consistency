@@ -2,6 +2,8 @@
     "workspaces": [
         "scope1/*",
         "scope2/*",
+        "nested-scope/**",
+        "foo*",
         "package1"
     ],
     "devDependencies": {
