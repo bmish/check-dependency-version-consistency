@@ -1,28 +1,25 @@
 import { join } from 'node:path';
 import { existsSync, readFileSync } from 'node:fs';
-import { getDirectoriesInPath } from './fs.js';
 import type { PackageJson } from 'type-fest';
+import { globbySync } from 'globby';
 
 export function getPackageJsonPaths(root: string): string[] {
-  return getPackages(root).map((pkg: string) =>
-    join(root, pkg, 'package.json')
-  );
+  return getPackages(root)
+    .map((pkg: string) => join(pkg, 'package.json'))
+    .filter((packageJsonPath) => existsSync(packageJsonPath));
 }
 
 function getPackages(root: string): string[] {
-  const workspacePackages = getWorkspaces(root).flatMap(
-    (packageLocation: string) => {
-      if (packageLocation.includes('*')) {
-        const packageLocationWithoutStar = packageLocation.replace('*', '');
-        return getDirectoriesInPath(join(root, packageLocationWithoutStar)).map(
-          (pkg) => join(packageLocationWithoutStar, pkg)
-        );
-      } else {
-        return packageLocation;
-      }
+  const workspacePackages = getWorkspaces(root).flatMap((workspace) => {
+    if (!workspace.includes('*')) {
+      return workspace;
     }
-  );
-  return ['.', ...workspacePackages]; // Include workspace root.
+
+    // Use cwd instead of passing join()'d paths to globby for Windows support: https://github.com/micromatch/micromatch/blob/34f44b4f57eacbdbcc74f64252e0845cf44bbdbd/README.md?plain=1#L822
+    return globbySync(workspace, { onlyDirectories: true, cwd: root });
+  });
+
+  return ['.', ...workspacePackages].map((path) => join(root, path)); // Include workspace root.
 }
 
 export function getWorkspaces(root: string): string[] {

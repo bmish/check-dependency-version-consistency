@@ -19,6 +19,9 @@ describe('Utils | workspace', function () {
           'scope1/package2/package.json',
           'scope2/deps-only/package.json',
           'scope2/dev-deps-only/package.json',
+          'nested-scope/nested-level/package/package.json',
+          'foo1/package.json',
+          'foo2/package.json',
           'package1/package.json',
         ].map((path) => join(FIXTURE_PATH_VALID, path))
       );
@@ -30,6 +33,8 @@ describe('Utils | workspace', function () {
       deepStrictEqual(getWorkspaces(FIXTURE_PATH_VALID), [
         'scope1/*',
         'scope2/*',
+        'nested-scope/**',
+        'foo*',
         'package1',
       ]);
     });
