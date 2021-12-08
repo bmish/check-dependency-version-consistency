@@ -6,6 +6,21 @@
 
 
 
+
+## v1.4.2 (2021-12-08)
+
+#### :bug: Bug Fix
+* [#275](https://github.com/bmish/check-dependency-version-consistency/pull/275) Avoid crash when abnormal version present ([@bmish](https://github.com/bmish))
+* [#271](https://github.com/bmish/check-dependency-version-consistency/pull/271) Correctly expand globs in workspace paths ([@bmish](https://github.com/bmish))
+
+#### :house: Internal
+* [#253](https://github.com/bmish/check-dependency-version-consistency/pull/253) Add GitHub Actions to Dependabot config ([@ddzz](https://github.com/ddzz))
+
+#### Committers: 2
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+- Darius D. ([@ddzz](https://github.com/ddzz))
+
+
 ## v1.4.1 (2021-10-28)
 
 #### :bug: Bug Fix
