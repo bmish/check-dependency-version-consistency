@@ -23,7 +23,13 @@ export function mismatchingVersionsToOutput(
       );
 
       const rows = obj.versions
-        .sort((a, b) => compareRanges(b.version, a.version))
+        .sort((a, b) => {
+          try {
+            return compareRanges(b.version, a.version);
+          } catch {
+            return 0;
+          }
+        })
         .map((versionObj) => {
           const usageCount = versionObj.packages.length;
           const packageNames = versionObj.packages.map((pkg) =>
