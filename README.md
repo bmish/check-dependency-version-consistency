@@ -3,7 +3,7 @@
 [![npm version](https://badge.fury.io/js/check-dependency-version-consistency.svg)](https://badge.fury.io/js/check-dependency-version-consistency)
 ![CI](https://github.com/bmish/check-dependency-version-consistency/workflows/CI/badge.svg)
 
-This plugin checks to ensure that dependencies are on consistent versions across a monorepo / yarn workspace. For example, every package in a workspace that has a dependency on `eslint` should specify the same version for it.
+This CLI tool checks to ensure that dependencies are on consistent versions across a monorepo / yarn workspace. For example, every package in a workspace that has a dependency on `eslint` should specify the same version for it.
 
 ## Motivation
 
@@ -33,7 +33,8 @@ This can be incorporated as one of your package.json lint scripts like this:
 {
   "lint": "npm-run-all --continue-on-error --aggregate-output --parallel lint:*",
   "lint:dependency-versions": "check-dependency-version-consistency .",
-  "lint:js": "eslint . --cache",
+  "lint:dependency-versions:fix": "npm-run-all \"lint:dependency-versions --fix\"",
+  "lint:js": "eslint --cache .",
 }
 ```
 
