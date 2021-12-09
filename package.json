@@ -22,7 +22,7 @@
   "scripts": {
     "build": "tsc",
     "lint": "npm-run-all --aggregate-output --continue-on-error --parallel lint:*",
-    "lint:docs": "markdownlint '**/*.md'",
+    "lint:docs": "markdownlint \"**/*.md\"",
     "lint:js": "eslint --cache .",
     "lint:package-json": "npmPkgJsonLint .",
     "lint:package-json-sorting": "sort-package-json --check",
