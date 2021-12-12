@@ -27,7 +27,7 @@ To run, use this command and optionally pass the path to the workspace root (whe
 yarn check-dependency-version-consistency .
 ```
 
-This can be incorporated as one of your package.json lint scripts like this:
+This can be incorporated as one of your `package.json` lint scripts like this:
 
 ```json
 {
