@@ -21,13 +21,13 @@ To install:
 yarn add --dev check-dependency-version-consistency
 ```
 
-To run, use this command and optionally pass the path to the workspace root (where the package.json file containing `workspaces` is located):
+To run, use this command and optionally pass the path to the workspace root (where the `package.json` file containing `workspaces` is located):
 
 ```sh
 yarn check-dependency-version-consistency .
 ```
 
-This can be incorporated as one of your package.json lint scripts like this:
+This can be incorporated as one of your `package.json` lint scripts like this:
 
 ```json
 {
