@@ -4,7 +4,6 @@ module.exports = {
     ecmaVersion: 2021,
     sourceType: 'module',
   },
-  plugins: ['square'],
   extends: ['plugin:square/base', 'plugin:node/recommended'],
   env: {
     node: true,
@@ -15,7 +14,7 @@ module.exports = {
     },
   },
   rules: {
-    'import/extensions': 'off', // extensions now recommended in ESM
+    'import/extensions': ['error', 'always'],
 
     'node/no-missing-import': 'off', // bug with recognizing node: prefix https://github.com/mysticatea/eslint-plugin-node/issues/275
   },
