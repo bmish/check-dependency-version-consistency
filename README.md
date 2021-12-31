@@ -1,7 +1,7 @@
 # check-dependency-version-consistency
 
-[![npm version](https://badge.fury.io/js/check-dependency-version-consistency.svg)](https://badge.fury.io/js/check-dependency-version-consistency)
-![CI](https://github.com/bmish/check-dependency-version-consistency/workflows/CI/badge.svg)
+[![npm version][npm-image]][npm-url]
+[![CI][ci-image]][ci-url]
 
 This CLI tool checks to ensure that dependencies are on consistent versions across a monorepo / yarn workspace. For example, every package in a workspace that has a dependency on `eslint` should specify the same version for it.
 
@@ -74,3 +74,8 @@ Found 2 dependencies with mismatching versions across the workspace. Fix with `-
 ## References
 
 * [Yarn Workspaces](https://classic.yarnpkg.com/lang/en/docs/workspaces/)
+
+[npm-image]: https://badge.fury.io/js/check-dependency-version-consistency.svg
+[npm-url]: https://www.npmjs.com/package/check-dependency-version-consistency
+[ci-image]: https://github.com/bmish/check-dependency-version-consistency/workflows/CI/badge.svg
+[ci-url]: https://github.com/bmish/check-dependency-version-consistency/actions/workflows/ci.yml
