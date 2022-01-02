@@ -6,3 +6,4 @@ dist/
 
 # Test output:
 .nyc_output
+.DS_Store
