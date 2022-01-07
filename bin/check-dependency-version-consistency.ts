@@ -72,9 +72,9 @@ function run() {
 
 try {
   run();
-} catch (e) {
-  if (e instanceof Error) {
-    console.error(e.message);
+} catch (error) {
+  if (error instanceof Error) {
+    console.error(error.message);
   }
   process.exitCode = 1;
 }
