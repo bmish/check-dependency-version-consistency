@@ -41,13 +41,13 @@ export function calculateVersionsForEachDependency(
     string,
     { packageName: string; version: string }[]
   >();
-  getPackageJsonPaths(root).forEach((packageJsonPath) =>
+  for (const packageJsonPath of getPackageJsonPaths(root)) {
     recordDependencyVersionsForPackageJson(
       dependenciesToVersionsSeen,
       packageJsonPath,
       root
-    )
-  );
+    );
+  }
   return dependenciesToVersionsSeen;
 }
 
@@ -124,17 +124,19 @@ export function calculateMismatchingVersions(
       }
 
       const uniqueVersions = [
-        ...new Set(versionList.map((obj) => obj.version)),
+        ...new Set(versionList.map((object) => object.version)),
       ].sort();
 
       if (uniqueVersions.length > 1) {
         const uniqueVersionsWithInfo = uniqueVersions.map((uniqueVersion) => {
           const matchingVersions = versionList.filter(
-            (obj) => obj.version === uniqueVersion
+            (object) => object.version === uniqueVersion
           );
           return {
             version: uniqueVersion,
-            packages: matchingVersions.map((obj) => obj.packageName).sort(),
+            packages: matchingVersions
+              .map((object) => object.packageName)
+              .sort(),
           };
         });
         return { dependency, versions: uniqueVersionsWithInfo };
@@ -142,14 +144,14 @@ export function calculateMismatchingVersions(
 
       return undefined;
     })
-    .filter((obj) => obj !== undefined) as MismatchingDependencyVersions;
+    .filter((object) => object !== undefined) as MismatchingDependencyVersions;
 }
 
 export function filterOutIgnoredDependencies(
   mismatchingVersions: MismatchingDependencyVersions,
   ignoredDependencies: string[]
 ): MismatchingDependencyVersions {
-  ignoredDependencies.forEach((ignoreDependency) => {
+  for (const ignoreDependency of ignoredDependencies) {
     if (
       !mismatchingVersions.some(
         (mismatchingVersion) =>
@@ -160,7 +162,7 @@ export function filterOutIgnoredDependencies(
         `Specified option '--ignore-dep ${ignoreDependency}', but no mismatches detected.`
       );
     }
-  });
+  }
   return mismatchingVersions.filter(
     (mismatchingVersion) =>
       !ignoredDependencies.includes(mismatchingVersion.dependency)
@@ -176,7 +178,9 @@ export function fixMismatchingVersions(
   // Return any mismatching versions that are still present after attempting fixes.
   return mismatchingVersions
     .map((mismatchingVersion) => {
-      const versions = mismatchingVersion.versions.map((obj) => obj.version);
+      const versions = mismatchingVersion.versions.map(
+        (object) => object.version
+      );
       let sortedVersions;
       try {
         sortedVersions = versions.sort(compareRanges);

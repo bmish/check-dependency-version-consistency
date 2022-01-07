@@ -5,7 +5,7 @@ import { globbySync } from 'globby';
 
 export function getPackageJsonPaths(root: string): string[] {
   return getPackages(root)
-    .map((pkg: string) => join(pkg, 'package.json'))
+    .map((package_: string) => join(package_, 'package.json'))
     .filter((packageJsonPath) => existsSync(packageJsonPath));
 }
 
