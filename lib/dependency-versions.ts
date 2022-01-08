@@ -149,7 +149,8 @@ export function calculateMismatchingVersions(
 
 export function filterOutIgnoredDependencies(
   mismatchingVersions: MismatchingDependencyVersions,
-  ignoredDependencies: string[]
+  ignoredDependencies: string[],
+  ignoredDependencyPatterns: RegExp[]
 ): MismatchingDependencyVersions {
   for (const ignoreDependency of ignoredDependencies) {
     if (
@@ -165,7 +166,10 @@ export function filterOutIgnoredDependencies(
   }
   return mismatchingVersions.filter(
     (mismatchingVersion) =>
-      !ignoredDependencies.includes(mismatchingVersion.dependency)
+      !ignoredDependencies.includes(mismatchingVersion.dependency) &&
+      !ignoredDependencyPatterns.some((ignoreDependencyPattern) =>
+        mismatchingVersion.dependency.match(ignoreDependencyPattern)
+      )
   );
 }
 

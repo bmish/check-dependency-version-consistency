@@ -93,7 +93,35 @@ describe('Utils | dependency-versions', function () {
         calculateVersionsForEachDependency(FIXTURE_PATH_INCONSISTENT_VERSIONS)
       );
       deepStrictEqual(
-        filterOutIgnoredDependencies(dependencyVersions, ['foo']),
+        filterOutIgnoredDependencies(dependencyVersions, ['foo'], []),
+        [
+          {
+            dependency: 'baz',
+            versions: [
+              {
+                version: '^7.8.9',
+                packages: [join('scope1', 'package1')],
+              },
+              {
+                version: '^8.0.0',
+                packages: [join('scope1', 'package2')],
+              },
+            ],
+          },
+        ]
+      );
+    });
+
+    it('filters out an ignored dependency with regexp', function () {
+      const dependencyVersions = calculateMismatchingVersions(
+        calculateVersionsForEachDependency(FIXTURE_PATH_INCONSISTENT_VERSIONS)
+      );
+      deepStrictEqual(
+        filterOutIgnoredDependencies(
+          dependencyVersions,
+          [],
+          [new RegExp('^f.+$')]
+        ),
         [
           {
             dependency: 'baz',
@@ -118,10 +146,28 @@ describe('Utils | dependency-versions', function () {
       );
       throws(
         () =>
-          filterOutIgnoredDependencies(dependencyVersions, ['nonexistentDep']),
+          filterOutIgnoredDependencies(
+            dependencyVersions,
+            ['nonexistentDep'],
+            []
+          ),
         new Error(
           "Specified option '--ignore-dep nonexistentDep', but no mismatches detected."
         )
+      );
+    });
+
+    it('does not throw when unnecessarily regexp-ignoring a dependency that has no mismatches (less strict vs. --ignore-dep to provide greater flexibility)', function () {
+      const dependencyVersions = calculateMismatchingVersions(
+        calculateVersionsForEachDependency(FIXTURE_PATH_INCONSISTENT_VERSIONS)
+      );
+      strictEqual(
+        filterOutIgnoredDependencies(
+          dependencyVersions,
+          [],
+          [new RegExp('nonexistentDep')]
+        ).length,
+        2
       );
     });
   });

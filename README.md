@@ -66,6 +66,7 @@ Found 2 dependencies with mismatching versions across the workspace. Fix with `-
 | --- | --- |
 | `--fix` | Whether to autofix inconsistencies (using highest version present). |
 | `--ignore-dep` | Dependency to ignore mismatches for (option can be repeated). |
+| `--ignore-dep-pattern` | RegExp of dependency names to ignore mismatches for (option can be repeated). |
 
 ## Related
 
