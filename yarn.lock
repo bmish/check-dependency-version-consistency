@@ -486,7 +486,7 @@
   dependencies:
     "@types/ms" "*"
 
-"@types/edit-json-file@^1.6.0":
+"@types/edit-json-file@^1.6.1":
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/@types/edit-json-file/-/edit-json-file-1.6.1.tgz#ee4504545099b0ff968988a4cb34b5c797da6149"
   integrity sha512-3zWmE5D8sr1EKW4q4MH58o1Jn/1yOj/EpsU+6ZSw6KerqzQvc1UxERW2xkDTvvf5jDc7ABx+9JTCaW40X5lCIQ==
@@ -1508,7 +1508,7 @@ duplexer3@^0.1.4:
   resolved "https://registry.yarnpkg.com/duplexer3/-/duplexer3-0.1.4.tgz#ee01dd1cac0ed3cbc7fdbea37dc0a8f1ce002ce2"
   integrity sha1-7gHdHKwO08vH/b6jfcCo8c4ALOI=
 
-edit-json-file@^1.6.0:
+edit-json-file@^1.7.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/edit-json-file/-/edit-json-file-1.7.0.tgz#b0bfb626169890568c2668369a8e5202f5c49150"
   integrity sha512-eIkLJ9i4ija7b2TbaLHy3scyjWFLzwM2Wa6kHbV4ppVLcCqn7FzqnO1vmCG3dLrkd+teWE3mvACfv166mO0VZg==

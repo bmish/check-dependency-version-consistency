@@ -209,12 +209,16 @@ export function fixMismatchingVersions(
             autosave: true,
             stringify_eol: packageJsonEndsInNewline, // If a newline at end of file exists, keep it.
           });
+
           packageJsonEditor.set(
             `devDependencies.${mismatchingVersion.dependency.replace(
               /\./g, // Escape dots.
               '\\.'
             )}`,
-            fixedVersion
+            fixedVersion,
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore (@types/edit-json-file not available for 1.7)
+            { preservePaths: false }
           );
         }
 
@@ -233,7 +237,10 @@ export function fixMismatchingVersions(
               /\./g, // Escape dots.
               '\\.'
             )}`,
-            fixedVersion
+            fixedVersion,
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore (@types/edit-json-file not available for 1.7)
+            { preservePaths: false }
           );
         }
       }
