@@ -216,8 +216,9 @@ export function fixMismatchingVersions(
               '\\.'
             )}`,
             fixedVersion,
-          // @ts-ignore (@types/edit-json-file not available for 1.7)
-           { preservePaths: false }
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore (@types/edit-json-file not available for 1.7)
+            { preservePaths: false }
           );
         }
 
@@ -237,6 +238,7 @@ export function fixMismatchingVersions(
               '\\.'
             )}`,
             fixedVersion,
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore (@types/edit-json-file not available for 1.7)
             { preservePaths: false }
           );

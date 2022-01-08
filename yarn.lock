@@ -486,7 +486,7 @@
   dependencies:
     "@types/ms" "*"
 
-"@types/edit-json-file@1.6.1":
+"@types/edit-json-file@^1.6.1":
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/@types/edit-json-file/-/edit-json-file-1.6.1.tgz#ee4504545099b0ff968988a4cb34b5c797da6149"
   integrity sha512-3zWmE5D8sr1EKW4q4MH58o1Jn/1yOj/EpsU+6ZSw6KerqzQvc1UxERW2xkDTvvf5jDc7ABx+9JTCaW40X5lCIQ==
