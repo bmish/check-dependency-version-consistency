@@ -44,17 +44,31 @@ function run() {
       false
     )
     .option(
-      '--ignore-dep <dependency>',
+      '--ignore-dep <dependency-name>',
       'Dependency to ignore (option can be repeated)',
       collect,
       []
     )
-    .action(function (path, options: { ignoreDep: string[]; fix: boolean }) {
+    .option(
+      '--ignore-dep-pattern <dependency-name-pattern>',
+      'RegExp of dependency names to ignore (option can be repeated)',
+      collect,
+      []
+    )
+    .action(function (
+      path,
+      options: {
+        ignoreDep: string[];
+        ignoreDepPattern: RegExp[];
+        fix: boolean;
+      }
+    ) {
       // Calculate.
       const dependencyVersions = calculateVersionsForEachDependency(path);
       let mismatchingVersions = filterOutIgnoredDependencies(
         calculateMismatchingVersions(dependencyVersions),
-        options.ignoreDep
+        options.ignoreDep,
+        options.ignoreDepPattern
       );
 
       if (options.fix) {
@@ -72,9 +86,9 @@ function run() {
 
 try {
   run();
-} catch (e) {
-  if (e instanceof Error) {
-    console.error(e.message);
+} catch (error) {
+  if (error instanceof Error) {
+    console.error(error.message);
   }
   process.exitCode = 1;
 }
