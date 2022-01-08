@@ -44,17 +44,31 @@ function run() {
       false
     )
     .option(
-      '--ignore-dep <dependency>',
+      '--ignore-dep <dependency-name>',
       'Dependency to ignore (option can be repeated)',
       collect,
       []
     )
-    .action(function (path, options: { ignoreDep: string[]; fix: boolean }) {
+    .option(
+      '--ignore-dep-pattern <dependency-name-pattern>',
+      'RegExp of dependency names to ignore (option can be repeated)',
+      collect,
+      []
+    )
+    .action(function (
+      path,
+      options: {
+        ignoreDep: string[];
+        ignoreDepPattern: RegExp[];
+        fix: boolean;
+      }
+    ) {
       // Calculate.
       const dependencyVersions = calculateVersionsForEachDependency(path);
       let mismatchingVersions = filterOutIgnoredDependencies(
         calculateMismatchingVersions(dependencyVersions),
-        options.ignoreDep
+        options.ignoreDep,
+        options.ignoreDepPattern
       );
 
       if (options.fix) {
