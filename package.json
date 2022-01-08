@@ -41,14 +41,14 @@
   "dependencies": {
     "chalk": "^4.1.2",
     "commander": "^8.1.0",
-    "edit-json-file": "^1.6.0",
+    "edit-json-file": "^1.7.0",
     "globby": "^12.0.2",
     "semver": "^7.3.5",
     "table": "^6.7.1",
     "type-fest": "^2.1.0"
   },
   "devDependencies": {
-    "@types/edit-json-file": "^1.6.0",
+    "@types/edit-json-file": "1.6.1",
     "@types/mocha": "^9.0.0",
     "@types/mock-fs": "^4.13.1",
     "@types/node": "^17.0.5",
