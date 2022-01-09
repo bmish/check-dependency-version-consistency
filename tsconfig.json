@@ -23,7 +23,10 @@
       ]
     },
     "target": "es2021",
-    "types": ["node"],
+    "types": [
+      "node",
+      "@types/jest"
+    ],
     "typeRoots": ["./types"]
   },
   "include": [

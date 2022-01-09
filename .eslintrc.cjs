@@ -26,12 +26,6 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['test/**/*.js'],
-      env: {
-        mocha: true,
-      },
-    },
-    {
       parser: '@typescript-eslint/parser',
       files: ['*.ts'],
       extends: ['plugin:@typescript-eslint/recommended'],

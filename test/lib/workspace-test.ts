@@ -1,6 +1,5 @@
-import 'mocha'; // eslint-disable-line import/no-unassigned-import -- to get Mocha types to work
 import { getPackageJsonPaths, getWorkspaces } from '../../lib/workspace.js';
-import { deepStrictEqual, throws } from 'node:assert';
+import { deepStrictEqual } from 'node:assert';
 import { join } from 'node:path';
 import {
   FIXTURE_PATH_NOT_A_WORKSPACE,
@@ -30,28 +29,30 @@ describe('Utils | workspace', function () {
 
   describe('#getWorkspaces', function () {
     it('behaves correctly with valid fixture', function () {
-      deepStrictEqual(getWorkspaces(FIXTURE_PATH_VALID), [
-        'scope1/*',
-        'scope2/*',
-        'nested-scope/**',
-        'foo*',
-        'package1',
-      ]);
+      expect(getWorkspaces(FIXTURE_PATH_VALID)).toMatchInlineSnapshot(`
+        Array [
+          "scope1/*",
+          "scope2/*",
+          "nested-scope/**",
+          "foo*",
+          "package1",
+        ]
+      `);
     });
 
     it('throws with fixture that has no package.json', function () {
-      throws(
-        () => getWorkspaces(FIXTURE_PATH_NO_PACKAGE_JSON),
-        new Error('No package.json found at provided path.')
+      expect(() =>
+        getWorkspaces(FIXTURE_PATH_NO_PACKAGE_JSON)
+      ).toThrowErrorMatchingInlineSnapshot(
+        '"No package.json found at provided path."'
       );
     });
 
     it('throws with fixture that does not have workspace specified', function () {
-      throws(
-        () => getWorkspaces(FIXTURE_PATH_NOT_A_WORKSPACE),
-        new Error(
-          'package.json at provided path does not specify `workspaces`.'
-        )
+      expect(() =>
+        getWorkspaces(FIXTURE_PATH_NOT_A_WORKSPACE)
+      ).toThrowErrorMatchingInlineSnapshot(
+        '"package.json at provided path does not specify `workspaces`."'
       );
     });
   });

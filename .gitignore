@@ -6,4 +6,4 @@ dist/
 .DS_Store
 
 # Test output:
-.nyc_output
+coverage/

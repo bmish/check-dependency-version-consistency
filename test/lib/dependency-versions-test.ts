@@ -1,4 +1,3 @@
-import 'mocha'; // eslint-disable-line import/no-unassigned-import -- to get Mocha types to work
 import {
   calculateVersionsForEachDependency,
   calculateMismatchingVersions,
@@ -6,7 +5,7 @@ import {
   fixMismatchingVersions,
   compareRanges,
 } from '../../lib/dependency-versions.js';
-import { ok, strictEqual, deepStrictEqual, throws } from 'node:assert';
+import { ok, strictEqual, deepStrictEqual } from 'node:assert';
 import {
   FIXTURE_PATH_VALID,
   FIXTURE_PATH_INCONSISTENT_VERSIONS,
@@ -144,16 +143,10 @@ describe('Utils | dependency-versions', function () {
       const dependencyVersions = calculateMismatchingVersions(
         calculateVersionsForEachDependency(FIXTURE_PATH_INCONSISTENT_VERSIONS)
       );
-      throws(
-        () =>
-          filterOutIgnoredDependencies(
-            dependencyVersions,
-            ['nonexistentDep'],
-            []
-          ),
-        new Error(
-          "Specified option '--ignore-dep nonexistentDep', but no mismatches detected."
-        )
+      expect(() =>
+        filterOutIgnoredDependencies(dependencyVersions, ['nonexistentDep'], [])
+      ).toThrowErrorMatchingInlineSnapshot(
+        '"Specified option \'--ignore-dep nonexistentDep\', but no mismatches detected."'
       );
     });
 
@@ -361,14 +354,12 @@ describe('Utils | dependency-versions', function () {
     });
 
     it('throws with invalid ranges', function () {
-      throws(
-        () => compareRanges('foo', '~6.0.0'),
-        new Error('Invalid Version: foo')
-      );
-      throws(
-        () => compareRanges('~6.0.0', 'foo'),
-        new Error('Invalid Version: foo')
-      );
+      expect(() =>
+        compareRanges('foo', '~6.0.0')
+      ).toThrowErrorMatchingInlineSnapshot('"Invalid Version: foo"');
+      expect(() =>
+        compareRanges('~6.0.0', 'foo')
+      ).toThrowErrorMatchingInlineSnapshot('"Invalid Version: foo"');
     });
   });
 });

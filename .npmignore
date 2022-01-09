@@ -11,6 +11,5 @@
 /.gitkeep
 /.markdownlintignore
 /.markdownlint.json
-/.nyc_output
 /.github
 /tmp/
