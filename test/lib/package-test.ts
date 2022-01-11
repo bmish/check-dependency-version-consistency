@@ -5,7 +5,8 @@ import { join } from 'node:path';
 describe('Utils | Package', function () {
   it('throws when package missing name ', function () {
     const package_ = new Package(
-      join(FIXTURE_PATH_PACKAGE_MISSING_NAME, 'package1')
+      join(FIXTURE_PATH_PACKAGE_MISSING_NAME, 'package1'),
+      FIXTURE_PATH_PACKAGE_MISSING_NAME
     );
     expect(() => package_.name).toThrowError(
       `${join(

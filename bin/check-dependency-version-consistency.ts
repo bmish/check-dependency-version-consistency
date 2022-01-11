@@ -68,6 +68,18 @@ function run() {
       collect,
       []
     )
+    .option(
+      '--ignore-path <path>',
+      'Workspace-relative path of packages to ignore (option can be repeated)',
+      collect,
+      []
+    )
+    .option(
+      '--ignore-path-pattern <path-pattern>',
+      'RegExp of workspace-relative path of packages to ignore (option can be repeated)',
+      collect,
+      []
+    )
     .action(function (
       path,
       options: {
@@ -75,6 +87,8 @@ function run() {
         ignoreDepPattern: RegExp[];
         ignorePackage: string[];
         ignorePackagePattern: RegExp[];
+        ignorePath: string[];
+        ignorePathPattern: RegExp[];
         fix: boolean;
       }
     ) {
@@ -82,7 +96,9 @@ function run() {
       const packages = getPackages(
         path,
         options.ignorePackage,
-        options.ignorePackagePattern
+        options.ignorePackagePattern,
+        options.ignorePath,
+        options.ignorePathPattern
       );
       const dependencyVersions = calculateVersionsForEachDependency(packages);
       let mismatchingVersions = filterOutIgnoredDependencies(

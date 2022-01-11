@@ -7,7 +7,9 @@ import { Package } from './package.js';
 export function getPackages(
   root: string,
   ignorePackages: string[],
-  ignorePackagePatterns: RegExp[]
+  ignorePackagePatterns: RegExp[],
+  ignorePaths: string[],
+  ignorePathPatterns: RegExp[]
 ): Package[] {
   const workspacePackages = getWorkspaces(root).flatMap((workspace) => {
     if (!workspace.includes('*')) {
@@ -25,7 +27,7 @@ export function getPackages(
 
   const packages = paths
     .filter((path) => Package.exists(path))
-    .map((path) => new Package(path));
+    .map((path) => new Package(path, root));
 
   for (const ignoredPackage of ignorePackages) {
     if (
@@ -50,12 +52,49 @@ export function getPackages(
     }
   }
 
-  if (ignorePackages.length > 0 || ignorePackagePatterns.length > 0) {
+  for (const ignoredPath of ignorePaths) {
+    if (
+      // eslint-disable-next-line unicorn/no-array-method-this-argument,unicorn/no-array-callback-reference -- false positive
+      !Package.some(packages, (package_) =>
+        package_.pathRelative.includes(ignoredPath)
+      )
+    ) {
+      throw new Error(
+        `Specified option '--ignore-path ${ignoredPath}', but no matching paths detected in workspace.`
+      );
+    }
+  }
+
+  for (const ignoredPathPattern of ignorePathPatterns) {
+    if (
+      // eslint-disable-next-line unicorn/no-array-method-this-argument,unicorn/no-array-callback-reference -- false positive
+      !Package.some(packages, (package_) =>
+        ignoredPathPattern.test(package_.pathRelative)
+      )
+    ) {
+      throw new Error(
+        `Specified option '--ignore-path-pattern ${ignoredPathPattern}', but no matching paths detected in workspace.`
+      );
+    }
+  }
+
+  if (
+    ignorePackages.length > 0 ||
+    ignorePackagePatterns.length > 0 ||
+    ignorePaths.length > 0 ||
+    ignorePathPatterns.length > 0
+  ) {
     return packages.filter(
       (package_) =>
         !ignorePackages.includes(package_.name) &&
         !ignorePackagePatterns.some((ignorePackagePattern) =>
           package_.name.match(ignorePackagePattern)
+        ) &&
+        !ignorePaths.some((ignorePath) =>
+          package_.pathRelative.includes(ignorePath)
+        ) &&
+        !ignorePathPatterns.some((ignorePathPattern) =>
+          package_.pathRelative.match(ignorePathPattern)
         )
     );
   }

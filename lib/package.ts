@@ -1,16 +1,18 @@
 import { existsSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, relative } from 'node:path';
 import { PackageJson } from 'type-fest';
 
 // Class to represent all of the information we need to know about a package in a workspace.
 export class Package {
-  path: string;
-  packageJson: PackageJson;
+  path: string; // Absolute path to package.
+  workspaceRoot: string; // Absolute path to workspace.
+  packageJson: PackageJson; // Absolute path to package.json.
   packageJsonPath: string;
   packageJsonEndsInNewline: boolean;
 
-  constructor(path: string) {
+  constructor(path: string, workspaceRoot: string) {
     this.path = path;
+    this.workspaceRoot = workspaceRoot;
     this.packageJsonPath = join(path, 'package.json');
     const packageJsonContents = readFileSync(this.packageJsonPath, 'utf-8');
     this.packageJsonEndsInNewline = packageJsonContents.endsWith('\n');
@@ -25,6 +27,11 @@ export class Package {
       throw new Error(`${this.packageJsonPath} missing \`name\``);
     }
     return this.packageJson.name;
+  }
+
+  // Relative to workspace root.
+  get pathRelative() {
+    return relative(this.workspaceRoot, this.path);
   }
 
   static exists(path: string) {

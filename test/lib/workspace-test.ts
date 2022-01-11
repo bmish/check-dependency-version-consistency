@@ -12,7 +12,7 @@ describe('Utils | workspace', function () {
   describe('#getPackages', function () {
     it('behaves correctly', function () {
       deepStrictEqual(
-        getPackages(FIXTURE_PATH_VALID, [], []).map(
+        getPackages(FIXTURE_PATH_VALID, [], [], [], []).map(
           (package_) => package_.path
         ),
         [
@@ -31,7 +31,7 @@ describe('Utils | workspace', function () {
 
     it('filters out ignored package', function () {
       deepStrictEqual(
-        getPackages(FIXTURE_PATH_VALID, ['@scope1/package1'], []).map(
+        getPackages(FIXTURE_PATH_VALID, ['@scope1/package1'], [], [], []).map(
           (package_) => package_.path
         ),
         [
@@ -49,7 +49,7 @@ describe('Utils | workspace', function () {
 
     it('throws when filtering out ignored package that does not exist', function () {
       expect(() =>
-        getPackages(FIXTURE_PATH_VALID, ['does-not-exist'], [])
+        getPackages(FIXTURE_PATH_VALID, ['does-not-exist'], [], [], [])
       ).toThrowErrorMatchingInlineSnapshot(
         '"Specified option \'--ignore-package does-not-exist\', but no such package detected in workspace."'
       );
@@ -57,9 +57,13 @@ describe('Utils | workspace', function () {
 
     it('filters out ignored package using regexp', function () {
       deepStrictEqual(
-        getPackages(FIXTURE_PATH_VALID, [], [new RegExp('^@scope1/.+')]).map(
-          (package_) => package_.path
-        ),
+        getPackages(
+          FIXTURE_PATH_VALID,
+          [],
+          [new RegExp('^@scope1/.+')],
+          [],
+          []
+        ).map((package_) => package_.path),
         [
           '.',
           '@scope2/deps-only',
@@ -74,9 +78,65 @@ describe('Utils | workspace', function () {
 
     it('throws when filtering out using regexp ignored package that does not exist', function () {
       expect(() =>
-        getPackages(FIXTURE_PATH_VALID, [], [new RegExp('fake')])
+        getPackages(FIXTURE_PATH_VALID, [], [new RegExp('fake')], [], [])
       ).toThrowErrorMatchingInlineSnapshot(
         '"Specified option \'--ignore-package-pattern /fake/\', but no matching packages detected in workspace."'
+      );
+    });
+
+    it('filters out ignored path', function () {
+      deepStrictEqual(
+        getPackages(FIXTURE_PATH_VALID, [], [], ['nested-scope'], []).map(
+          (package_) => package_.path
+        ),
+        [
+          '.',
+          '@scope1/package1',
+          '@scope1/package2',
+          '@scope2/deps-only',
+          '@scope2/dev-deps-only',
+          'foo1',
+          'foo2',
+          'package1',
+        ].map((path) => join(FIXTURE_PATH_VALID, path))
+      );
+    });
+
+    it('throws when filtering out ignored path that does not exist', function () {
+      expect(() =>
+        getPackages(FIXTURE_PATH_VALID, [], [], ['fake'], [])
+      ).toThrowErrorMatchingInlineSnapshot(
+        '"Specified option \'--ignore-path fake\', but no matching paths detected in workspace."'
+      );
+    });
+
+    it('filters out ignored path using regexp', function () {
+      deepStrictEqual(
+        getPackages(
+          FIXTURE_PATH_VALID,
+          [],
+          [],
+          [],
+          [new RegExp('^nested-scope.+')]
+        ).map((package_) => package_.path),
+        [
+          '.',
+          '@scope1/package1',
+          '@scope1/package2',
+          '@scope2/deps-only',
+          '@scope2/dev-deps-only',
+          'foo1',
+          'foo2',
+          'package1',
+        ].map((path) => join(FIXTURE_PATH_VALID, path))
+      );
+    });
+
+    it('throws when filtering out using regexp ignored path that does not exist', function () {
+      expect(() =>
+        getPackages(FIXTURE_PATH_VALID, [], [], [], [new RegExp('fake')])
+      ).toThrowErrorMatchingInlineSnapshot(
+        '"Specified option \'--ignore-path-pattern /fake/\', but no matching paths detected in workspace."'
       );
     });
   });

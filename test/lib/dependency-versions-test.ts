@@ -20,7 +20,7 @@ import type { PackageJson } from 'type-fest';
 import { join } from 'node:path';
 
 function getPackagesHelper(root: string) {
-  return getPackages(root, [], []);
+  return getPackages(root, [], [], [], []);
 }
 
 describe('Utils | dependency-versions', function () {
