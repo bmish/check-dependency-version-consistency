@@ -84,11 +84,11 @@ function run() {
       path,
       options: {
         ignoreDep: string[];
-        ignoreDepPattern: RegExp[];
+        ignoreDepPattern: string[];
         ignorePackage: string[];
-        ignorePackagePattern: RegExp[];
+        ignorePackagePattern: string[];
         ignorePath: string[];
-        ignorePathPattern: RegExp[];
+        ignorePathPattern: string[];
         fix: boolean;
       }
     ) {
@@ -96,15 +96,15 @@ function run() {
       const packages = getPackages(
         path,
         options.ignorePackage,
-        options.ignorePackagePattern,
+        options.ignorePackagePattern.map((s) => new RegExp(s)),
         options.ignorePath,
-        options.ignorePathPattern
+        options.ignorePathPattern.map((s) => new RegExp(s))
       );
       const dependencyVersions = calculateVersionsForEachDependency(packages);
       let mismatchingVersions = filterOutIgnoredDependencies(
         calculateMismatchingVersions(dependencyVersions),
         options.ignoreDep,
-        options.ignoreDepPattern
+        options.ignoreDepPattern.map((s) => new RegExp(s))
       );
 
       if (options.fix) {
