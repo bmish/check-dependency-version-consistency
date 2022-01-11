@@ -19,18 +19,22 @@ import { readFileSync } from 'node:fs';
 import type { PackageJson } from 'type-fest';
 import { join } from 'node:path';
 
+function getPackagesHelper(root: string) {
+  return getPackages(root, [], []);
+}
+
 describe('Utils | dependency-versions', function () {
   describe('#calculateMismatchingVersions', function () {
     it('has no mismatches with valid fixture', function () {
       const dependencyVersions = calculateVersionsForEachDependency(
-        getPackages(FIXTURE_PATH_VALID, [])
+        getPackagesHelper(FIXTURE_PATH_VALID)
       );
       deepStrictEqual(calculateMismatchingVersions(dependencyVersions), []);
     });
 
     it('has mismatches with fixture with inconsistent versions', function () {
       const dependencyVersions = calculateVersionsForEachDependency(
-        getPackages(FIXTURE_PATH_INCONSISTENT_VERSIONS, [])
+        getPackagesHelper(FIXTURE_PATH_INCONSISTENT_VERSIONS)
       );
       expect(calculateMismatchingVersions(dependencyVersions)).toStrictEqual([
         {
@@ -106,21 +110,21 @@ describe('Utils | dependency-versions', function () {
 
     it('has empty results when no packages', function () {
       const dependencyVersions = calculateVersionsForEachDependency(
-        getPackages(FIXTURE_PATH_NO_PACKAGES, [])
+        getPackagesHelper(FIXTURE_PATH_NO_PACKAGES)
       );
       deepStrictEqual(calculateMismatchingVersions(dependencyVersions), []);
     });
 
     it('has empty results when no dependencies', function () {
       const dependencyVersions = calculateVersionsForEachDependency(
-        getPackages(FIXTURE_PATH_NO_DEPENDENCIES, [])
+        getPackagesHelper(FIXTURE_PATH_NO_DEPENDENCIES)
       );
       deepStrictEqual(calculateMismatchingVersions(dependencyVersions), []);
     });
 
     it('has empty results when a package is missing package.json', function () {
       const dependencyVersions = calculateVersionsForEachDependency(
-        getPackages(FIXTURE_PATH_PACKAGE_MISSING_PACKAGE_JSON, [])
+        getPackagesHelper(FIXTURE_PATH_PACKAGE_MISSING_PACKAGE_JSON)
       );
       deepStrictEqual(calculateMismatchingVersions(dependencyVersions), []);
     });
@@ -130,7 +134,7 @@ describe('Utils | dependency-versions', function () {
     it('filters out an ignored dependency', function () {
       const dependencyVersions = calculateMismatchingVersions(
         calculateVersionsForEachDependency(
-          getPackages(FIXTURE_PATH_INCONSISTENT_VERSIONS, [])
+          getPackagesHelper(FIXTURE_PATH_INCONSISTENT_VERSIONS)
         )
       );
       expect(
@@ -171,7 +175,7 @@ describe('Utils | dependency-versions', function () {
     it('filters out an ignored dependency with regexp', function () {
       const dependencyVersions = calculateMismatchingVersions(
         calculateVersionsForEachDependency(
-          getPackages(FIXTURE_PATH_INCONSISTENT_VERSIONS, [])
+          getPackagesHelper(FIXTURE_PATH_INCONSISTENT_VERSIONS)
         )
       );
       expect(
@@ -216,7 +220,7 @@ describe('Utils | dependency-versions', function () {
     it('throws when unnecessarily ignoring a dependency that has no mismatches', function () {
       const dependencyVersions = calculateMismatchingVersions(
         calculateVersionsForEachDependency(
-          getPackages(FIXTURE_PATH_INCONSISTENT_VERSIONS, [])
+          getPackagesHelper(FIXTURE_PATH_INCONSISTENT_VERSIONS)
         )
       );
       expect(() =>
@@ -229,7 +233,7 @@ describe('Utils | dependency-versions', function () {
     it('does not throw when unnecessarily regexp-ignoring a dependency that has no mismatches (less strict vs. --ignore-dep to provide greater flexibility)', function () {
       const dependencyVersions = calculateMismatchingVersions(
         calculateVersionsForEachDependency(
-          getPackages(FIXTURE_PATH_INCONSISTENT_VERSIONS, [])
+          getPackagesHelper(FIXTURE_PATH_INCONSISTENT_VERSIONS)
         )
       );
       strictEqual(
@@ -283,7 +287,7 @@ describe('Utils | dependency-versions', function () {
     });
 
     it('fixes the fixable inconsistencies', function () {
-      const packages = getPackages('.', []);
+      const packages = getPackagesHelper('.');
       const mismatchingVersions = calculateMismatchingVersions(
         calculateVersionsForEachDependency(packages)
       );
