@@ -9,6 +9,7 @@ import {
   filterOutIgnoredDependencies,
   fixMismatchingVersions,
 } from '../lib/dependency-versions.js';
+import { getPackages } from '../lib/workspace.js';
 import { mismatchingVersionsToOutput } from '../lib/output.js';
 import { join, dirname } from 'node:path';
 import type { PackageJson } from 'type-fest';
@@ -55,16 +56,24 @@ function run() {
       collect,
       []
     )
+    .option(
+      '--ignore-package <package-name>',
+      'Workspace package to ignore (option can be repeated)',
+      collect,
+      []
+    )
     .action(function (
       path,
       options: {
         ignoreDep: string[];
         ignoreDepPattern: RegExp[];
+        ignorePackage: string[];
         fix: boolean;
       }
     ) {
       // Calculate.
-      const dependencyVersions = calculateVersionsForEachDependency(path);
+      const packages = getPackages(path, options.ignorePackage);
+      const dependencyVersions = calculateVersionsForEachDependency(packages);
       let mismatchingVersions = filterOutIgnoredDependencies(
         calculateMismatchingVersions(dependencyVersions),
         options.ignoreDep,
@@ -72,7 +81,10 @@ function run() {
       );
 
       if (options.fix) {
-        mismatchingVersions = fixMismatchingVersions(path, mismatchingVersions);
+        mismatchingVersions = fixMismatchingVersions(
+          packages,
+          mismatchingVersions
+        );
       }
 
       // Show output.

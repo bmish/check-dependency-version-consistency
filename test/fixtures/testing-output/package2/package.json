@@ -1,0 +1,9 @@
+{
+    "name": "package2",
+    "dependencies": {
+        "bar": "2.0.0",
+        "baz": "~2.0.0",
+        "biz": "workspace:*"
+    },
+    "devDependencies": {}
+}

@@ -1,0 +1,6 @@
+{
+    "name": "misleading-name-package1",
+    "devDependencies": {
+        "foo": "1.3.0"
+    }
+}

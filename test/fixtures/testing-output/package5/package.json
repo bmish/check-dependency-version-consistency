@@ -1,0 +1,7 @@
+{
+    "name": "package5",
+    "dependencies": {
+        "bar": "1.4.0"
+    },
+    "devDependencies": {}
+}

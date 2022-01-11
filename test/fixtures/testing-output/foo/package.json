@@ -1,0 +1,7 @@
+{
+    "name": "foo",
+    "dependencies": {
+        "foo": "1.2.3"
+    },
+    "devDependencies": {}
+}

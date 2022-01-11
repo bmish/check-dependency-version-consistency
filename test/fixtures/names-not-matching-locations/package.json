@@ -1,6 +1,7 @@
 {
+    "name": "some-workspace-name",
     "workspaces": [
-        "@scope1/*"
+        "*"
     ],
     "devDependencies": {
         "foo": "1.2.0"

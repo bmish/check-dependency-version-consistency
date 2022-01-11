@@ -1,0 +1,6 @@
+{
+    "name": "@scope2/dev-deps-only",
+    "devDependencies": {
+      "baz": "^7.8.9"
+    }
+}

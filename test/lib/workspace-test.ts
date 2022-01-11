@@ -1,28 +1,55 @@
-import { getPackageJsonPaths, getWorkspaces } from '../../lib/workspace.js';
+import { getPackages, getWorkspaces } from '../../lib/workspace.js';
 import { deepStrictEqual } from 'node:assert';
 import { join } from 'node:path';
 import {
   FIXTURE_PATH_NOT_A_WORKSPACE,
   FIXTURE_PATH_NO_PACKAGE_JSON,
   FIXTURE_PATH_VALID,
+  FIXTURE_PATH_WORKSPACE_NOT_AN_ARRAY,
 } from '../fixtures/index.js';
 
 describe('Utils | workspace', function () {
-  describe('#getPackageJsonPaths', function () {
+  describe('#getPackages', function () {
     it('behaves correctly', function () {
       deepStrictEqual(
-        getPackageJsonPaths(FIXTURE_PATH_VALID),
+        getPackages(FIXTURE_PATH_VALID, []).map((package_) => package_.path),
         [
-          'package.json',
-          'scope1/package1/package.json',
-          'scope1/package2/package.json',
-          'scope2/deps-only/package.json',
-          'scope2/dev-deps-only/package.json',
-          'nested-scope/nested-level/package/package.json',
-          'foo1/package.json',
-          'foo2/package.json',
-          'package1/package.json',
+          '.',
+          '@scope1/package1',
+          '@scope1/package2',
+          '@scope2/deps-only',
+          '@scope2/dev-deps-only',
+          'nested-scope/@nested-level/package',
+          'foo1',
+          'foo2',
+          'package1',
         ].map((path) => join(FIXTURE_PATH_VALID, path))
+      );
+    });
+
+    it('filters out ignored package', function () {
+      deepStrictEqual(
+        getPackages(FIXTURE_PATH_VALID, ['@scope1/package1']).map(
+          (package_) => package_.path
+        ),
+        [
+          '.',
+          '@scope1/package2',
+          '@scope2/deps-only',
+          '@scope2/dev-deps-only',
+          'nested-scope/@nested-level/package',
+          'foo1',
+          'foo2',
+          'package1',
+        ].map((path) => join(FIXTURE_PATH_VALID, path))
+      );
+    });
+
+    it('throws when filtering out ignored package that does not exist', function () {
+      expect(() =>
+        getPackages(FIXTURE_PATH_VALID, ['does-not-exist'])
+      ).toThrowErrorMatchingInlineSnapshot(
+        '"Specified option \'--ignore-package does-not-exist\', but no such package detected in workspace."'
       );
     });
   });
@@ -31,8 +58,8 @@ describe('Utils | workspace', function () {
     it('behaves correctly with valid fixture', function () {
       expect(getWorkspaces(FIXTURE_PATH_VALID)).toMatchInlineSnapshot(`
         Array [
-          "scope1/*",
-          "scope2/*",
+          "@scope1/*",
+          "@scope2/*",
           "nested-scope/**",
           "foo*",
           "package1",
@@ -53,6 +80,14 @@ describe('Utils | workspace', function () {
         getWorkspaces(FIXTURE_PATH_NOT_A_WORKSPACE)
       ).toThrowErrorMatchingInlineSnapshot(
         '"package.json at provided path does not specify `workspaces`."'
+      );
+    });
+
+    it('throws with fixture that does not have workspace specified as array', function () {
+      expect(() =>
+        getWorkspaces(FIXTURE_PATH_WORKSPACE_NOT_AN_ARRAY)
+      ).toThrowErrorMatchingInlineSnapshot(
+        '"package.json `workspaces` is not a string array."'
       );
     });
   });

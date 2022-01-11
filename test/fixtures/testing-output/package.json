@@ -1,0 +1,8 @@
+{
+    "workspaces": [
+        "*"
+    ],
+    "dependencies": {
+        "foo": "4.5.6"
+    }
+}

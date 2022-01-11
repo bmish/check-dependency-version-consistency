@@ -1,5 +1,5 @@
 {
     "workspaces": [
-        "scope1/*"
+        "@scope1/*"
     ]
 }

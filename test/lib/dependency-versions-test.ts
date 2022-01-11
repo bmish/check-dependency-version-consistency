@@ -5,6 +5,7 @@ import {
   fixMismatchingVersions,
   compareRanges,
 } from '../../lib/dependency-versions.js';
+import { getPackages } from '../../lib/workspace.js';
 import { ok, strictEqual, deepStrictEqual } from 'node:assert';
 import {
   FIXTURE_PATH_VALID,
@@ -21,26 +22,43 @@ import { join } from 'node:path';
 describe('Utils | dependency-versions', function () {
   describe('#calculateMismatchingVersions', function () {
     it('has no mismatches with valid fixture', function () {
-      const dependencyVersions =
-        calculateVersionsForEachDependency(FIXTURE_PATH_VALID);
+      const dependencyVersions = calculateVersionsForEachDependency(
+        getPackages(FIXTURE_PATH_VALID, [])
+      );
       deepStrictEqual(calculateMismatchingVersions(dependencyVersions), []);
     });
 
     it('has mismatches with fixture with inconsistent versions', function () {
       const dependencyVersions = calculateVersionsForEachDependency(
-        FIXTURE_PATH_INCONSISTENT_VERSIONS
+        getPackages(FIXTURE_PATH_INCONSISTENT_VERSIONS, [])
       );
-      deepStrictEqual(calculateMismatchingVersions(dependencyVersions), [
+      expect(calculateMismatchingVersions(dependencyVersions)).toStrictEqual([
         {
           dependency: 'baz',
           versions: [
             {
               version: '^7.8.9',
-              packages: [join('scope1', 'package1')],
+              packages: [
+                expect.objectContaining({
+                  path: join(
+                    FIXTURE_PATH_INCONSISTENT_VERSIONS,
+                    '@scope1',
+                    'package1'
+                  ),
+                }),
+              ],
             },
             {
               version: '^8.0.0',
-              packages: [join('scope1', 'package2')],
+              packages: [
+                expect.objectContaining({
+                  path: join(
+                    FIXTURE_PATH_INCONSISTENT_VERSIONS,
+                    '@scope1',
+                    'package2'
+                  ),
+                }),
+              ],
             },
           ],
         },
@@ -50,14 +68,36 @@ describe('Utils | dependency-versions', function () {
             {
               version: '1.2.0',
               packages: [
-                '.',
-                join('scope1', 'package2'),
-                join('scope1', 'package3'),
+                expect.objectContaining({
+                  path: join(FIXTURE_PATH_INCONSISTENT_VERSIONS),
+                }),
+                expect.objectContaining({
+                  path: join(
+                    FIXTURE_PATH_INCONSISTENT_VERSIONS,
+                    '@scope1',
+                    'package2'
+                  ),
+                }),
+                expect.objectContaining({
+                  path: join(
+                    FIXTURE_PATH_INCONSISTENT_VERSIONS,
+                    '@scope1',
+                    'package3'
+                  ),
+                }),
               ],
             },
             {
               version: '1.3.0',
-              packages: [join('scope1', 'package1')],
+              packages: [
+                expect.objectContaining({
+                  path: join(
+                    FIXTURE_PATH_INCONSISTENT_VERSIONS,
+                    '@scope1',
+                    'package1'
+                  ),
+                }),
+              ],
             },
           ],
         },
@@ -66,21 +106,21 @@ describe('Utils | dependency-versions', function () {
 
     it('has empty results when no packages', function () {
       const dependencyVersions = calculateVersionsForEachDependency(
-        FIXTURE_PATH_NO_PACKAGES
+        getPackages(FIXTURE_PATH_NO_PACKAGES, [])
       );
       deepStrictEqual(calculateMismatchingVersions(dependencyVersions), []);
     });
 
     it('has empty results when no dependencies', function () {
       const dependencyVersions = calculateVersionsForEachDependency(
-        FIXTURE_PATH_NO_DEPENDENCIES
+        getPackages(FIXTURE_PATH_NO_DEPENDENCIES, [])
       );
       deepStrictEqual(calculateMismatchingVersions(dependencyVersions), []);
     });
 
     it('has empty results when a package is missing package.json', function () {
       const dependencyVersions = calculateVersionsForEachDependency(
-        FIXTURE_PATH_PACKAGE_MISSING_PACKAGE_JSON
+        getPackages(FIXTURE_PATH_PACKAGE_MISSING_PACKAGE_JSON, [])
       );
       deepStrictEqual(calculateMismatchingVersions(dependencyVersions), []);
     });
@@ -89,59 +129,95 @@ describe('Utils | dependency-versions', function () {
   describe('#filterOutIgnoredDependencies', function () {
     it('filters out an ignored dependency', function () {
       const dependencyVersions = calculateMismatchingVersions(
-        calculateVersionsForEachDependency(FIXTURE_PATH_INCONSISTENT_VERSIONS)
+        calculateVersionsForEachDependency(
+          getPackages(FIXTURE_PATH_INCONSISTENT_VERSIONS, [])
+        )
       );
-      deepStrictEqual(
-        filterOutIgnoredDependencies(dependencyVersions, ['foo'], []),
-        [
-          {
-            dependency: 'baz',
-            versions: [
-              {
-                version: '^7.8.9',
-                packages: [join('scope1', 'package1')],
-              },
-              {
-                version: '^8.0.0',
-                packages: [join('scope1', 'package2')],
-              },
-            ],
-          },
-        ]
-      );
+      expect(
+        filterOutIgnoredDependencies(dependencyVersions, ['foo'], [])
+      ).toStrictEqual([
+        {
+          dependency: 'baz',
+          versions: [
+            {
+              version: '^7.8.9',
+              packages: [
+                expect.objectContaining({
+                  path: join(
+                    FIXTURE_PATH_INCONSISTENT_VERSIONS,
+                    '@scope1',
+                    'package1'
+                  ),
+                }),
+              ],
+            },
+            {
+              version: '^8.0.0',
+              packages: [
+                expect.objectContaining({
+                  path: join(
+                    FIXTURE_PATH_INCONSISTENT_VERSIONS,
+                    '@scope1',
+                    'package2'
+                  ),
+                }),
+              ],
+            },
+          ],
+        },
+      ]);
     });
 
     it('filters out an ignored dependency with regexp', function () {
       const dependencyVersions = calculateMismatchingVersions(
-        calculateVersionsForEachDependency(FIXTURE_PATH_INCONSISTENT_VERSIONS)
+        calculateVersionsForEachDependency(
+          getPackages(FIXTURE_PATH_INCONSISTENT_VERSIONS, [])
+        )
       );
-      deepStrictEqual(
+      expect(
         filterOutIgnoredDependencies(
           dependencyVersions,
           [],
           [new RegExp('^f.+$')]
-        ),
-        [
-          {
-            dependency: 'baz',
-            versions: [
-              {
-                version: '^7.8.9',
-                packages: [join('scope1', 'package1')],
-              },
-              {
-                version: '^8.0.0',
-                packages: [join('scope1', 'package2')],
-              },
-            ],
-          },
-        ]
-      );
+        )
+      ).toStrictEqual([
+        {
+          dependency: 'baz',
+          versions: [
+            {
+              version: '^7.8.9',
+              packages: [
+                expect.objectContaining({
+                  path: join(
+                    FIXTURE_PATH_INCONSISTENT_VERSIONS,
+                    '@scope1',
+                    'package1'
+                  ),
+                }),
+              ],
+            },
+            {
+              version: '^8.0.0',
+              packages: [
+                expect.objectContaining({
+                  path: join(
+                    FIXTURE_PATH_INCONSISTENT_VERSIONS,
+                    '@scope1',
+                    'package2'
+                  ),
+                }),
+              ],
+            },
+          ],
+        },
+      ]);
     });
 
     it('throws when unnecessarily ignoring a dependency that has no mismatches', function () {
       const dependencyVersions = calculateMismatchingVersions(
-        calculateVersionsForEachDependency(FIXTURE_PATH_INCONSISTENT_VERSIONS)
+        calculateVersionsForEachDependency(
+          getPackages(FIXTURE_PATH_INCONSISTENT_VERSIONS, [])
+        )
       );
       expect(() =>
         filterOutIgnoredDependencies(dependencyVersions, ['nonexistentDep'], [])
@@ -152,7 +228,9 @@ describe('Utils | dependency-versions', function () {
 
     it('does not throw when unnecessarily regexp-ignoring a dependency that has no mismatches (less strict vs. --ignore-dep to provide greater flexibility)', function () {
       const dependencyVersions = calculateMismatchingVersions(
-        calculateVersionsForEachDependency(FIXTURE_PATH_INCONSISTENT_VERSIONS)
+        calculateVersionsForEachDependency(
+          getPackages(FIXTURE_PATH_INCONSISTENT_VERSIONS, [])
+        )
       );
       strictEqual(
         filterOutIgnoredDependencies(
@@ -170,11 +248,12 @@ describe('Utils | dependency-versions', function () {
       // Create a mock workspace filesystem for temporary usage in this test because changes will be written to some files.
       mockFs({
         'package.json': JSON.stringify({
-          workspaces: ['scope1/*'],
+          workspaces: ['@scope1/*'],
           devDependencies: { foo: '^1.0.0' },
         }),
-        'scope1/package1': {
+        '@scope1/package1': {
           'package.json': JSON.stringify({
+            name: '@scope1/package1',
             dependencies: { foo: '^1.0.0', bar: '^3.0.0', 'a.b.c': '5.0.0' },
             devDependencies: {
               'one.two.three': '^4.1.0',
@@ -182,8 +261,9 @@ describe('Utils | dependency-versions', function () {
             },
           }),
         },
-        'scope1/package2': {
+        '@scope1/package2': {
           'package.json': `${JSON.stringify({
+            name: '@scope1/package2',
             dependencies: {
               foo: '^2.0.0',
               bar: 'invalidVersion',
@@ -203,22 +283,23 @@ describe('Utils | dependency-versions', function () {
     });
 
     it('fixes the fixable inconsistencies', function () {
+      const packages = getPackages('.', []);
       const mismatchingVersions = calculateMismatchingVersions(
-        calculateVersionsForEachDependency('.')
+        calculateVersionsForEachDependency(packages)
       );
       const fixedMismatchingVersions = fixMismatchingVersions(
-        '.',
+        packages,
         mismatchingVersions
       );
 
       // Read in package.json files.
       const packageJsonRootContents = readFileSync('package.json', 'utf-8');
       const packageJson1Contents = readFileSync(
-        'scope1/package1/package.json',
+        '@scope1/package1/package.json',
         'utf-8'
       );
       const packageJson2Contents = readFileSync(
-        'scope1/package2/package.json',
+        '@scope1/package2/package.json',
         'utf-8'
       );
       const packageJsonRoot: PackageJson = JSON.parse(packageJsonRootContents);
@@ -295,25 +376,30 @@ describe('Utils | dependency-versions', function () {
       );
 
       // Check return value.
-      deepStrictEqual(
-        fixedMismatchingVersions,
-        [
-          {
-            dependency: 'bar',
-            versions: [
-              {
-                version: '^3.0.0',
-                packages: [join('scope1', 'package1')],
-              },
-              {
-                version: 'invalidVersion',
-                packages: [join('scope1', 'package2')],
-              },
-            ],
-          },
-        ],
-        'should return only the dependency that could not be fixed due to the abnormal version present'
-      );
+      // Should return only the dependency that could not be fixed due to the abnormal version present.
+      expect(fixedMismatchingVersions).toStrictEqual([
+        {
+          dependency: 'bar',
+          versions: [
+            {
+              version: '^3.0.0',
+              packages: [
+                expect.objectContaining({
+                  path: join('@scope1', 'package1'),
+                }),
+              ],
+            },
+            {
+              version: 'invalidVersion',
+              packages: [
+                expect.objectContaining({
+                  path: join('@scope1', 'package2'),
+                }),
+              ],
+            },
+          ],
+        },
+      ]);
 
       // Existing newline at end of file should be maintained.
       ok(
