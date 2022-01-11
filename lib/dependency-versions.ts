@@ -175,6 +175,32 @@ export function filterOutIgnoredDependencies(
   return mismatchingVersions;
 }
 
+function writeDependencyVersion(
+  packageJsonPath: string,
+  packageJsonEndsInNewline: boolean,
+  isDependency: boolean, // true for dependency, false for dev-dependency.
+  dependencyName: string,
+  newVersion: string
+) {
+  const packageJsonEditor = editJsonFile(packageJsonPath, {
+    autosave: true,
+    stringify_eol: packageJsonEndsInNewline, // If a newline at end of file exists, keep it.
+  });
+
+  packageJsonEditor.set(
+    `${
+      isDependency ? 'dependencies' : 'devDependencies'
+    }.${dependencyName.replace(
+      /\./g, // Escape dots to avoid creating unwanted nested properties.
+      '\\.'
+    )}`,
+    newVersion,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore (@types/edit-json-file not available for 1.7)
+    { preservePaths: false } // Disable `preservePaths` so that nested dependency names (i.e. @types/jest) won't prevent the intentional dot in the path we provide from working.
+  );
+}
+
 export function fixMismatchingVersions(
   packages: Package[],
   mismatchingVersions: MismatchingDependencyVersions
@@ -202,20 +228,12 @@ export function fixMismatchingVersions(
             mismatchingVersion.dependency
           ] !== fixedVersion
         ) {
-          const packageJsonEditor = editJsonFile(package_.packageJsonPath, {
-            autosave: true,
-            stringify_eol: package_.packageJsonEndsInNewline, // If a newline at end of file exists, keep it.
-          });
-
-          packageJsonEditor.set(
-            `devDependencies.${mismatchingVersion.dependency.replace(
-              /\./g, // Escape dots.
-              '\\.'
-            )}`,
-            fixedVersion,
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore (@types/edit-json-file not available for 1.7)
-            { preservePaths: false }
+          writeDependencyVersion(
+            package_.packageJsonPath,
+            package_.packageJsonEndsInNewline,
+            false,
+            mismatchingVersion.dependency,
+            fixedVersion
           );
         }
 
@@ -225,19 +243,12 @@ export function fixMismatchingVersions(
           package_.packageJson.dependencies[mismatchingVersion.dependency] !==
             fixedVersion
         ) {
-          const packageJsonEditor = editJsonFile(package_.packageJsonPath, {
-            autosave: true,
-            stringify_eol: package_.packageJsonEndsInNewline, // If a newline at end of file exists, keep it.
-          });
-          packageJsonEditor.set(
-            `dependencies.${mismatchingVersion.dependency.replace(
-              /\./g, // Escape dots.
-              '\\.'
-            )}`,
-            fixedVersion,
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore (@types/edit-json-file not available for 1.7)
-            { preservePaths: false }
+          writeDependencyVersion(
+            package_.packageJsonPath,
+            package_.packageJsonEndsInNewline,
+            true,
+            mismatchingVersion.dependency,
+            fixedVersion
           );
         }
       }
