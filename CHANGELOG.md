@@ -7,6 +7,32 @@
 
 
 
+
+## v1.5.0 (2022-01-11)
+
+#### :rocket: Enhancement
+* [#303](https://github.com/bmish/check-dependency-version-consistency/pull/303) Add options `--ignore-path` and `--ignore-path-pattern` ([@bmish](https://github.com/bmish))
+* [#301](https://github.com/bmish/check-dependency-version-consistency/pull/301) Add option `--ignore-package-pattern` ([@bmish](https://github.com/bmish))
+* [#215](https://github.com/bmish/check-dependency-version-consistency/pull/215) Add option `--ignore-package` and switch to displaying actual package names ([@bmish](https://github.com/bmish))
+* [#298](https://github.com/bmish/check-dependency-version-consistency/pull/298) Add option `--ignore-dep-pattern` ([@bmish](https://github.com/bmish))
+
+#### :bug: Bug Fix
+* [#299](https://github.com/bmish/check-dependency-version-consistency/pull/299) Fix incorrect autofix for nested dependency ([@tamslinn](https://github.com/tamslinn))
+
+#### :memo: Documentation
+* [#288](https://github.com/bmish/check-dependency-version-consistency/pull/288) Update badge links in README ([@ddzz](https://github.com/ddzz))
+* [#285](https://github.com/bmish/check-dependency-version-consistency/pull/285) Update filename formatting in README ([@ddzz](https://github.com/ddzz))
+
+#### :house: Internal
+* [#300](https://github.com/bmish/check-dependency-version-consistency/pull/300) Switch to jest for snapshot testing ([@bmish](https://github.com/bmish))
+* [#296](https://github.com/bmish/check-dependency-version-consistency/pull/296) Add `.DS_Store` file to `.gitignore` ([@ddzz](https://github.com/ddzz))
+
+#### Committers: 3
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+- Darius D. ([@ddzz](https://github.com/ddzz))
+- Tamsin ([@tamslinn](https://github.com/tamslinn))
+
+
 ## v1.4.2 (2021-12-08)
 
 #### :bug: Bug Fix
