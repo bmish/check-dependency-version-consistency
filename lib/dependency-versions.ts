@@ -145,7 +145,18 @@ export function filterOutIgnoredDependencies(
       )
     ) {
       throw new Error(
-        `Specified option '--ignore-dep ${ignoreDependency}', but no mismatches detected.`
+        `Specified option '--ignore-dep ${ignoreDependency}', but no version mismatches detected for this dependency.`
+      );
+    }
+  }
+  for (const ignoredDependencyPattern of ignoredDependencyPatterns) {
+    if (
+      !mismatchingVersions.some((mismatchingVersion) =>
+        ignoredDependencyPattern.test(mismatchingVersion.dependency)
+      )
+    ) {
+      throw new Error(
+        `Specified option '--ignore-dep-pattern ${ignoredDependencyPattern}', but no matching dependencies with version mismatches detected.`
       );
     }
   }

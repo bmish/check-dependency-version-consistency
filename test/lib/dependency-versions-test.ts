@@ -226,23 +226,24 @@ describe('Utils | dependency-versions', function () {
       expect(() =>
         filterOutIgnoredDependencies(dependencyVersions, ['nonexistentDep'], [])
       ).toThrowErrorMatchingInlineSnapshot(
-        '"Specified option \'--ignore-dep nonexistentDep\', but no mismatches detected."'
+        '"Specified option \'--ignore-dep nonexistentDep\', but no version mismatches detected for this dependency."'
       );
     });
 
-    it('does not throw when unnecessarily regexp-ignoring a dependency that has no mismatches (less strict vs. --ignore-dep to provide greater flexibility)', function () {
+    it('throws when unnecessarily regexp-ignoring a dependency that has no mismatches', function () {
       const dependencyVersions = calculateMismatchingVersions(
         calculateVersionsForEachDependency(
           getPackagesHelper(FIXTURE_PATH_INCONSISTENT_VERSIONS)
         )
       );
-      strictEqual(
+      expect(() =>
         filterOutIgnoredDependencies(
           dependencyVersions,
           [],
           [new RegExp('nonexistentDep')]
-        ).length,
-        2
+        )
+      ).toThrowErrorMatchingInlineSnapshot(
+        '"Specified option \'--ignore-dep-pattern /nonexistentDep/\', but no matching dependencies with version mismatches detected."'
       );
     });
   });
