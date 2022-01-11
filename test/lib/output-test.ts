@@ -16,7 +16,7 @@ describe('Utils | output', function () {
         mismatchingVersionsToOutput(
           calculateMismatchingVersions(
             calculateVersionsForEachDependency(
-              getPackages(FIXTURE_PATH_TESTING_OUTPUT, [])
+              getPackages(FIXTURE_PATH_TESTING_OUTPUT, [], [])
             )
           )
         )
@@ -61,7 +61,7 @@ describe('Utils | output', function () {
         mismatchingVersionsToOutput(
           calculateMismatchingVersions(
             calculateVersionsForEachDependency(
-              getPackages(FIXTURE_PATH_NAMES_NOT_MATCHING_LOCATIONS, [])
+              getPackages(FIXTURE_PATH_NAMES_NOT_MATCHING_LOCATIONS, [], [])
             )
           )
         )

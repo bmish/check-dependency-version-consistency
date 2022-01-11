@@ -62,17 +62,28 @@ function run() {
       collect,
       []
     )
+    .option(
+      '--ignore-package-pattern <package-name-pattern>',
+      'RegExp of package names to ignore (option can be repeated)',
+      collect,
+      []
+    )
     .action(function (
       path,
       options: {
         ignoreDep: string[];
         ignoreDepPattern: RegExp[];
         ignorePackage: string[];
+        ignorePackagePattern: RegExp[];
         fix: boolean;
       }
     ) {
       // Calculate.
-      const packages = getPackages(path, options.ignorePackage);
+      const packages = getPackages(
+        path,
+        options.ignorePackage,
+        options.ignorePackagePattern
+      );
       const dependencyVersions = calculateVersionsForEachDependency(packages);
       let mismatchingVersions = filterOutIgnoredDependencies(
         calculateMismatchingVersions(dependencyVersions),

@@ -4,7 +4,11 @@ import type { PackageJson } from 'type-fest';
 import { globbySync } from 'globby';
 import { Package } from './package.js';
 
-export function getPackages(root: string, ignorePackages: string[]): Package[] {
+export function getPackages(
+  root: string,
+  ignorePackages: string[],
+  ignorePackagePatterns: RegExp[]
+): Package[] {
   const workspacePackages = getWorkspaces(root).flatMap((workspace) => {
     if (!workspace.includes('*')) {
       return workspace;
@@ -33,9 +37,26 @@ export function getPackages(root: string, ignorePackages: string[]): Package[] {
     }
   }
 
-  if (ignorePackages.length > 0) {
+  for (const ignoredPackagePattern of ignorePackagePatterns) {
+    if (
+      // eslint-disable-next-line unicorn/no-array-method-this-argument,unicorn/no-array-callback-reference -- false positive
+      !Package.some(packages, (package_) =>
+        ignoredPackagePattern.test(package_.name)
+      )
+    ) {
+      throw new Error(
+        `Specified option '--ignore-package-pattern ${ignoredPackagePattern}', but no matching packages detected in workspace.`
+      );
+    }
+  }
+
+  if (ignorePackages.length > 0 || ignorePackagePatterns.length > 0) {
     return packages.filter(
-      (package_) => !ignorePackages.includes(package_.name)
+      (package_) =>
+        !ignorePackages.includes(package_.name) &&
+        !ignorePackagePatterns.some((ignorePackagePattern) =>
+          package_.name.match(ignorePackagePattern)
+        )
     );
   }
 
