@@ -246,6 +246,17 @@ describe('Utils | dependency-versions', function () {
         '"Specified option \'--ignore-dep-pattern /nonexistentDep/\', but no matching dependencies with version mismatches detected."'
       );
     });
+
+    it('does not filter anything out when nothing to ignore', function () {
+      const dependencyVersions = calculateMismatchingVersions(
+        calculateVersionsForEachDependency(
+          getPackagesHelper(FIXTURE_PATH_INCONSISTENT_VERSIONS)
+        )
+      );
+      expect(
+        filterOutIgnoredDependencies(dependencyVersions, [], []).length
+      ).toStrictEqual(2);
+    });
   });
 
   describe('#fixMismatchingVersions', function () {

@@ -149,6 +149,7 @@ export function filterOutIgnoredDependencies(
       );
     }
   }
+
   for (const ignoredDependencyPattern of ignoredDependencyPatterns) {
     if (
       !mismatchingVersions.some((mismatchingVersion) =>
@@ -160,13 +161,18 @@ export function filterOutIgnoredDependencies(
       );
     }
   }
-  return mismatchingVersions.filter(
-    (mismatchingVersion) =>
-      !ignoredDependencies.includes(mismatchingVersion.dependency) &&
-      !ignoredDependencyPatterns.some((ignoreDependencyPattern) =>
-        mismatchingVersion.dependency.match(ignoreDependencyPattern)
-      )
-  );
+
+  if (ignoredDependencies.length > 0 || ignoredDependencyPatterns.length > 0) {
+    return mismatchingVersions.filter(
+      (mismatchingVersion) =>
+        !ignoredDependencies.includes(mismatchingVersion.dependency) &&
+        !ignoredDependencyPatterns.some((ignoreDependencyPattern) =>
+          mismatchingVersion.dependency.match(ignoreDependencyPattern)
+        )
+    );
+  }
+
+  return mismatchingVersions;
 }
 
 export function fixMismatchingVersions(
