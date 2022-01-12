@@ -40,24 +40,62 @@ This can be incorporated as one of your `package.json` lint scripts like this:
 
 If there are no dependency mismatches, the program will exit with success.
 
-If there are any dependency mismatches, the program will exit with failure and output the mismatching versions:
+If there are any dependency mismatches, the program will exit with failure and output the mismatching versions.
+
+## Example
+
+package.json
+
+```json
+{
+  "workspaces": ["*"]
+}
+```
+
+package1/package.json
+
+```json
+{
+  "name": "package1",
+  "devDependencies": {
+    "eslint": "^8.0.0"
+  }
+}
+```
+
+package2/package.json
+
+```json
+{
+  "name": "package2",
+  "devDependencies": {
+    "eslint": "^7.0.0"
+  }
+}
+```
+
+package3/package.json
+
+```json
+{
+  "name": "package3",
+  "devDependencies": {
+    "eslint": "^7.0.0"
+  }
+}
+```
+
+Output:
 
 ```pt
-Found 2 dependencies with mismatching versions across the workspace. Fix with `--fix`.
-╔════════╤════════╤═════════════════════════════╗
-║ eslint │ Usages │ Packages                    ║
-╟────────┼────────┼─────────────────────────────╢
-║ ^8.0.0 │ 1      │ @some-scope/package-name    ║
-╟────────┼────────┼─────────────────────────────╢
-║ ^7.0.0 │ 5      │ foo, bar, baz, and 2 others ║
-╚════════╧════════╧═════════════════════════════╝
-╔═════════╤════════╤════════════════════════════════════════╗
-║ globby  │ Usages │ Packages                               ║
-╟─────────┼────────┼────────────────────────────────────────╢
-║ ^11.0.0 │ 2      │ packages/hello-world, packages/foo-bar ║
-╟─────────┼────────┼────────────────────────────────────────╢
-║ ^7.1.1  │ 1      │ packages/my-favorite-package           ║
-╚═════════╧════════╧════════════════════════════════════════╝
+Found 1 dependency with mismatching versions across the workspace. Fix with `--fix`.
+╔════════╤════════╤════════════════════╗
+║ eslint │ Usages │ Packages           ║
+╟────────┼────────┼────────────────────╢
+║ ^8.0.0 │ 1      │ package1           ║
+╟────────┼────────┼────────────────────╢
+║ ^7.0.0 │ 2      │ package2, package3 ║
+╚════════╧════════╧════════════════════╝
 ```
 
 ## Options
