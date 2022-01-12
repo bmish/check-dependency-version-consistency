@@ -195,8 +195,6 @@ function writeDependencyVersion(
       '\\.'
     )}`,
     newVersion,
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore (@types/edit-json-file not available for 1.7)
     { preservePaths: false } // Disable `preservePaths` so that nested dependency names (i.e. @types/jest) won't prevent the intentional dot in the path we provide from working.
   );
 }
