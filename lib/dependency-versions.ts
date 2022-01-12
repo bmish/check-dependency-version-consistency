@@ -229,7 +229,7 @@ export function fixMismatchingVersions(
           ] !== fixedVersion
         ) {
           writeDependencyVersion(
-            package_.packageJsonPath,
+            package_.pathPackageJson,
             package_.packageJsonEndsInNewline,
             false,
             mismatchingVersion.dependency,
@@ -244,7 +244,7 @@ export function fixMismatchingVersions(
             fixedVersion
         ) {
           writeDependencyVersion(
-            package_.packageJsonPath,
+            package_.pathPackageJson,
             package_.packageJsonEndsInNewline,
             true,
             mismatchingVersion.dependency,
