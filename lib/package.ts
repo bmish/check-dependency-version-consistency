@@ -5,16 +5,16 @@ import { PackageJson } from 'type-fest';
 // Class to represent all of the information we need to know about a package in a workspace.
 export class Package {
   path: string; // Absolute path to package.
-  workspaceRoot: string; // Absolute path to workspace.
-  packageJson: PackageJson; // Absolute path to package.json.
-  packageJsonPath: string;
+  pathWorkspace: string; // Absolute path to workspace.
+  pathPackageJson: string; // Absolute path to package.json.
+  packageJson: PackageJson;
   packageJsonEndsInNewline: boolean;
 
-  constructor(path: string, workspaceRoot: string) {
+  constructor(path: string, pathWorkspace: string) {
     this.path = path;
-    this.workspaceRoot = workspaceRoot;
-    this.packageJsonPath = join(path, 'package.json');
-    const packageJsonContents = readFileSync(this.packageJsonPath, 'utf-8');
+    this.pathWorkspace = pathWorkspace;
+    this.pathPackageJson = join(path, 'package.json');
+    const packageJsonContents = readFileSync(this.pathPackageJson, 'utf-8');
     this.packageJsonEndsInNewline = packageJsonContents.endsWith('\n');
     this.packageJson = JSON.parse(packageJsonContents);
   }
@@ -24,14 +24,14 @@ export class Package {
       return '(Root)';
     }
     if (!this.packageJson.name) {
-      throw new Error(`${this.packageJsonPath} missing \`name\``);
+      throw new Error(`${this.pathPackageJson} missing \`name\``);
     }
     return this.packageJson.name;
   }
 
   // Relative to workspace root.
   get pathRelative() {
-    return relative(this.workspaceRoot, this.path);
+    return relative(this.pathWorkspace, this.path);
   }
 
   static exists(path: string) {
