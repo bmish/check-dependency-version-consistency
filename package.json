@@ -42,7 +42,7 @@
     "type-fest": "^2.1.0"
   },
   "devDependencies": {
-    "@types/edit-json-file": "^1.6.1",
+    "@types/edit-json-file": "^1.7.0",
     "@types/jest": "^27.4.0",
     "@types/mock-fs": "^4.13.1",
     "@types/node": "^17.0.5",

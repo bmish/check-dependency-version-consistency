@@ -954,12 +954,13 @@
   dependencies:
     "@types/ms" "*"
 
-"@types/edit-json-file@^1.6.1":
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/@types/edit-json-file/-/edit-json-file-1.6.1.tgz#ee4504545099b0ff968988a4cb34b5c797da6149"
-  integrity sha512-3zWmE5D8sr1EKW4q4MH58o1Jn/1yOj/EpsU+6ZSw6KerqzQvc1UxERW2xkDTvvf5jDc7ABx+9JTCaW40X5lCIQ==
+"@types/edit-json-file@^1.7.0":
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/@types/edit-json-file/-/edit-json-file-1.7.0.tgz#c3ab99b33ca8f018d412b2b6a1e3c7bf1a05f732"
+  integrity sha512-yZrbGD4Qp92s6xU80MWBdz9vJE8k8EbO+gLWYb4W1UL9WYVUMOtUr5zvKlKgbcc2veYmFLO9dPnYA9Mxul0lOw==
   dependencies:
     "@types/node" "*"
+    "@types/set-value" "*"
 
 "@types/glob@^7.1.1":
   version "7.2.0"
@@ -1085,6 +1086,11 @@
   version "7.3.9"
   resolved "https://registry.yarnpkg.com/@types/semver/-/semver-7.3.9.tgz#152c6c20a7688c30b967ec1841d31ace569863fc"
   integrity sha512-L/TMpyURfBkf+o/526Zb6kd/tchUP3iBDEPjqjb+U2MAJhVRxxrmr2fwpe08E7QsV7YLcpq0tUaQ9O9x97ZIxQ==
+
+"@types/set-value@*":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@types/set-value/-/set-value-4.0.1.tgz#7caf185556a67c2d9051080931853047423c93bd"
+  integrity sha512-mP/CLy6pdrhsDVrz1+Yp5Ly6Tcel2IAEejhyI5NxY6WnBUdWN+AAfGa0HHsdgCdsPWWcd/4D5J2X2TrRYcYRag==
 
 "@types/stack-utils@^2.0.0":
   version "2.0.1"
