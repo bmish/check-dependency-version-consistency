@@ -8,6 +8,7 @@ module.exports = {
     'plugin:square/base',
     'plugin:node/recommended',
     'plugin:unicorn/recommended', // Turn eslint-plugin-unicorn recommended rules on again because many were turned off by eslint-plugin-square.
+    'plugin:jest/recommended',
   ],
   env: {
     node: true,

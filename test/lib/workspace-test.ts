@@ -1,5 +1,4 @@
 import { getPackages, getWorkspaces } from '../../lib/workspace.js';
-import { deepStrictEqual } from 'node:assert';
 import { join } from 'node:path';
 import {
   FIXTURE_PATH_NOT_A_WORKSPACE,
@@ -11,10 +10,11 @@ import {
 describe('Utils | workspace', function () {
   describe('#getPackages', function () {
     it('behaves correctly', function () {
-      deepStrictEqual(
+      expect(
         getPackages(FIXTURE_PATH_VALID, [], [], [], []).map(
           (package_) => package_.path
-        ),
+        )
+      ).toStrictEqual(
         [
           '.',
           '@scope1/package1',
@@ -30,10 +30,11 @@ describe('Utils | workspace', function () {
     });
 
     it('filters out ignored package', function () {
-      deepStrictEqual(
+      expect(
         getPackages(FIXTURE_PATH_VALID, ['@scope1/package1'], [], [], []).map(
           (package_) => package_.path
-        ),
+        )
+      ).toStrictEqual(
         [
           '.',
           '@scope1/package2',
@@ -56,14 +57,15 @@ describe('Utils | workspace', function () {
     });
 
     it('filters out ignored package using regexp', function () {
-      deepStrictEqual(
+      expect(
         getPackages(
           FIXTURE_PATH_VALID,
           [],
           [new RegExp('^@scope1/.+')],
           [],
           []
-        ).map((package_) => package_.path),
+        ).map((package_) => package_.path)
+      ).toStrictEqual(
         [
           '.',
           '@scope2/deps-only',
@@ -85,10 +87,11 @@ describe('Utils | workspace', function () {
     });
 
     it('filters out ignored path', function () {
-      deepStrictEqual(
+      expect(
         getPackages(FIXTURE_PATH_VALID, [], [], ['nested-scope'], []).map(
           (package_) => package_.path
-        ),
+        )
+      ).toStrictEqual(
         [
           '.',
           '@scope1/package1',
@@ -111,14 +114,15 @@ describe('Utils | workspace', function () {
     });
 
     it('filters out ignored path using regexp', function () {
-      deepStrictEqual(
+      expect(
         getPackages(
           FIXTURE_PATH_VALID,
           [],
           [],
           [],
           [new RegExp('^nested-scope.+')]
-        ).map((package_) => package_.path),
+        ).map((package_) => package_.path)
+      ).toStrictEqual(
         [
           '.',
           '@scope1/package1',
