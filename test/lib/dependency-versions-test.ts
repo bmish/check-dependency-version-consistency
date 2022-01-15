@@ -414,8 +414,8 @@ describe('Utils | dependency-versions', function () {
       ]);
 
       // Existing newline at end of file should be maintained.
-      expect(packageJson1Contents).not.toMatch(new RegExp('\n$')); // package1 should not end in newline
-      expect(packageJson2Contents).toMatch(new RegExp('\n$')); // package2 should end in newline
+      expect(packageJson1Contents).not.toMatch(/\n$/); // package1 should not end in newline
+      expect(packageJson2Contents).toMatch(/\n$/); // package2 should end in newline
     });
   });
 
