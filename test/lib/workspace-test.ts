@@ -11,10 +11,10 @@ import {
 describe('Utils | workspace', function () {
   describe('#getPackages', function () {
     it('behaves correctly', function () {
-      deepStrictEqual(
+      expect((
         getPackages(FIXTURE_PATH_VALID, [], [], [], []).map(
           (package_) => package_.path
-        ),
+        )).toStrictEqual(
         [
           '.',
           '@scope1/package1',

@@ -112,21 +112,21 @@ describe('Utils | dependency-versions', function () {
       const dependencyVersions = calculateVersionsForEachDependency(
         getPackagesHelper(FIXTURE_PATH_NO_PACKAGES)
       );
-      deepStrictEqual(calculateMismatchingVersions(dependencyVersions), []);
+      expect(calculateMismatchingVersions(dependencyVersions)).toEqual([]);
     });
 
     it('has empty results when no dependencies', function () {
       const dependencyVersions = calculateVersionsForEachDependency(
         getPackagesHelper(FIXTURE_PATH_NO_DEPENDENCIES)
       );
-      deepStrictEqual(calculateMismatchingVersions(dependencyVersions), []);
+      expect(calculateMismatchingVersions(dependencyVersions)).toEqual([]);
     });
 
     it('has empty results when a package is missing package.json', function () {
       const dependencyVersions = calculateVersionsForEachDependency(
         getPackagesHelper(FIXTURE_PATH_PACKAGE_MISSING_PACKAGE_JSON)
       );
-      deepStrictEqual(calculateMismatchingVersions(dependencyVersions), []);
+      expect(calculateMismatchingVersions(dependencyVersions)).toEqual([]);
     });
   });
 
@@ -323,73 +323,51 @@ describe('Utils | dependency-versions', function () {
       const packageJson2: PackageJson = JSON.parse(packageJson2Contents);
 
       // foo
-      strictEqual(
-        packageJson1.dependencies && packageJson1.dependencies.foo,
-        '^2.0.0',
-        'updates the package1 `foo` version to the highest version'
-      );
-      strictEqual(
-        packageJson2.dependencies && packageJson2.dependencies.foo,
-        '^2.0.0',
-        'does not change package2 `foo` version since already at highest version'
-      );
-      strictEqual(
-        packageJsonRoot.devDependencies && packageJsonRoot.devDependencies.foo,
-        '^2.0.0',
-        'updates the root package `foo` version to the highest version'
-      );
+      expect(
+        packageJson1.dependencies && packageJson1.dependencies.foo
+      ).toEqual('^2.0.0');
+      expect(
+        packageJson2.dependencies && packageJson2.dependencies.foo
+      ).toEqual('^2.0.0');
+      expect(
+        packageJsonRoot.devDependencies && packageJsonRoot.devDependencies.foo
+      ).toEqual('^2.0.0');
 
       // bar
-      strictEqual(
-        packageJson1.dependencies && packageJson1.dependencies.bar,
-        '^3.0.0',
-        'does not change package1 `bar` version due to abnormal version present'
-      );
-      strictEqual(
-        packageJson2.dependencies && packageJson2.dependencies.bar,
-        'invalidVersion',
-        'does not change package2 `bar` version due to abnormal version present'
-      );
+      expect(
+        packageJson1.dependencies && packageJson1.dependencies.bar
+      ).toEqual('^3.0.0');
+      expect(
+        packageJson2.dependencies && packageJson2.dependencies.bar
+      ).toEqual('invalidVersion');
 
       // a.b.c
-      strictEqual(
-        packageJson1.dependencies && packageJson1.dependencies['a.b.c'],
-        '~5.5.0',
-        'updates the package1 `a.b.c` version to the highest version'
-      );
-      strictEqual(
-        packageJson2.dependencies && packageJson2.dependencies['a.b.c'],
-        '~5.5.0',
-        'does not change package2 `a.b.c` version since already at highest version'
-      );
+      expect(
+        packageJson1.dependencies && packageJson1.dependencies['a.b.c']
+      ).toEqual('~5.5.0');
+      expect(
+        packageJson2.dependencies && packageJson2.dependencies['a.b.c']
+      ).toEqual('~5.5.0');
 
       // one.two.three
-      strictEqual(
+      expect(
         packageJson1.devDependencies &&
-          packageJson1.devDependencies['one.two.three'],
-        '^4.1.0',
-        'does not change package1 `one.two.three` version since already at highest version'
-      );
-      strictEqual(
+          packageJson1.devDependencies['one.two.three']
+      ).toEqual('^4.1.0');
+      expect(
         packageJson2.devDependencies &&
-          packageJson2.devDependencies['one.two.three'],
-        '^4.1.0',
-        'updates the package2 `one.two.three` version to the highest version'
-      );
+          packageJson2.devDependencies['one.two.three']
+      ).toEqual('^4.1.0');
 
       // @types/one
-      strictEqual(
+      expect(
         packageJson1.devDependencies &&
-          packageJson1.devDependencies['@types/one'],
-        '1.0.1',
-        'does not change package1 `@types/one` version since already at highest version'
-      );
-      strictEqual(
+          packageJson1.devDependencies['@types/one']
+      ).toEqual('1.0.1');
+      expect(
         packageJson2.devDependencies &&
-          packageJson2.devDependencies['@types/one'],
-        '1.0.1',
-        'updates the package2 `@types/one` version to the highest version'
-      );
+          packageJson2.devDependencies['@types/one']
+      ).toEqual('1.0.1');
 
       // Check return value.
       // Should return only the dependency that could not be fixed due to the abnormal version present.
@@ -418,41 +396,38 @@ describe('Utils | dependency-versions', function () {
       ]);
 
       // Existing newline at end of file should be maintained.
-      ok(
-        !packageJson1Contents.endsWith('\n'),
-        'package1 should not end in newline'
-      );
-      ok(packageJson2Contents.endsWith('\n'), 'package2 should end in newline');
+      expect(!packageJson1Contents.endsWith('\n')).toBeTruthy();
+      expect(packageJson2Contents.endsWith('\n')).toBeTruthy();
     });
   });
 
   describe('#compareRanges', function () {
     it('correctly chooses the higher range', function () {
       // 1 (greater than)
-      strictEqual(compareRanges('1.2.3', '1.2.2'), 1);
-      strictEqual(compareRanges('5.0.0', '4.0.0'), 1);
-      strictEqual(compareRanges('8.0.0-beta.1', '^7'), 1);
-      strictEqual(compareRanges('^5.0.0', '4.0.0'), 1);
-      strictEqual(compareRanges('^5.0.0', '^4.0.0'), 1);
-      strictEqual(compareRanges('^5.0.0', '~4.0.0'), 1);
-      strictEqual(compareRanges('^5.0.0', '~5.0.0'), 1);
-      strictEqual(compareRanges('~5.0.0', '5.0.0'), 1);
-      strictEqual(compareRanges('~5.0.0', '~4.0.0'), 1);
+      expect(compareRanges('1.2.3', '1.2.2')).toEqual(1);
+      expect(compareRanges('5.0.0', '4.0.0')).toEqual(1);
+      expect(compareRanges('8.0.0-beta.1', '^7')).toEqual(1);
+      expect(compareRanges('^5.0.0', '4.0.0')).toEqual(1);
+      expect(compareRanges('^5.0.0', '^4.0.0')).toEqual(1);
+      expect(compareRanges('^5.0.0', '~4.0.0')).toEqual(1);
+      expect(compareRanges('^5.0.0', '~5.0.0')).toEqual(1);
+      expect(compareRanges('~5.0.0', '5.0.0')).toEqual(1);
+      expect(compareRanges('~5.0.0', '~4.0.0')).toEqual(1);
 
       // -1 (less than)
-      strictEqual(compareRanges('4.0.0', '5.0.0'), -1);
-      strictEqual(compareRanges('5.0.0', '~5.0.0'), -1);
-      strictEqual(compareRanges('^4.0.0', '^5.0.0'), -1);
-      strictEqual(compareRanges('~4.0.0', '~5.0.0'), -1);
-      strictEqual(compareRanges('~5.0.0', '^5.0.0'), -1);
+      expect(compareRanges('4.0.0', '5.0.0')).toEqual(-1);
+      expect(compareRanges('5.0.0', '~5.0.0')).toEqual(-1);
+      expect(compareRanges('^4.0.0', '^5.0.0')).toEqual(-1);
+      expect(compareRanges('~4.0.0', '~5.0.0')).toEqual(-1);
+      expect(compareRanges('~5.0.0', '^5.0.0')).toEqual(-1);
 
       // 0 (equal)
-      strictEqual(compareRanges('6', '6'), 0);
-      strictEqual(compareRanges('6.0', '6.0'), 0);
-      strictEqual(compareRanges('6.0.0', '6.0.0'), 0);
-      strictEqual(compareRanges('^6.0.0', '^6.0.0'), 0);
-      strictEqual(compareRanges('v6', '6'), 0);
-      strictEqual(compareRanges('~6.0.0', '~6.0.0'), 0);
+      expect(compareRanges('6', '6')).toEqual(0);
+      expect(compareRanges('6.0', '6.0')).toEqual(0);
+      expect(compareRanges('6.0.0', '6.0.0')).toEqual(0);
+      expect(compareRanges('^6.0.0', '^6.0.0')).toEqual(0);
+      expect(compareRanges('v6', '6')).toEqual(0);
+      expect(compareRanges('~6.0.0', '~6.0.0')).toEqual(0);
     });
 
     it('throws with invalid ranges', function () {
