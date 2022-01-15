@@ -330,47 +330,58 @@ describe('Utils | dependency-versions', function () {
       const packageJson2: PackageJson = JSON.parse(packageJson2Contents);
 
       // foo
+      // updates the package1 `foo` version to the highest version
       expect(
         packageJson1.dependencies && packageJson1.dependencies.foo
       ).toStrictEqual('^2.0.0');
+      // does not change package2 `foo` version since already at highest version
       expect(
         packageJson2.dependencies && packageJson2.dependencies.foo
       ).toStrictEqual('^2.0.0');
+      // updates the root package `foo` version to the highest version
       expect(
         packageJsonRoot.devDependencies && packageJsonRoot.devDependencies.foo
       ).toStrictEqual('^2.0.0');
 
       // bar
+      // does not change package1 `bar` version due to abnormal version present
       expect(
         packageJson1.dependencies && packageJson1.dependencies.bar
       ).toStrictEqual('^3.0.0');
+      // does not change package2 `bar` version due to abnormal version present
       expect(
         packageJson2.dependencies && packageJson2.dependencies.bar
       ).toStrictEqual('invalidVersion');
 
       // a.b.c
+      // updates the package1 `a.b.c` version to the highest version
       expect(
         packageJson1.dependencies && packageJson1.dependencies['a.b.c']
       ).toStrictEqual('~5.5.0');
+      // does not change package2 `a.b.c` version since already at highest version
       expect(
         packageJson2.dependencies && packageJson2.dependencies['a.b.c']
       ).toStrictEqual('~5.5.0');
 
       // one.two.three
+      // does not change package1 `one.two.three` version since already at highest version
       expect(
         packageJson1.devDependencies &&
           packageJson1.devDependencies['one.two.three']
       ).toStrictEqual('^4.1.0');
+      // updates the package2 `one.two.three` version to the highest version
       expect(
         packageJson2.devDependencies &&
           packageJson2.devDependencies['one.two.three']
       ).toStrictEqual('^4.1.0');
 
       // @types/one
+      // does not change package1 `@types/one` version since already at highest version
       expect(
         packageJson1.devDependencies &&
           packageJson1.devDependencies['@types/one']
       ).toStrictEqual('1.0.1');
+      // updates the package2 `@types/one` version to the highest version
       expect(
         packageJson2.devDependencies &&
           packageJson2.devDependencies['@types/one']
@@ -403,7 +414,9 @@ describe('Utils | dependency-versions', function () {
       ]);
 
       // Existing newline at end of file should be maintained.
+      // package1 should not end in newline
       expect(!packageJson1Contents.endsWith('\n')).toBeTruthy();
+      // package2 should end in newline
       expect(packageJson2Contents.endsWith('\n')).toBeTruthy();
     });
   });
