@@ -6,7 +6,6 @@ import {
   compareRanges,
 } from '../../lib/dependency-versions.js';
 import { getPackages } from '../../lib/workspace.js';
-import { ok, strictEqual, deepStrictEqual } from 'node:assert';
 import {
   FIXTURE_PATH_VALID,
   FIXTURE_PATH_INCONSISTENT_VERSIONS,
@@ -29,7 +28,9 @@ describe('Utils | dependency-versions', function () {
       const dependencyVersions = calculateVersionsForEachDependency(
         getPackagesHelper(FIXTURE_PATH_VALID)
       );
-      deepStrictEqual(calculateMismatchingVersions(dependencyVersions), []);
+      expect(calculateMismatchingVersions(dependencyVersions)).toStrictEqual(
+        []
+      );
     });
 
     it('has mismatches with fixture with inconsistent versions', function () {
@@ -112,21 +113,27 @@ describe('Utils | dependency-versions', function () {
       const dependencyVersions = calculateVersionsForEachDependency(
         getPackagesHelper(FIXTURE_PATH_NO_PACKAGES)
       );
-      expect(calculateMismatchingVersions(dependencyVersions)).toStrictEqual([]);
+      expect(calculateMismatchingVersions(dependencyVersions)).toStrictEqual(
+        []
+      );
     });
 
     it('has empty results when no dependencies', function () {
       const dependencyVersions = calculateVersionsForEachDependency(
         getPackagesHelper(FIXTURE_PATH_NO_DEPENDENCIES)
       );
-      expect(calculateMismatchingVersions(dependencyVersions)).toStrictEqual([]);
+      expect(calculateMismatchingVersions(dependencyVersions)).toStrictEqual(
+        []
+      );
     });
 
     it('has empty results when a package is missing package.json', function () {
       const dependencyVersions = calculateVersionsForEachDependency(
         getPackagesHelper(FIXTURE_PATH_PACKAGE_MISSING_PACKAGE_JSON)
       );
-      expect(calculateMismatchingVersions(dependencyVersions)).toStrictEqual([]);
+      expect(calculateMismatchingVersions(dependencyVersions)).toStrictEqual(
+        []
+      );
     });
   });
 
