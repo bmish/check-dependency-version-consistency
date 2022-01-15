@@ -112,21 +112,21 @@ describe('Utils | dependency-versions', function () {
       const dependencyVersions = calculateVersionsForEachDependency(
         getPackagesHelper(FIXTURE_PATH_NO_PACKAGES)
       );
-      expect(calculateMismatchingVersions(dependencyVersions)).toEqual([]);
+      expect(calculateMismatchingVersions(dependencyVersions)).toStrictEqual([]);
     });
 
     it('has empty results when no dependencies', function () {
       const dependencyVersions = calculateVersionsForEachDependency(
         getPackagesHelper(FIXTURE_PATH_NO_DEPENDENCIES)
       );
-      expect(calculateMismatchingVersions(dependencyVersions)).toEqual([]);
+      expect(calculateMismatchingVersions(dependencyVersions)).toStrictEqual([]);
     });
 
     it('has empty results when a package is missing package.json', function () {
       const dependencyVersions = calculateVersionsForEachDependency(
         getPackagesHelper(FIXTURE_PATH_PACKAGE_MISSING_PACKAGE_JSON)
       );
-      expect(calculateMismatchingVersions(dependencyVersions)).toEqual([]);
+      expect(calculateMismatchingVersions(dependencyVersions)).toStrictEqual([]);
     });
   });
 
@@ -325,49 +325,49 @@ describe('Utils | dependency-versions', function () {
       // foo
       expect(
         packageJson1.dependencies && packageJson1.dependencies.foo
-      ).toEqual('^2.0.0');
+      ).toStrictEqual('^2.0.0');
       expect(
         packageJson2.dependencies && packageJson2.dependencies.foo
-      ).toEqual('^2.0.0');
+      ).toStrictEqual('^2.0.0');
       expect(
         packageJsonRoot.devDependencies && packageJsonRoot.devDependencies.foo
-      ).toEqual('^2.0.0');
+      ).toStrictEqual('^2.0.0');
 
       // bar
       expect(
         packageJson1.dependencies && packageJson1.dependencies.bar
-      ).toEqual('^3.0.0');
+      ).toStrictEqual('^3.0.0');
       expect(
         packageJson2.dependencies && packageJson2.dependencies.bar
-      ).toEqual('invalidVersion');
+      ).toStrictEqual('invalidVersion');
 
       // a.b.c
       expect(
         packageJson1.dependencies && packageJson1.dependencies['a.b.c']
-      ).toEqual('~5.5.0');
+      ).toStrictEqual('~5.5.0');
       expect(
         packageJson2.dependencies && packageJson2.dependencies['a.b.c']
-      ).toEqual('~5.5.0');
+      ).toStrictEqual('~5.5.0');
 
       // one.two.three
       expect(
         packageJson1.devDependencies &&
           packageJson1.devDependencies['one.two.three']
-      ).toEqual('^4.1.0');
+      ).toStrictEqual('^4.1.0');
       expect(
         packageJson2.devDependencies &&
           packageJson2.devDependencies['one.two.three']
-      ).toEqual('^4.1.0');
+      ).toStrictEqual('^4.1.0');
 
       // @types/one
       expect(
         packageJson1.devDependencies &&
           packageJson1.devDependencies['@types/one']
-      ).toEqual('1.0.1');
+      ).toStrictEqual('1.0.1');
       expect(
         packageJson2.devDependencies &&
           packageJson2.devDependencies['@types/one']
-      ).toEqual('1.0.1');
+      ).toStrictEqual('1.0.1');
 
       // Check return value.
       // Should return only the dependency that could not be fixed due to the abnormal version present.
@@ -404,30 +404,30 @@ describe('Utils | dependency-versions', function () {
   describe('#compareRanges', function () {
     it('correctly chooses the higher range', function () {
       // 1 (greater than)
-      expect(compareRanges('1.2.3', '1.2.2')).toEqual(1);
-      expect(compareRanges('5.0.0', '4.0.0')).toEqual(1);
-      expect(compareRanges('8.0.0-beta.1', '^7')).toEqual(1);
-      expect(compareRanges('^5.0.0', '4.0.0')).toEqual(1);
-      expect(compareRanges('^5.0.0', '^4.0.0')).toEqual(1);
-      expect(compareRanges('^5.0.0', '~4.0.0')).toEqual(1);
-      expect(compareRanges('^5.0.0', '~5.0.0')).toEqual(1);
-      expect(compareRanges('~5.0.0', '5.0.0')).toEqual(1);
-      expect(compareRanges('~5.0.0', '~4.0.0')).toEqual(1);
+      expect(compareRanges('1.2.3', '1.2.2')).toStrictEqual(1);
+      expect(compareRanges('5.0.0', '4.0.0')).toStrictEqual(1);
+      expect(compareRanges('8.0.0-beta.1', '^7')).toStrictEqual(1);
+      expect(compareRanges('^5.0.0', '4.0.0')).toStrictEqual(1);
+      expect(compareRanges('^5.0.0', '^4.0.0')).toStrictEqual(1);
+      expect(compareRanges('^5.0.0', '~4.0.0')).toStrictEqual(1);
+      expect(compareRanges('^5.0.0', '~5.0.0')).toStrictEqual(1);
+      expect(compareRanges('~5.0.0', '5.0.0')).toStrictEqual(1);
+      expect(compareRanges('~5.0.0', '~4.0.0')).toStrictEqual(1);
 
       // -1 (less than)
-      expect(compareRanges('4.0.0', '5.0.0')).toEqual(-1);
-      expect(compareRanges('5.0.0', '~5.0.0')).toEqual(-1);
-      expect(compareRanges('^4.0.0', '^5.0.0')).toEqual(-1);
-      expect(compareRanges('~4.0.0', '~5.0.0')).toEqual(-1);
-      expect(compareRanges('~5.0.0', '^5.0.0')).toEqual(-1);
+      expect(compareRanges('4.0.0', '5.0.0')).toStrictEqual(-1);
+      expect(compareRanges('5.0.0', '~5.0.0')).toStrictEqual(-1);
+      expect(compareRanges('^4.0.0', '^5.0.0')).toStrictEqual(-1);
+      expect(compareRanges('~4.0.0', '~5.0.0')).toStrictEqual(-1);
+      expect(compareRanges('~5.0.0', '^5.0.0')).toStrictEqual(-1);
 
       // 0 (equal)
-      expect(compareRanges('6', '6')).toEqual(0);
-      expect(compareRanges('6.0', '6.0')).toEqual(0);
-      expect(compareRanges('6.0.0', '6.0.0')).toEqual(0);
-      expect(compareRanges('^6.0.0', '^6.0.0')).toEqual(0);
-      expect(compareRanges('v6', '6')).toEqual(0);
-      expect(compareRanges('~6.0.0', '~6.0.0')).toEqual(0);
+      expect(compareRanges('6', '6')).toStrictEqual(0);
+      expect(compareRanges('6.0', '6.0')).toStrictEqual(0);
+      expect(compareRanges('6.0.0', '6.0.0')).toStrictEqual(0);
+      expect(compareRanges('^6.0.0', '^6.0.0')).toStrictEqual(0);
+      expect(compareRanges('v6', '6')).toStrictEqual(0);
+      expect(compareRanges('~6.0.0', '~6.0.0')).toStrictEqual(0);
     });
 
     it('throws with invalid ranges', function () {
