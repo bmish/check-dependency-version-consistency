@@ -54,7 +54,6 @@ If there are any dependency mismatches, the program will exit with failure and o
 
 `package1/package.json`:
 
-
 ```json
 {
   "name": "package1",
