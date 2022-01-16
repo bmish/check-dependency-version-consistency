@@ -8,9 +8,13 @@ import {
   calculateMismatchingVersions,
   filterOutIgnoredDependencies,
   fixMismatchingVersions,
+  MismatchingDependencyVersions,
 } from '../lib/dependency-versions.js';
 import { getPackages } from '../lib/workspace.js';
-import { mismatchingVersionsToOutput } from '../lib/output.js';
+import {
+  mismatchingVersionsToOutput,
+  mismatchingVersionsFixedToOutput,
+} from '../lib/output.js';
 import { join, dirname } from 'node:path';
 import type { PackageJson } from 'type-fest';
 import { fileURLToPath } from 'node:url';
@@ -100,21 +104,31 @@ function run() {
         options.ignorePath,
         options.ignorePathPattern.map((s) => new RegExp(s))
       );
+
       const dependencyVersions = calculateVersionsForEachDependency(packages);
+
       let mismatchingVersions = filterOutIgnoredDependencies(
         calculateMismatchingVersions(dependencyVersions),
         options.ignoreDep,
         options.ignoreDepPattern.map((s) => new RegExp(s))
       );
+      let mismatchingVersionsFixed: MismatchingDependencyVersions = [];
 
       if (options.fix) {
-        mismatchingVersions = fixMismatchingVersions(
+        const resultsAfterFix = fixMismatchingVersions(
           packages,
           mismatchingVersions
         );
+        mismatchingVersions = resultsAfterFix.notFixed;
+        mismatchingVersionsFixed = resultsAfterFix.fixed;
       }
 
-      // Show output.
+      // Show output for dependencies we fixed.
+      if (mismatchingVersionsFixed.length > 0) {
+        console.log(mismatchingVersionsFixedToOutput(mismatchingVersionsFixed));
+      }
+
+      // Show output for dependencies that still have mismatches.
       if (mismatchingVersions.length > 0) {
         console.log(mismatchingVersionsToOutput(mismatchingVersions));
         process.exitCode = 1;

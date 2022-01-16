@@ -2,7 +2,10 @@ import {
   calculateVersionsForEachDependency,
   calculateMismatchingVersions,
 } from '../../lib/dependency-versions.js';
-import { mismatchingVersionsToOutput } from '../../lib/output.js';
+import {
+  mismatchingVersionsToOutput,
+  mismatchingVersionsFixedToOutput,
+} from '../../lib/output.js';
 import { getPackages } from '../../lib/workspace.js';
 import {
   FIXTURE_PATH_TESTING_OUTPUT,
@@ -90,6 +93,40 @@ describe('Utils | output', function () {
       ).toThrowErrorMatchingInlineSnapshot(
         '"No mismatching versions to output."'
       );
+    });
+  });
+
+  describe('#mismatchingVersionsFixedToOutputLines', function () {
+    it('behaves correctly', function () {
+      expect(
+        mismatchingVersionsFixedToOutput(
+          calculateMismatchingVersions(
+            calculateVersionsForEachDependency(
+              getPackages(FIXTURE_PATH_TESTING_OUTPUT, [], [], [], [])
+            )
+          )
+        )
+      ).toMatchInlineSnapshot(
+        '"Fixed versions for 4 dependencies: bar, baz, biz, foo"'
+      );
+    });
+
+    it('behaves correctly with a single fix', function () {
+      expect(
+        mismatchingVersionsFixedToOutput(
+          calculateMismatchingVersions(
+            calculateVersionsForEachDependency(
+              getPackages(FIXTURE_PATH_TESTING_OUTPUT, [], [], [], [])
+            )
+          ).slice(0, 1)
+        )
+      ).toMatchInlineSnapshot('"Fixed versions for 1 dependency: bar"');
+    });
+
+    it('behaves correctly with empty input', function () {
+      expect(() =>
+        mismatchingVersionsFixedToOutput([])
+      ).toThrowErrorMatchingInlineSnapshot('"No fixes to output."');
     });
   });
 });

@@ -61,3 +61,18 @@ export function mismatchingVersionsToOutput(
     tables,
   ].join('\n');
 }
+
+export function mismatchingVersionsFixedToOutput(
+  mismatchingDependencyVersions: MismatchingDependencyVersions
+): string {
+  if (mismatchingDependencyVersions.length === 0) {
+    throw new Error('No fixes to output.');
+  }
+
+  const dependencies = mismatchingDependencyVersions
+    .map((mismatchingVersion) => mismatchingVersion.dependency)
+    .sort();
+  return `Fixed versions for ${dependencies.length} ${
+    dependencies.length === 1 ? 'dependency' : 'dependencies'
+  }: ${dependencies.join(', ')}`;
+}
