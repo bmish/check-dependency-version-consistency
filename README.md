@@ -44,7 +44,7 @@ If there are any dependency mismatches, the program will exit with failure and o
 
 ## Example
 
-package.json
+`package.json`:
 
 ```json
 {
@@ -52,7 +52,8 @@ package.json
 }
 ```
 
-package1/package.json
+`package1/package.json`:
+
 
 ```json
 {
@@ -63,7 +64,7 @@ package1/package.json
 }
 ```
 
-package2/package.json
+`package2/package.json`:
 
 ```json
 {
@@ -74,7 +75,7 @@ package2/package.json
 }
 ```
 
-package3/package.json
+`package3/package.json`:
 
 ```json
 {
