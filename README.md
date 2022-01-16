@@ -88,7 +88,7 @@ package3/package.json
 Output:
 
 ```pt
-Found 1 dependency with mismatching versions across the workspace. Fix with `--fix`.
+Found 1 dependency with mismatching versions across the workspace. Upgrade all to latest present version with `--fix`.
 ╔════════╤════════╤════════════════════╗
 ║ eslint │ Usages │ Packages           ║
 ╟────────┼────────┼────────────────────╢

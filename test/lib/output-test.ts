@@ -21,7 +21,7 @@ describe('Utils | output', function () {
           )
         )
       ).toMatchInlineSnapshot(`
-        "Found 4 dependencies with mismatching versions across the workspace. Fix with \`--fix\`.
+        "Found 4 dependencies with mismatching versions across the workspace. Upgrade all to latest present version with \`--fix\`.
         ╔═══════╤════════╤════════════════════════════════════════════╗
         ║ [1mbar[22m   │ Usages │ Packages                                   ║
         ╟───────┼────────┼────────────────────────────────────────────╢
@@ -72,7 +72,7 @@ describe('Utils | output', function () {
           )
         )
       ).toMatchInlineSnapshot(`
-        "Found 1 dependency with mismatching versions across the workspace. Fix with \`--fix\`.
+        "Found 1 dependency with mismatching versions across the workspace. Upgrade all to latest present version with \`--fix\`.
         ╔═══════╤════════╤══════════════════════════╗
         ║ [1mfoo[22m   │ Usages │ Packages                 ║
         ╟───────┼────────┼──────────────────────────╢
