@@ -202,59 +202,71 @@ function writeDependencyVersion(
 export function fixMismatchingVersions(
   packages: Package[],
   mismatchingVersions: MismatchingDependencyVersions
-): MismatchingDependencyVersions {
-  // Return any mismatching versions that are still present after attempting fixes.
-  return mismatchingVersions
-    .map((mismatchingVersion) => {
-      const versions = mismatchingVersion.versions.map(
-        (object) => object.version
-      );
-      let sortedVersions;
-      try {
-        sortedVersions = versions.sort(compareRanges);
-      } catch {
-        // Unable to sort so skip this dependency (return it to indicate it was not fixed).
-        return mismatchingVersion;
-      }
-      const fixedVersion = sortedVersions[sortedVersions.length - 1]; // Highest version will be sorted to end of list.
+): {
+  fixed: MismatchingDependencyVersions;
+  notFixed: MismatchingDependencyVersions;
+} {
+  const fixed = [];
+  const notFixed = [];
+  for (const mismatchingVersion of mismatchingVersions) {
+    const versions = mismatchingVersion.versions.map(
+      (object) => object.version
+    );
+    let sortedVersions;
+    try {
+      sortedVersions = versions.sort(compareRanges);
+    } catch {
+      // Unable to sort so skip this dependency.
+      notFixed.push(mismatchingVersion);
+      continue;
+    }
 
-      for (const package_ of packages) {
-        if (
-          package_.packageJson.devDependencies &&
-          package_.packageJson.devDependencies[mismatchingVersion.dependency] &&
-          package_.packageJson.devDependencies[
-            mismatchingVersion.dependency
-          ] !== fixedVersion
-        ) {
-          writeDependencyVersion(
-            package_.pathPackageJson,
-            package_.packageJsonEndsInNewline,
-            false,
-            mismatchingVersion.dependency,
-            fixedVersion
-          );
-        }
+    const fixedVersion = sortedVersions[sortedVersions.length - 1]; // Highest version will be sorted to end of list.
 
-        if (
-          package_.packageJson.dependencies &&
-          package_.packageJson.dependencies[mismatchingVersion.dependency] &&
-          package_.packageJson.dependencies[mismatchingVersion.dependency] !==
-            fixedVersion
-        ) {
-          writeDependencyVersion(
-            package_.pathPackageJson,
-            package_.packageJsonEndsInNewline,
-            true,
-            mismatchingVersion.dependency,
-            fixedVersion
-          );
-        }
+    let isFixed = false;
+    for (const package_ of packages) {
+      if (
+        package_.packageJson.devDependencies &&
+        package_.packageJson.devDependencies[mismatchingVersion.dependency] &&
+        package_.packageJson.devDependencies[mismatchingVersion.dependency] !==
+          fixedVersion
+      ) {
+        writeDependencyVersion(
+          package_.pathPackageJson,
+          package_.packageJsonEndsInNewline,
+          false,
+          mismatchingVersion.dependency,
+          fixedVersion
+        );
+        isFixed = true;
       }
 
-      // Fixed successfully.
-      return undefined;
-    })
-    .filter((item) => item !== undefined) as MismatchingDependencyVersions;
+      if (
+        package_.packageJson.dependencies &&
+        package_.packageJson.dependencies[mismatchingVersion.dependency] &&
+        package_.packageJson.dependencies[mismatchingVersion.dependency] !==
+          fixedVersion
+      ) {
+        writeDependencyVersion(
+          package_.pathPackageJson,
+          package_.packageJsonEndsInNewline,
+          true,
+          mismatchingVersion.dependency,
+          fixedVersion
+        );
+        isFixed = true;
+      }
+    }
+
+    if (isFixed) {
+      fixed.push(mismatchingVersion);
+    }
+  }
+
+  return {
+    fixed,
+    notFixed,
+  };
 }
 
 export function compareRanges(a: string, b: string): 0 | -1 | 1 {

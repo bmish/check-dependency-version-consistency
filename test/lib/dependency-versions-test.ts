@@ -310,7 +310,7 @@ describe('Utils | dependency-versions', function () {
       const mismatchingVersions = calculateMismatchingVersions(
         calculateVersionsForEachDependency(packages)
       );
-      const fixedMismatchingVersions = fixMismatchingVersions(
+      const { fixed, notFixed } = fixMismatchingVersions(
         packages,
         mismatchingVersions
       );
@@ -388,8 +388,8 @@ describe('Utils | dependency-versions', function () {
       ).toStrictEqual('1.0.1');
 
       // Check return value.
-      // Should return only the dependency that could not be fixed due to the abnormal version present.
-      expect(fixedMismatchingVersions).toStrictEqual([
+      // Only one dependency should not be fixed due to the abnormal version present.
+      expect(notFixed).toStrictEqual([
         {
           dependency: 'bar',
           versions: [
@@ -406,6 +406,95 @@ describe('Utils | dependency-versions', function () {
               packages: [
                 expect.objectContaining({
                   path: join('@scope1', 'package2'),
+                }),
+              ],
+            },
+          ],
+        },
+      ]);
+      expect(fixed).toStrictEqual([
+        {
+          dependency: '@types/one',
+          versions: [
+            {
+              version: '1.0.0',
+              packages: [
+                expect.objectContaining({
+                  path: join('@scope1', 'package2'),
+                }),
+              ],
+            },
+            {
+              version: '1.0.1',
+              packages: [
+                expect.objectContaining({
+                  path: join('@scope1', 'package1'),
+                }),
+              ],
+            },
+          ],
+        },
+        {
+          dependency: 'a.b.c',
+          versions: [
+            {
+              version: '5.0.0',
+              packages: [
+                expect.objectContaining({
+                  path: join('@scope1', 'package1'),
+                }),
+              ],
+            },
+            {
+              version: '~5.5.0',
+              packages: [
+                expect.objectContaining({
+                  path: join('@scope1', 'package2'),
+                }),
+              ],
+            },
+          ],
+        },
+        {
+          dependency: 'foo',
+          versions: [
+            {
+              version: '^1.0.0',
+              packages: [
+                expect.objectContaining({
+                  path: '.',
+                }),
+                expect.objectContaining({
+                  path: join('@scope1', 'package1'),
+                }),
+              ],
+            },
+            {
+              version: '^2.0.0',
+              packages: [
+                expect.objectContaining({
+                  path: join('@scope1', 'package2'),
+                }),
+              ],
+            },
+          ],
+        },
+        {
+          dependency: 'one.two.three',
+          versions: [
+            {
+              version: '^4.0.0',
+              packages: [
+                expect.objectContaining({
+                  path: join('@scope1', 'package2'),
+                }),
+              ],
+            },
+            {
+              version: '^4.1.0',
+              packages: [
+                expect.objectContaining({
+                  path: join('@scope1', 'package1'),
                 }),
               ],
             },
