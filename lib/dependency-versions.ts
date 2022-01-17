@@ -212,16 +212,14 @@ export function fixMismatchingVersions(
     const versions = mismatchingVersion.versions.map(
       (object) => object.version
     );
-    let sortedVersions;
+    let fixedVersion;
     try {
-      sortedVersions = versions.sort(compareRanges);
+      fixedVersion = getHighestVersion(versions);
     } catch {
-      // Unable to sort so skip this dependency.
+      // Skip this dependency.
       notFixed.push(mismatchingVersion);
       continue;
     }
-
-    const fixedVersion = sortedVersions[sortedVersions.length - 1]; // Highest version will be sorted to end of list.
 
     let isFixed = false;
     for (const package_ of packages) {
@@ -298,4 +296,9 @@ export function compareRanges(a: string, b: string): 0 | -1 | 1 {
 
   // Greater version considered higher.
   return semver.gt(aVersion, bVersion) ? 1 : -1;
+}
+
+export function getHighestVersion(versions: string[]): string {
+  const sortedVersions = versions.sort(compareRanges);
+  return sortedVersions[sortedVersions.length - 1]; // Highest version will be sorted to end of list.
 }
