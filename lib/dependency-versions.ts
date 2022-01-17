@@ -98,38 +98,35 @@ function recordDependencyVersion(
 export function calculateMismatchingVersions(
   dependencyVersions: DependenciesToVersionsSeen
 ): MismatchingDependencyVersions {
-  return [...dependencyVersions.keys()]
-    .sort()
-    .map((dependency) => {
-      const versionList = dependencyVersions.get(dependency);
-      /* istanbul ignore if */
-      if (!versionList) {
-        // `versionList` should always exist at this point, this if statement is just to please TypeScript.
-        return undefined;
-      }
+  return [...dependencyVersions.keys()].sort().flatMap((dependency) => {
+    const versionList = dependencyVersions.get(dependency);
+    /* istanbul ignore if */
+    if (!versionList) {
+      // `versionList` should always exist at this point, this if statement is just to please TypeScript.
+      return [];
+    }
 
-      const uniqueVersions = [
-        ...new Set(versionList.map((object) => object.version)),
-      ].sort();
+    const uniqueVersions = [
+      ...new Set(versionList.map((object) => object.version)),
+    ].sort();
 
-      if (uniqueVersions.length > 1) {
-        const uniqueVersionsWithInfo = uniqueVersions.map((uniqueVersion) => {
-          const matchingVersions = versionList.filter(
-            (object) => object.version === uniqueVersion
-          );
-          return {
-            version: uniqueVersion,
-            packages: matchingVersions
-              .map((object) => object.package)
-              .sort(Package.comparator),
-          };
-        });
-        return { dependency, versions: uniqueVersionsWithInfo };
-      }
+    if (uniqueVersions.length > 1) {
+      const uniqueVersionsWithInfo = uniqueVersions.map((uniqueVersion) => {
+        const matchingVersions = versionList.filter(
+          (object) => object.version === uniqueVersion
+        );
+        return {
+          version: uniqueVersion,
+          packages: matchingVersions
+            .map((object) => object.package)
+            .sort(Package.comparator),
+        };
+      });
+      return { dependency, versions: uniqueVersionsWithInfo };
+    }
 
-      return undefined;
-    })
-    .filter((object) => object !== undefined) as MismatchingDependencyVersions;
+    return [];
+  });
 }
 
 export function filterOutIgnoredDependencies(
