@@ -89,6 +89,6 @@ export function mismatchingVersionsFixedToOutput(
   return `Fixed versions for ${dependenciesAndFixedVersions.length} ${
     dependenciesAndFixedVersions.length === 1 ? 'dependency' : 'dependencies'
   }: ${dependenciesAndFixedVersions
-    .map((object) => `${object.dependency} to ${object.version}`)
+    .map((object) => `${object.dependency}@${object.version}`)
     .join(', ')}`;
 }
