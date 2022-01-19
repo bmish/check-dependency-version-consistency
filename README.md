@@ -27,28 +27,26 @@ To run, use this command and optionally pass the path to the workspace root (whe
 yarn check-dependency-version-consistency .
 ```
 
-This can be incorporated as one of your `package.json` lint scripts like this:
-
-```json
-{
-  "lint": "npm-run-all --continue-on-error --aggregate-output --parallel lint:*",
-  "lint:dependency-versions": "check-dependency-version-consistency .",
-  "lint:dependency-versions:fix": "npm-run-all \"lint:dependency-versions --fix\"",
-  "lint:js": "eslint --cache .",
-}
-```
-
 If there are no dependency mismatches, the program will exit with success.
 
 If there are any dependency mismatches, the program will exit with failure and output the mismatching versions.
 
 ## Example
 
-`package.json`:
+`package.json` (workspace root):
 
 ```json
 {
-  "workspaces": ["*"]
+  "workspaces": ["*"],
+  "scripts": {
+    "lint": "npm-run-all --continue-on-error --aggregate-output --parallel lint:*",
+    "lint:dependency-versions": "check-dependency-version-consistency .",
+    "lint:dependency-versions:fix": "npm-run-all \"lint:dependency-versions --fix\""
+  },
+  "devDependencies": {
+    "check-dependency-version-consistency": "*",
+    "npm-run-all": "*"
+  }
 }
 ```
 
