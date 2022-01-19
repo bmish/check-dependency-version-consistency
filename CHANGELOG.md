@@ -8,6 +8,27 @@
 
 
 
+
+## v1.6.0 (2022-01-18)
+
+#### :rocket: Enhancement
+* [#320](https://github.com/bmish/check-dependency-version-consistency/pull/320) Display which dependencies were fixed when running with `--fix` ([@bmish](https://github.com/bmish))
+
+#### :bug: Bug Fix
+* [#324](https://github.com/bmish/check-dependency-version-consistency/pull/324) Avoid publishing unnecessary files ([@bmish](https://github.com/bmish))
+
+#### :memo: Documentation
+* [#315](https://github.com/bmish/check-dependency-version-consistency/pull/315) Add more detailed README example section ([@bmish](https://github.com/bmish))
+
+#### :house: Internal
+* [#316](https://github.com/bmish/check-dependency-version-consistency/pull/316) Add `eslint-plugin-jest` and update tests ([@ddzz](https://github.com/ddzz))
+* [#313](https://github.com/bmish/check-dependency-version-consistency/pull/313) Update to `@types/edit-json-file` 1.7.0 and remove `ts-ignore` comment ([@bmish](https://github.com/bmish))
+
+#### Committers: 2
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+- Darius D. ([@ddzz](https://github.com/ddzz))
+
+
 ## v1.5.0 (2022-01-11)
 
 #### :rocket: Enhancement
