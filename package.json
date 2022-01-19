@@ -19,6 +19,10 @@
   "bin": {
     "check-dependency-version-consistency": "dist/bin/check-dependency-version-consistency.js"
   },
+  "files": [
+    "dist/",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsc",
     "lint": "npm-run-all --aggregate-output --continue-on-error --parallel lint:*",
