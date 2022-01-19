@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import type { MismatchingDependencyVersions } from './dependency-versions.js';
-import { compareRanges } from './dependency-versions.js';
+import { compareRanges, getHighestVersion } from './dependency-versions.js';
 import { table } from 'table';
 
 export function mismatchingVersionsToOutput(
@@ -69,10 +69,26 @@ export function mismatchingVersionsFixedToOutput(
     throw new Error('No fixes to output.');
   }
 
-  const dependencies = mismatchingDependencyVersions
-    .map((mismatchingVersion) => mismatchingVersion.dependency)
-    .sort();
-  return `Fixed versions for ${dependencies.length} ${
-    dependencies.length === 1 ? 'dependency' : 'dependencies'
-  }: ${dependencies.join(', ')}`;
+  const dependenciesAndFixedVersions = mismatchingDependencyVersions
+    .flatMap((mismatchingVersion) => {
+      let version;
+      try {
+        version = getHighestVersion(
+          mismatchingVersion.versions.map((v) => v.version)
+        );
+      } catch {
+        return []; // Ignore this dependency since unable to get the version that we would have fixed it to.
+      }
+      return {
+        dependency: mismatchingVersion.dependency,
+        version,
+      };
+    })
+    .sort((a, b) => a.dependency.localeCompare(b.dependency));
+
+  return `Fixed versions for ${dependenciesAndFixedVersions.length} ${
+    dependenciesAndFixedVersions.length === 1 ? 'dependency' : 'dependencies'
+  }: ${dependenciesAndFixedVersions
+    .map((object) => `${object.dependency}@${object.version}`)
+    .join(', ')}`;
 }

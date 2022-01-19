@@ -107,7 +107,7 @@ describe('Utils | output', function () {
           )
         )
       ).toMatchInlineSnapshot(
-        '"Fixed versions for 4 dependencies: bar, baz, biz, foo"'
+        '"Fixed versions for 3 dependencies: bar@2.0.0, baz@^2.0.0, foo@4.5.6"'
       );
     });
 
@@ -120,7 +120,7 @@ describe('Utils | output', function () {
             )
           ).slice(0, 1)
         )
-      ).toMatchInlineSnapshot('"Fixed versions for 1 dependency: bar"');
+      ).toMatchInlineSnapshot('"Fixed versions for 1 dependency: bar@2.0.0"');
     });
 
     it('behaves correctly with empty input', function () {
