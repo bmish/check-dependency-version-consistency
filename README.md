@@ -100,7 +100,7 @@ Found 1 dependency with mismatching versions across the workspace. Fix with `--f
 
 | Name | Description |
 | --- | --- |
-| `--fix` | Whether to autofix inconsistencies (using highest version present). |
+| `--fix` | Whether to autofix inconsistencies (using latest version present). |
 | `--ignore-dep` | Dependency to ignore mismatches for (option can be repeated). |
 | `--ignore-dep-pattern` | RegExp of dependency names to ignore mismatches for (option can be repeated). |
 | `--ignore-package` | Workspace package to ignore mismatches for (option can be repeated). |
