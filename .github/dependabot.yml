@@ -4,7 +4,7 @@ version: 2
 updates:
   - package-ecosystem: 'npm'
     directory: '/'
-    versioning-strategy: 'increase'
+    versioning-strategy: 'increase' # Update versions in both package.json and lockfile
     schedule:
       interval: 'monthly'
 
