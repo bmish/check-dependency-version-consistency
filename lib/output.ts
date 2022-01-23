@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import type { MismatchingDependencyVersions } from './dependency-versions.js';
-import { compareRanges, getHighestVersion } from './dependency-versions.js';
+import { compareRanges, getLatestVersion } from './dependency-versions.js';
 import { table } from 'table';
 
 export function mismatchingVersionsToOutput(
@@ -17,9 +17,9 @@ export function mismatchingVersionsToOutput(
       const usageCounts = object.versions.map(
         (versionObject) => versionObject.packages.length
       );
-      const highestUsageCount = Math.max(...usageCounts);
+      const latestUsageCount = Math.max(...usageCounts);
       const hasMultipleUsageCounts = !usageCounts.every(
-        (count) => count === highestUsageCount
+        (count) => count === latestUsageCount
       );
 
       const rows = object.versions
@@ -43,8 +43,8 @@ export function mismatchingVersionsToOutput(
               : packageNames.join(', ');
           return [
             chalk.redBright(versionObject.version),
-            // Bold the usage count if it's the highest, as long as it's not the only usage count present.
-            usageCount === highestUsageCount && hasMultipleUsageCounts
+            // Bold the usage count if it's the latest, as long as it's not the only usage count present.
+            usageCount === latestUsageCount && hasMultipleUsageCounts
               ? chalk.bold(usageCount)
               : usageCount,
             packageListSentence,
@@ -73,7 +73,7 @@ export function mismatchingVersionsFixedToOutput(
     .flatMap((mismatchingVersion) => {
       let version;
       try {
-        version = getHighestVersion(
+        version = getLatestVersion(
           mismatchingVersion.versions.map((v) => v.version)
         );
       } catch {

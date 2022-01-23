@@ -4,7 +4,7 @@ import {
   filterOutIgnoredDependencies,
   fixMismatchingVersions,
   compareRanges,
-  getHighestVersion,
+  getLatestVersion,
 } from '../../lib/dependency-versions.js';
 import { getPackages } from '../../lib/workspace.js';
 import {
@@ -331,15 +331,15 @@ describe('Utils | dependency-versions', function () {
       const packageJson2: PackageJson = JSON.parse(packageJson2Contents);
 
       // foo
-      // updates the package1 `foo` version to the highest version
+      // updates the package1 `foo` version to the latest version
       expect(
         packageJson1.dependencies && packageJson1.dependencies.foo
       ).toStrictEqual('^2.0.0');
-      // does not change package2 `foo` version since already at highest version
+      // does not change package2 `foo` version since already at latest version
       expect(
         packageJson2.dependencies && packageJson2.dependencies.foo
       ).toStrictEqual('^2.0.0');
-      // updates the root package `foo` version to the highest version
+      // updates the root package `foo` version to the latest version
       expect(
         packageJsonRoot.devDependencies && packageJsonRoot.devDependencies.foo
       ).toStrictEqual('^2.0.0');
@@ -355,34 +355,34 @@ describe('Utils | dependency-versions', function () {
       ).toStrictEqual('invalidVersion');
 
       // a.b.c
-      // updates the package1 `a.b.c` version to the highest version
+      // updates the package1 `a.b.c` version to the latest version
       expect(
         packageJson1.dependencies && packageJson1.dependencies['a.b.c']
       ).toStrictEqual('~5.5.0');
-      // does not change package2 `a.b.c` version since already at highest version
+      // does not change package2 `a.b.c` version since already at latest version
       expect(
         packageJson2.dependencies && packageJson2.dependencies['a.b.c']
       ).toStrictEqual('~5.5.0');
 
       // one.two.three
-      // does not change package1 `one.two.three` version since already at highest version
+      // does not change package1 `one.two.three` version since already at latest version
       expect(
         packageJson1.devDependencies &&
           packageJson1.devDependencies['one.two.three']
       ).toStrictEqual('^4.1.0');
-      // updates the package2 `one.two.three` version to the highest version
+      // updates the package2 `one.two.three` version to the latest version
       expect(
         packageJson2.devDependencies &&
           packageJson2.devDependencies['one.two.three']
       ).toStrictEqual('^4.1.0');
 
       // @types/one
-      // does not change package1 `@types/one` version since already at highest version
+      // does not change package1 `@types/one` version since already at latest version
       expect(
         packageJson1.devDependencies &&
           packageJson1.devDependencies['@types/one']
       ).toStrictEqual('1.0.1');
-      // updates the package2 `@types/one` version to the highest version
+      // updates the package2 `@types/one` version to the latest version
       expect(
         packageJson2.devDependencies &&
           packageJson2.devDependencies['@types/one']
@@ -548,16 +548,16 @@ describe('Utils | dependency-versions', function () {
     });
   });
 
-  describe('#getHighestVersion', function () {
+  describe('#getLatestVersion', function () {
     it('correctly chooses the higher range', function () {
       // Just basic sanity checks to ensure the data is passed through to `compareRanges` which has extensive tests.
-      expect(getHighestVersion(['1.2.3', '1.2.2'])).toStrictEqual('1.2.3');
-      expect(getHighestVersion(['1.2.2', '1.2.3'])).toStrictEqual('1.2.3');
+      expect(getLatestVersion(['1.2.3', '1.2.2'])).toStrictEqual('1.2.3');
+      expect(getLatestVersion(['1.2.2', '1.2.3'])).toStrictEqual('1.2.3');
     });
 
     it('throws with invalid version', function () {
       expect(() =>
-        getHighestVersion(['1.2.3', 'foo'])
+        getLatestVersion(['1.2.3', 'foo'])
       ).toThrowErrorMatchingInlineSnapshot('"Invalid Version: foo"');
     });
   });

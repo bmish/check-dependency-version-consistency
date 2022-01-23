@@ -211,7 +211,7 @@ export function fixMismatchingVersions(
     );
     let fixedVersion;
     try {
-      fixedVersion = getHighestVersion(versions);
+      fixedVersion = getLatestVersion(versions);
     } catch {
       // Skip this dependency.
       notFixed.push(mismatchingVersion);
@@ -295,7 +295,7 @@ export function compareRanges(a: string, b: string): 0 | -1 | 1 {
   return semver.gt(aVersion, bVersion) ? 1 : -1;
 }
 
-export function getHighestVersion(versions: string[]): string {
+export function getLatestVersion(versions: string[]): string {
   const sortedVersions = versions.sort(compareRanges);
-  return sortedVersions[sortedVersions.length - 1]; // Highest version will be sorted to end of list.
+  return sortedVersions[sortedVersions.length - 1]; // Latest version will be sorted to end of list.
 }
