@@ -4,7 +4,7 @@ import {
   filterOutIgnoredDependencies,
   fixMismatchingVersions,
   compareRanges,
-  getHighestVersion,
+  getLatestVersion,
 } from '../../lib/dependency-versions.js';
 import { getPackages } from '../../lib/workspace.js';
 import {
@@ -548,16 +548,16 @@ describe('Utils | dependency-versions', function () {
     });
   });
 
-  describe('#getHighestVersion', function () {
+  describe('#getLatestVersion', function () {
     it('correctly chooses the higher range', function () {
       // Just basic sanity checks to ensure the data is passed through to `compareRanges` which has extensive tests.
-      expect(getHighestVersion(['1.2.3', '1.2.2'])).toStrictEqual('1.2.3');
-      expect(getHighestVersion(['1.2.2', '1.2.3'])).toStrictEqual('1.2.3');
+      expect(getLatestVersion(['1.2.3', '1.2.2'])).toStrictEqual('1.2.3');
+      expect(getLatestVersion(['1.2.2', '1.2.3'])).toStrictEqual('1.2.3');
     });
 
     it('throws with invalid version', function () {
       expect(() =>
-        getHighestVersion(['1.2.3', 'foo'])
+        getLatestVersion(['1.2.3', 'foo'])
       ).toThrowErrorMatchingInlineSnapshot('"Invalid Version: foo"');
     });
   });

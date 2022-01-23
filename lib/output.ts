@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import type { MismatchingDependencyVersions } from './dependency-versions.js';
-import { compareRanges, getHighestVersion } from './dependency-versions.js';
+import { compareRanges, getLatestVersion } from './dependency-versions.js';
 import { table } from 'table';
 
 export function mismatchingVersionsToOutput(
@@ -73,7 +73,7 @@ export function mismatchingVersionsFixedToOutput(
     .flatMap((mismatchingVersion) => {
       let version;
       try {
-        version = getHighestVersion(
+        version = getLatestVersion(
           mismatchingVersion.versions.map((v) => v.version)
         );
       } catch {
