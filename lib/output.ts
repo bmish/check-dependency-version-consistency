@@ -17,9 +17,9 @@ export function mismatchingVersionsToOutput(
       const usageCounts = object.versions.map(
         (versionObject) => versionObject.packages.length
       );
-      const highestUsageCount = Math.max(...usageCounts);
+      const latestUsageCount = Math.max(...usageCounts);
       const hasMultipleUsageCounts = !usageCounts.every(
-        (count) => count === highestUsageCount
+        (count) => count === latestUsageCount
       );
 
       const rows = object.versions
@@ -43,8 +43,8 @@ export function mismatchingVersionsToOutput(
               : packageNames.join(', ');
           return [
             chalk.redBright(versionObject.version),
-            // Bold the usage count if it's the highest, as long as it's not the only usage count present.
-            usageCount === highestUsageCount && hasMultipleUsageCounts
+            // Bold the usage count if it's the latest, as long as it's not the only usage count present.
+            usageCount === latestUsageCount && hasMultipleUsageCounts
               ? chalk.bold(usageCount)
               : usageCount,
             packageListSentence,

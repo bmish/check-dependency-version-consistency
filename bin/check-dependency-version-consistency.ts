@@ -45,7 +45,7 @@ function run() {
     .addArgument(new Argument('[path]', 'path to workspace root').default('.'))
     .option(
       '--fix',
-      'Whether to autofix inconsistencies (using highest version present)',
+      'Whether to autofix inconsistencies (using latest version present)',
       false
     )
     .option(
