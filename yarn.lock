@@ -2492,9 +2492,9 @@ eslint-plugin-react@^7.26.1:
     string.prototype.matchall "^4.0.5"
 
 eslint-plugin-square@^21.0.0:
-  version "21.0.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-square/-/eslint-plugin-square-21.0.1.tgz#7b5f6afe56d3153e903ebf2910c017c08bc0ea5b"
-  integrity sha512-WlRG5Sd5h1YwUl93nqtCuCVkAsOTK0WfOtmePxg7NB/uRYNG+YrS8bgvUO8Zcy9/B2Lw3F/Ckc1latr/RrmmMA==
+  version "21.0.2"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-square/-/eslint-plugin-square-21.0.2.tgz#725b952a7b5bb6e3a61086d2d68dd4377eb35a51"
+  integrity sha512-qBMVIC4jQHJdoTiwiM0VYAwjIKvRkk9Q6tcSds4NtLTwcQUDBxs1Ht2bdHGR/NgGbdUUdxaxwJoib8RQLGiw4A==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^5.1.0"
     eslint-config-prettier "^8.3.0"
