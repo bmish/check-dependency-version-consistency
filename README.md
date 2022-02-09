@@ -3,7 +3,10 @@
 [![npm version][npm-image]][npm-url]
 [![CI][ci-image]][ci-url]
 
-This CLI tool checks to ensure that dependencies are on consistent versions across a monorepo / yarn workspace. For example, every package in a workspace that has a dependency on `eslint` should specify the same version for it.
+This CLI tool enforces the following aspects of consistency across a monorepo / yarn workspace:
+
+1. Dependencies are on consistent versions. For example, every package in a workspace that has a dependency on `eslint` should specify the same version for it.
+2. Dependencies on local packages use the local packages directly instead of older versions of them. For example, if one package `package1` in a workspace depends on another package `package2` in the workspace, `package1` should request the current version of `package2`.
 
 ## Motivation
 
@@ -27,9 +30,9 @@ To run, use this command and optionally pass the path to the workspace root (whe
 yarn check-dependency-version-consistency .
 ```
 
-If there are no dependency mismatches, the program will exit with success.
+If there are no inconsistencies, the program will exit with success.
 
-If there are any dependency mismatches, the program will exit with failure and output the mismatching versions.
+If there are any inconsistencies, the program will exit with failure and output the mismatching versions.
 
 ## Example
 
@@ -57,6 +60,9 @@ If there are any dependency mismatches, the program will exit with failure and o
   "name": "package1",
   "devDependencies": {
     "eslint": "^8.0.0"
+  },
+  "dependencies": {
+    "package2": "^0.0.0"
   }
 }
 ```
@@ -66,6 +72,7 @@ If there are any dependency mismatches, the program will exit with failure and o
 ```json
 {
   "name": "package2",
+  "version": "1.0.0",
   "devDependencies": {
     "eslint": "^7.0.0"
   }
@@ -86,7 +93,7 @@ If there are any dependency mismatches, the program will exit with failure and o
 Output:
 
 ```pt
-Found 1 dependency with mismatching versions across the workspace. Fix with `--fix`.
+Found 2 dependencies with mismatching versions across the workspace. Fix with `--fix`.
 ╔════════╤════════╤════════════════════╗
 ║ eslint │ Usages │ Packages           ║
 ╟────────┼────────┼────────────────────╢
@@ -94,6 +101,13 @@ Found 1 dependency with mismatching versions across the workspace. Fix with `--f
 ╟────────┼────────┼────────────────────╢
 ║ ^7.0.0 │ 2      │ package2, package3 ║
 ╚════════╧════════╧════════════════════╝
+╔══════════╤════════╤══════════╗
+║ package2 │ Usages │ Packages ║
+╟──────────┼────────┼──────────╢
+║ 1.0.0    │ 1      │ package2 ║
+╟──────────┼────────┼──────────╢
+║ ^0.0.0   │ 1      │ package1 ║
+╚══════════╧════════╧══════════╝
 ```
 
 ## Options

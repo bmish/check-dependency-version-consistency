@@ -40,3 +40,7 @@ export const FIXTURE_PATH_PACKAGE_MISSING_NAME = join(
   FIXTURE_PATH,
   'package-missing-name'
 );
+export const FIXTURE_PATH_INCONSISTENT_LOCAL_PACKAGE_VERSION = join(
+  FIXTURE_PATH,
+  'inconsistent-local-package-version'
+);

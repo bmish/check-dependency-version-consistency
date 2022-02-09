@@ -4,7 +4,7 @@ import { Package } from './package.js';
 
 export type DependenciesToVersionsSeen = Map<
   string,
-  { package: Package; version: string }[]
+  { package: Package; version: string; isLocalPackageVersion: boolean }[]
 >;
 
 export type MismatchingDependencyVersions = Array<{
@@ -36,7 +36,7 @@ export function calculateVersionsForEachDependency(
 ): DependenciesToVersionsSeen {
   const dependenciesToVersionsSeen: DependenciesToVersionsSeen = new Map<
     string,
-    { package: Package; version: string }[]
+    { package: Package; version: string; isLocalPackageVersion: boolean }[]
   >();
   for (const package_ of packages) {
     recordDependencyVersionsForPackageJson(
@@ -51,6 +51,16 @@ function recordDependencyVersionsForPackageJson(
   dependenciesToVersionsSeen: DependenciesToVersionsSeen,
   package_: Package
 ) {
+  if (package_.packageJson.name && package_.packageJson.version) {
+    recordDependencyVersion(
+      dependenciesToVersionsSeen,
+      package_.packageJson.name,
+      package_.packageJson.version,
+      package_,
+      true
+    );
+  }
+
   if (package_.packageJson.dependencies) {
     for (const [dependency, dependencyVersion] of Object.entries(
       package_.packageJson.dependencies
@@ -82,7 +92,8 @@ function recordDependencyVersion(
   dependenciesToVersionsSeen: DependenciesToVersionsSeen,
   dependency: string,
   version: string,
-  package_: Package
+  package_: Package,
+  isLocalPackageVersion = false
 ) {
   if (!dependenciesToVersionsSeen.has(dependency)) {
     dependenciesToVersionsSeen.set(dependency, []);
@@ -91,41 +102,79 @@ function recordDependencyVersion(
   /* istanbul ignore if */
   if (list) {
     // `list` should always exist at this point, this if statement is just to please TypeScript.
-    list.push({ package: package_, version });
+    list.push({ package: package_, version, isLocalPackageVersion });
   }
 }
 
 export function calculateMismatchingVersions(
   dependencyVersions: DependenciesToVersionsSeen
 ): MismatchingDependencyVersions {
-  return [...dependencyVersions.keys()].sort().flatMap((dependency) => {
-    const versionList = dependencyVersions.get(dependency);
-    /* istanbul ignore if */
-    if (!versionList) {
-      // `versionList` should always exist at this point, this if statement is just to please TypeScript.
-      return [];
-    }
+  // Loop through all dependencies seen.
+  return [...dependencyVersions.entries()]
+    .sort()
+    .flatMap(([dependency, versionObjectsForDep]) => {
+      /* istanbul ignore if */
+      if (!versionObjectsForDep) {
+        // Should always exist at this point, this if statement is just to please TypeScript.
+        return [];
+      }
 
-    const uniqueVersions = [
-      ...new Set(versionList.map((object) => object.version)),
-    ].sort();
+      // Calculate unique versions seen for this dependency.
+      const uniqueVersions = [
+        ...new Set(
+          versionObjectsForDep
+            .filter((versionObject) => !versionObject.isLocalPackageVersion)
+            .map((versionObject) => versionObject.version)
+        ),
+      ].sort();
 
-    if (uniqueVersions.length > 1) {
-      const uniqueVersionsWithInfo = uniqueVersions.map((uniqueVersion) => {
-        const matchingVersions = versionList.filter(
-          (object) => object.version === uniqueVersion
+      // If we saw more than one unique version for this dependency, we found an inconsistency.
+      if (uniqueVersions.length > 1) {
+        const uniqueVersionsWithInfo = versionsObjectsWithSortedPackages(
+          uniqueVersions,
+          versionObjectsForDep
         );
-        return {
-          version: uniqueVersion,
-          packages: matchingVersions
-            .map((object) => object.package)
-            .sort(Package.comparator),
-        };
-      });
-      return { dependency, versions: uniqueVersionsWithInfo };
-    }
+        return { dependency, versions: uniqueVersionsWithInfo };
+      }
 
-    return [];
+      // If we saw a local package version that isn't compatible with the local package's actual version, we found an inconsistency.
+      const localPackageVersions = versionObjectsForDep
+        .filter((object) => object.isLocalPackageVersion)
+        .map((object) => object.version);
+      if (
+        localPackageVersions.length === 1 &&
+        uniqueVersions.length === 1 &&
+        !semver.satisfies(localPackageVersions[0], uniqueVersions[0])
+      ) {
+        const uniqueVersionsWithInfo = versionsObjectsWithSortedPackages(
+          [...uniqueVersions, ...localPackageVersions],
+          versionObjectsForDep
+        );
+        return { dependency, versions: uniqueVersionsWithInfo };
+      }
+
+      return [];
+    });
+}
+
+function versionsObjectsWithSortedPackages(
+  versions: string[],
+  versionObjects: {
+    package: Package;
+    version: string;
+    isLocalPackageVersion: boolean;
+  }[]
+) {
+  return versions.map((version) => {
+    const matchingVersionObjects = versionObjects.filter(
+      (versionObject) => versionObject.version === version
+    );
+    return {
+      version,
+      packages: matchingVersionObjects
+        .map((object) => object.package)
+        .sort(Package.comparator),
+    };
   });
 }
 
@@ -255,6 +304,8 @@ export function fixMismatchingVersions(
 
     if (isFixed) {
       fixed.push(mismatchingVersion);
+    } else {
+      notFixed.push(mismatchingVersion);
     }
   }
 
