@@ -9,6 +9,24 @@
 
 
 
+
+## v2.0.0 (2022-02-14)
+
+#### :boom: Breaking Change
+* [#343](https://github.com/bmish/check-dependency-version-consistency/pull/343) Check local package version consistency ([@bmish](https://github.com/bmish))
+
+#### :rocket: Enhancement
+* [#342](https://github.com/bmish/check-dependency-version-consistency/pull/342) build(deps): bump globby from 12.2.0 to 13.1.1 ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### :memo: Documentation
+* [#330](https://github.com/bmish/check-dependency-version-consistency/pull/330) Use `latest` version instead of `highest` version ([@ddzz](https://github.com/ddzz))
+* [#329](https://github.com/bmish/check-dependency-version-consistency/pull/329) Improve completeness of example in README ([@bmish](https://github.com/bmish))
+
+#### Committers: 2
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+- Darius D. ([@ddzz](https://github.com/ddzz))
+
+
 ## v1.6.0 (2022-01-18)
 
 #### :rocket: Enhancement
