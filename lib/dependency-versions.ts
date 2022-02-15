@@ -119,14 +119,29 @@ export function calculateMismatchingVersions(
         return [];
       }
 
+      // Check what versions we have seen for this dependency.
+      let versions = versionObjectsForDep
+        .filter((versionObject) => !versionObject.isLocalPackageVersion)
+        .map((versionObject) => versionObject.version);
+
+      // Check if this dependency is a local package.
+      const localPackageVersions = versionObjectsForDep
+        .filter((versionObject) => versionObject.isLocalPackageVersion)
+        .map((versionObject) => versionObject.version);
+
+      if (
+        localPackageVersions.length === 1 &&
+        versions.some(
+          (uniqueVersion) =>
+            !semver.satisfies(localPackageVersions[0], uniqueVersion)
+        )
+      ) {
+        // If we saw a version for this dependency that isn't compatible with its actual local package version, add the local package version to the list of versions seen.
+        versions = [...versions, ...localPackageVersions];
+      }
+
       // Calculate unique versions seen for this dependency.
-      const uniqueVersions = [
-        ...new Set(
-          versionObjectsForDep
-            .filter((versionObject) => !versionObject.isLocalPackageVersion)
-            .map((versionObject) => versionObject.version)
-        ),
-      ].sort();
+      const uniqueVersions = [...new Set(versions)].sort(compareRangesSafe);
 
       // If we saw more than one unique version for this dependency, we found an inconsistency.
       if (uniqueVersions.length > 1) {
@@ -134,23 +149,10 @@ export function calculateMismatchingVersions(
           uniqueVersions,
           versionObjectsForDep
         );
-        return { dependency, versions: uniqueVersionsWithInfo };
-      }
-
-      // If we saw a local package version that isn't compatible with the local package's actual version, we found an inconsistency.
-      const localPackageVersions = versionObjectsForDep
-        .filter((object) => object.isLocalPackageVersion)
-        .map((object) => object.version);
-      if (
-        localPackageVersions.length === 1 &&
-        uniqueVersions.length === 1 &&
-        !semver.satisfies(localPackageVersions[0], uniqueVersions[0])
-      ) {
-        const uniqueVersionsWithInfo = versionsObjectsWithSortedPackages(
-          [...uniqueVersions, ...localPackageVersions],
-          versionObjectsForDep
-        );
-        return { dependency, versions: uniqueVersionsWithInfo };
+        return {
+          dependency,
+          versions: uniqueVersionsWithInfo,
+        };
       }
 
       return [];
@@ -254,7 +256,9 @@ export function fixMismatchingVersions(
 } {
   const fixed = [];
   const notFixed = [];
+  // Loop through each dependency that has a mismatching versions.
   for (const mismatchingVersion of mismatchingVersions) {
+    // Decide what version we should fix to.
     const versions = mismatchingVersion.versions.map(
       (object) => object.version
     );
@@ -267,6 +271,21 @@ export function fixMismatchingVersions(
       continue;
     }
 
+    // If this dependency is from a local package and the version we want to fix to is higher than the actual package version, skip it.
+    const localPackage = packages.find(
+      (package_) => package_.name === mismatchingVersion.dependency
+    );
+    if (
+      localPackage &&
+      localPackage.packageJson.version &&
+      compareRanges(fixedVersion, localPackage.packageJson.version) > 0
+    ) {
+      // Skip this dependency.
+      notFixed.push(mismatchingVersion);
+      continue;
+    }
+
+    // Update the dependency version in each package.json.
     let isFixed = false;
     for (const package_ of packages) {
       if (
@@ -304,8 +323,6 @@ export function fixMismatchingVersions(
 
     if (isFixed) {
       fixed.push(mismatchingVersion);
-    } else {
-      notFixed.push(mismatchingVersion);
     }
   }
 
@@ -313,6 +330,15 @@ export function fixMismatchingVersions(
     fixed,
     notFixed,
   };
+}
+
+// This version doesn't throw for when we want to ignore invalid versions that might be present.
+export function compareRangesSafe(a: string, b: string): 0 | -1 | 1 {
+  try {
+    return compareRanges(a, b);
+  } catch {
+    return 0;
+  }
 }
 
 export function compareRanges(a: string, b: string): 0 | -1 | 1 {
