@@ -86,6 +86,19 @@ function recordDependencyVersionsForPackageJson(
       );
     }
   }
+
+  if (package_.packageJson.resolutions) {
+    for (const [dependency, dependencyVersion] of Object.entries(
+      package_.packageJson.resolutions
+    )) {
+      recordDependencyVersion(
+        dependenciesToVersionsSeen,
+        dependency,
+        dependencyVersion,
+        package_
+      );
+    }
+  }
 }
 
 function recordDependencyVersion(
@@ -226,7 +239,7 @@ export function filterOutIgnoredDependencies(
 function writeDependencyVersion(
   packageJsonPath: string,
   packageJsonEndsInNewline: boolean,
-  isDependency: boolean, // true for dependency, false for dev-dependency.
+  type: 'dependencies' | 'devDependencies' | 'resolutions',
   dependencyName: string,
   newVersion: string
 ) {
@@ -236,9 +249,7 @@ function writeDependencyVersion(
   });
 
   packageJsonEditor.set(
-    `${
-      isDependency ? 'dependencies' : 'devDependencies'
-    }.${dependencyName.replace(
+    `${type}.${dependencyName.replace(
       /\./g, // Escape dots to avoid creating unwanted nested properties.
       '\\.'
     )}`,
@@ -297,7 +308,7 @@ export function fixMismatchingVersions(
         writeDependencyVersion(
           package_.pathPackageJson,
           package_.packageJsonEndsInNewline,
-          false,
+          'devDependencies',
           mismatchingVersion.dependency,
           fixedVersion
         );
@@ -313,7 +324,23 @@ export function fixMismatchingVersions(
         writeDependencyVersion(
           package_.pathPackageJson,
           package_.packageJsonEndsInNewline,
-          true,
+          'dependencies',
+          mismatchingVersion.dependency,
+          fixedVersion
+        );
+        isFixed = true;
+      }
+
+      if (
+        package_.packageJson.resolutions &&
+        package_.packageJson.resolutions[mismatchingVersion.dependency] &&
+        package_.packageJson.resolutions[mismatchingVersion.dependency] !==
+          fixedVersion
+      ) {
+        writeDependencyVersion(
+          package_.pathPackageJson,
+          package_.packageJsonEndsInNewline,
+          'resolutions',
           mismatchingVersion.dependency,
           fixedVersion
         );
