@@ -342,9 +342,9 @@ export function compareRangesSafe(a: string, b: string): 0 | -1 | 1 {
 }
 
 export function compareRanges(a: string, b: string): 0 | -1 | 1 {
-  // Strip range and coerce to normalized version.
-  const aVersion = semver.coerce(a.replace(/^[\^~]/, ''));
-  const bVersion = semver.coerce(b.replace(/^[\^~]/, ''));
+  // Coerce to normalized version without any range prefix.
+  const aVersion = semver.coerce(a);
+  const bVersion = semver.coerce(b);
   if (!aVersion) {
     throw new Error(`Invalid Version: ${a}`);
   }
