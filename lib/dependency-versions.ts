@@ -341,6 +341,8 @@ export function compareRangesSafe(a: string, b: string): 0 | -1 | 1 {
   }
 }
 
+const RANGE_PRECEDENCE = ['~', '^']; // Lowest to highest.
+
 export function compareRanges(a: string, b: string): 0 | -1 | 1 {
   // Coerce to normalized version without any range prefix.
   const aVersion = semver.coerce(a);
@@ -353,19 +355,18 @@ export function compareRanges(a: string, b: string): 0 | -1 | 1 {
   }
 
   if (semver.eq(aVersion, bVersion)) {
-    // Same version, but wider range considered higher.
-    if (a.startsWith('^') && !b.startsWith('^')) {
+    // Same version, so decide which range is considered higher.
+    const aRange = (a.match(/^\D+/) || [])[0];
+    const bRange = (b.match(/^\D+/) || [])[0];
+    const aRangePrecedence = RANGE_PRECEDENCE.indexOf(aRange);
+    const bRangePrecedence = RANGE_PRECEDENCE.indexOf(bRange);
+    if (aRangePrecedence > bRangePrecedence) {
       return 1;
-    } else if (!a.startsWith('^') && b.startsWith('^')) {
-      return -1;
-    } else if (a.startsWith('~') && !b.startsWith('~')) {
-      return 1;
-    } else if (!a.startsWith('~') && b.startsWith('~')) {
+    } else if (aRangePrecedence === bRangePrecedence) {
+      return 0;
+    } else if (aRangePrecedence < bRangePrecedence) {
       return -1;
     }
-
-    // Same version, same range.
-    return 0;
   }
 
   // Greater version considered higher.
