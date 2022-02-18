@@ -4,6 +4,7 @@ import {
   filterOutIgnoredDependencies,
   fixMismatchingVersions,
   compareRanges,
+  compareRangesSafe,
   getLatestVersion,
 } from '../../lib/dependency-versions.js';
 import { getPackages } from '../../lib/workspace.js';
@@ -572,7 +573,7 @@ describe('Utils | dependency-versions', function () {
               name: 'package1',
               version: '1.0.0',
               dependencies: {
-                package2: '^1.0.0',
+                package2: '^1.0.0', // Lower than actual version of this local package.
               },
             }),
           },
@@ -582,6 +583,14 @@ describe('Utils | dependency-versions', function () {
               version: '2.0.0',
               dependencies: {
                 package1: '^2.0.0', // Higher than actual version of this local package.
+              },
+            }),
+          },
+          package3: {
+            'package.json': JSON.stringify({
+              name: 'package3',
+              dependencies: {
+                package1: '^0.0.0', // Lower than actual version of this local package.
               },
             }),
           },
@@ -611,8 +620,13 @@ describe('Utils | dependency-versions', function () {
           'package2/package.json',
           'utf-8'
         );
+        const packageJson3Contents = readFileSync(
+          'package3/package.json',
+          'utf-8'
+        );
         const packageJson1: PackageJson = JSON.parse(packageJson1Contents);
         const packageJson2: PackageJson = JSON.parse(packageJson2Contents);
+        const packageJson3: PackageJson = JSON.parse(packageJson3Contents);
 
         expect(
           packageJson1.dependencies && packageJson1.dependencies['package2']
@@ -622,18 +636,26 @@ describe('Utils | dependency-versions', function () {
           packageJson2.dependencies && packageJson2.dependencies['package1']
         ).toStrictEqual('^2.0.0');
 
+        expect(
+          packageJson3.dependencies && packageJson3.dependencies['package1']
+        ).toStrictEqual('^0.0.0');
+
         expect(notFixed).toStrictEqual([
           {
             // Not fixed since found version higher than actual version of this local package.
             dependency: 'package1',
             versions: [
               {
-                version: '^2.0.0',
-                packages: [expect.objectContaining({ path: 'package2' })],
+                version: '^0.0.0',
+                packages: [expect.objectContaining({ path: 'package3' })],
               },
               {
                 version: '1.0.0',
                 packages: [expect.objectContaining({ path: 'package1' })],
+              },
+              {
+                version: '^2.0.0',
+                packages: [expect.objectContaining({ path: 'package2' })],
               },
             ],
           },
@@ -703,6 +725,19 @@ describe('Utils | dependency-versions', function () {
       expect(() =>
         compareRanges('~6.0.0', 'foo')
       ).toThrowErrorMatchingInlineSnapshot('"Invalid Version: foo"');
+    });
+  });
+
+  describe('#compareRangesSafe', function () {
+    it('behaves correctly', function () {
+      expect(compareRangesSafe('1.2.3', '1.2.2')).toStrictEqual(1);
+      expect(compareRangesSafe('4.0.0', '5.0.0')).toStrictEqual(-1);
+      expect(compareRangesSafe('6', '6')).toStrictEqual(0);
+    });
+
+    it('does not throw with invalid ranges', function () {
+      expect(compareRangesSafe('foo', '~6.0.0')).toStrictEqual(0);
+      expect(compareRangesSafe('~6.0.0', 'foo')).toStrictEqual(0);
     });
   });
 
