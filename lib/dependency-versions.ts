@@ -141,7 +141,9 @@ export function calculateMismatchingVersions(
       }
 
       // Calculate unique versions seen for this dependency.
-      const uniqueVersions = [...new Set(versions)].sort(compareRangesSafe);
+      const uniqueVersions = [...new Set(versions)].sort(
+        compareVersionRangesSafe
+      );
 
       // If we saw more than one unique version for this dependency, we found an inconsistency.
       if (uniqueVersions.length > 1) {
@@ -278,7 +280,7 @@ export function fixMismatchingVersions(
     if (
       localPackage &&
       localPackage.packageJson.version &&
-      compareRanges(fixedVersion, localPackage.packageJson.version) > 0
+      compareVersionRanges(fixedVersion, localPackage.packageJson.version) > 0
     ) {
       // Skip this dependency.
       notFixed.push(mismatchingVersion);
@@ -333,17 +335,16 @@ export function fixMismatchingVersions(
 }
 
 // This version doesn't throw for when we want to ignore invalid versions that might be present.
-export function compareRangesSafe(a: string, b: string): 0 | -1 | 1 {
+export function compareVersionRangesSafe(a: string, b: string): 0 | -1 | 1 {
   try {
-    return compareRanges(a, b);
+    return compareVersionRanges(a, b);
   } catch {
     return 0;
   }
 }
 
-const RANGE_PRECEDENCE = ['~', '^']; // Lowest to highest.
-
-export function compareRanges(a: string, b: string): 0 | -1 | 1 {
+// Compare semver version ranges like ^1.0.0, ~2.5.0, 3.0.0, etc.
+export function compareVersionRanges(a: string, b: string): 0 | -1 | 1 {
   // Coerce to normalized version without any range prefix.
   const aVersion = semver.coerce(a);
   const bVersion = semver.coerce(b);
@@ -356,24 +357,36 @@ export function compareRanges(a: string, b: string): 0 | -1 | 1 {
 
   if (semver.eq(aVersion, bVersion)) {
     // Same version, so decide which range is considered higher.
-    const aRange = (a.match(/^\D+/) || [])[0];
-    const bRange = (b.match(/^\D+/) || [])[0];
-    const aRangePrecedence = RANGE_PRECEDENCE.indexOf(aRange);
-    const bRangePrecedence = RANGE_PRECEDENCE.indexOf(bRange);
-    if (aRangePrecedence > bRangePrecedence) {
-      return 1;
-    } else if (aRangePrecedence === bRangePrecedence) {
-      return 0;
-    } else if (aRangePrecedence < bRangePrecedence) {
-      return -1;
-    }
+    const aRange = versionRangeToRange(a);
+    const bRange = versionRangeToRange(b);
+    return compareRanges(aRange, bRange);
   }
 
   // Greater version considered higher.
   return semver.gt(aVersion, bVersion) ? 1 : -1;
 }
 
+const RANGE_PRECEDENCE = ['~', '^']; // Lowest to highest.
+
+// Compare semver ranges like ^, ~, etc.
+export function compareRanges(aRange: string, bRange: string): 0 | -1 | 1 {
+  const aRangePrecedence = RANGE_PRECEDENCE.indexOf(aRange);
+  const bRangePrecedence = RANGE_PRECEDENCE.indexOf(bRange);
+  if (aRangePrecedence > bRangePrecedence) {
+    return 1;
+  } else if (aRangePrecedence < bRangePrecedence) {
+    return -1;
+  }
+  return 0;
+}
+
+// Example input: ^1.0.0, output: ^
+export function versionRangeToRange(versionRange: string): string {
+  const match = versionRange.match(/^\D+/);
+  return match ? match[0] : '';
+}
+
 export function getLatestVersion(versions: string[]): string {
-  const sortedVersions = versions.sort(compareRanges);
+  const sortedVersions = versions.sort(compareVersionRanges);
   return sortedVersions[sortedVersions.length - 1]; // Latest version will be sorted to end of list.
 }

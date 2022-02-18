@@ -3,8 +3,10 @@ import {
   calculateMismatchingVersions,
   filterOutIgnoredDependencies,
   fixMismatchingVersions,
+  compareVersionRanges,
+  compareVersionRangesSafe,
   compareRanges,
-  compareRangesSafe,
+  versionRangeToRange,
   getLatestVersion,
 } from '../../lib/dependency-versions.js';
 import { getPackages } from '../../lib/workspace.js';
@@ -689,61 +691,90 @@ describe('Utils | dependency-versions', function () {
     });
   });
 
-  describe('#compareRanges', function () {
+  describe('#compareVersionRanges', function () {
     it('correctly chooses the higher range', function () {
       // 1 (greater than)
-      expect(compareRanges('1.2.3', '1.2.2')).toStrictEqual(1);
-      expect(compareRanges('5.0.0', '4.0.0')).toStrictEqual(1);
-      expect(compareRanges('8.0.0-beta.1', '^7')).toStrictEqual(1);
-      expect(compareRanges('^5.0.0', '4.0.0')).toStrictEqual(1);
-      expect(compareRanges('^5.0.0', '^4.0.0')).toStrictEqual(1);
-      expect(compareRanges('^5.0.0', '~4.0.0')).toStrictEqual(1);
-      expect(compareRanges('^5.0.0', '~5.0.0')).toStrictEqual(1);
-      expect(compareRanges('~5.0.0', '5.0.0')).toStrictEqual(1);
-      expect(compareRanges('~5.0.0', '~4.0.0')).toStrictEqual(1);
+      expect(compareVersionRanges('1.2.3', '1.2.2')).toStrictEqual(1);
+      expect(compareVersionRanges('5.0.0', '4.0.0')).toStrictEqual(1);
+      expect(compareVersionRanges('8.0.0-beta.1', '^7')).toStrictEqual(1);
+      expect(compareVersionRanges('^5.0.0', '4.0.0')).toStrictEqual(1);
+      expect(compareVersionRanges('^5.0.0', '^4.0.0')).toStrictEqual(1);
+      expect(compareVersionRanges('^5.0.0', '~4.0.0')).toStrictEqual(1);
+      expect(compareVersionRanges('^5.0.0', '~5.0.0')).toStrictEqual(1);
+      expect(compareVersionRanges('~5.0.0', '5.0.0')).toStrictEqual(1);
+      expect(compareVersionRanges('~5.0.0', '~4.0.0')).toStrictEqual(1);
 
       // -1 (less than)
-      expect(compareRanges('4.0.0', '5.0.0')).toStrictEqual(-1);
-      expect(compareRanges('5.0.0', '~5.0.0')).toStrictEqual(-1);
-      expect(compareRanges('^4.0.0', '^5.0.0')).toStrictEqual(-1);
-      expect(compareRanges('~4.0.0', '~5.0.0')).toStrictEqual(-1);
-      expect(compareRanges('~5.0.0', '^5.0.0')).toStrictEqual(-1);
+      expect(compareVersionRanges('4.0.0', '5.0.0')).toStrictEqual(-1);
+      expect(compareVersionRanges('5.0.0', '~5.0.0')).toStrictEqual(-1);
+      expect(compareVersionRanges('^4.0.0', '^5.0.0')).toStrictEqual(-1);
+      expect(compareVersionRanges('~4.0.0', '~5.0.0')).toStrictEqual(-1);
+      expect(compareVersionRanges('~5.0.0', '^5.0.0')).toStrictEqual(-1);
 
       // 0 (equal)
-      expect(compareRanges('6', '6')).toStrictEqual(0);
-      expect(compareRanges('6.0', '6.0')).toStrictEqual(0);
-      expect(compareRanges('6.0.0', '6.0.0')).toStrictEqual(0);
-      expect(compareRanges('^6.0.0', '^6.0.0')).toStrictEqual(0);
-      expect(compareRanges('v6', '6')).toStrictEqual(0);
-      expect(compareRanges('~6.0.0', '~6.0.0')).toStrictEqual(0);
+      expect(compareVersionRanges('6', '6')).toStrictEqual(0);
+      expect(compareVersionRanges('6.0', '6.0')).toStrictEqual(0);
+      expect(compareVersionRanges('6.0.0', '6.0.0')).toStrictEqual(0);
+      expect(compareVersionRanges('^6.0.0', '^6.0.0')).toStrictEqual(0);
+      expect(compareVersionRanges('v6', '6')).toStrictEqual(0);
+      expect(compareVersionRanges('~6.0.0', '~6.0.0')).toStrictEqual(0);
     });
 
     it('throws with invalid ranges', function () {
       expect(() =>
-        compareRanges('foo', '~6.0.0')
+        compareVersionRanges('foo', '~6.0.0')
       ).toThrowErrorMatchingInlineSnapshot('"Invalid Version: foo"');
       expect(() =>
-        compareRanges('~6.0.0', 'foo')
+        compareVersionRanges('~6.0.0', 'foo')
       ).toThrowErrorMatchingInlineSnapshot('"Invalid Version: foo"');
     });
   });
 
-  describe('#compareRangesSafe', function () {
+  describe('#compareRanges', function () {
     it('behaves correctly', function () {
-      expect(compareRangesSafe('1.2.3', '1.2.2')).toStrictEqual(1);
-      expect(compareRangesSafe('4.0.0', '5.0.0')).toStrictEqual(-1);
-      expect(compareRangesSafe('6', '6')).toStrictEqual(0);
+      // gt
+      expect(compareRanges('^', '~')).toStrictEqual(1);
+      expect(compareRanges('^', '')).toStrictEqual(1);
+      expect(compareRanges('~', '')).toStrictEqual(1);
+
+      // eq
+      expect(compareRanges('', '')).toStrictEqual(0);
+      expect(compareRanges('~', '~')).toStrictEqual(0);
+      expect(compareRanges('^', '^')).toStrictEqual(0);
+
+      // lt
+      expect(compareRanges('', '~')).toStrictEqual(-1);
+      expect(compareRanges('', '^')).toStrictEqual(-1);
+      expect(compareRanges('~', '^')).toStrictEqual(-1);
+    });
+  });
+
+  describe('#versionRangeToRange', function () {
+    it('behaves correctly', function () {
+      expect(versionRangeToRange('>1.0.0')).toStrictEqual('>');
+      expect(versionRangeToRange('>=1.0.0')).toStrictEqual('>=');
+      expect(versionRangeToRange('^1.0.0')).toStrictEqual('^');
+      expect(versionRangeToRange('~1.0.0')).toStrictEqual('~');
+      expect(versionRangeToRange('1.0.0')).toStrictEqual('');
+    });
+  });
+
+  describe('#compareVersionRangesSafe', function () {
+    it('behaves correctly', function () {
+      expect(compareVersionRangesSafe('1.2.3', '1.2.2')).toStrictEqual(1);
+      expect(compareVersionRangesSafe('4.0.0', '5.0.0')).toStrictEqual(-1);
+      expect(compareVersionRangesSafe('6', '6')).toStrictEqual(0);
     });
 
     it('does not throw with invalid ranges', function () {
-      expect(compareRangesSafe('foo', '~6.0.0')).toStrictEqual(0);
-      expect(compareRangesSafe('~6.0.0', 'foo')).toStrictEqual(0);
+      expect(compareVersionRangesSafe('foo', '~6.0.0')).toStrictEqual(0);
+      expect(compareVersionRangesSafe('~6.0.0', 'foo')).toStrictEqual(0);
     });
   });
 
   describe('#getLatestVersion', function () {
     it('correctly chooses the higher range', function () {
-      // Just basic sanity checks to ensure the data is passed through to `compareRanges` which has extensive tests.
+      // Just basic sanity checks to ensure the data is passed through to `compareVersionRanges` which has extensive tests.
       expect(getLatestVersion(['1.2.3', '1.2.2'])).toStrictEqual('1.2.3');
       expect(getLatestVersion(['1.2.2', '1.2.3'])).toStrictEqual('1.2.3');
     });
