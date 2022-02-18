@@ -10,6 +10,16 @@
 
 
 
+
+## v2.0.1 (2022-02-17)
+
+#### :bug: Bug Fix
+* [#347](https://github.com/bmish/check-dependency-version-consistency/pull/347) Improve handling of local package version inconsistencies ([@bmish](https://github.com/bmish))
+
+#### Committers: 1
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+
+
 ## v2.0.0 (2022-02-14)
 
 #### :boom: Breaking Change
