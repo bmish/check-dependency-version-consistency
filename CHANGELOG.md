@@ -11,6 +11,16 @@
 
 
 
+
+## v2.0.2 (2022-02-20)
+
+#### :bug: Bug Fix
+* [#355](https://github.com/bmish/check-dependency-version-consistency/pull/355) Maintain range type when fixing to local package version ([@bmish](https://github.com/bmish))
+
+#### Committers: 1
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+
+
 ## v2.0.1 (2022-02-17)
 
 #### :bug: Bug Fix
