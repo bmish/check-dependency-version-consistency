@@ -287,6 +287,14 @@ export function fixMismatchingVersions(
       continue;
     }
 
+    if (localPackage && localPackage.packageJson.version === fixedVersion) {
+      // When fixing to the version of a local package, don't just use the bare package version, but include the highest range type we have seen.
+      const highestRangeTypeSeen = getHighestRangeType(
+        versions.map((versionRange) => versionRangeToRange(versionRange))
+      );
+      fixedVersion = `${highestRangeTypeSeen}${semver.coerce(fixedVersion)}`;
+    }
+
     // Update the dependency version in each package.json.
     let isFixed = false;
     for (const package_ of packages) {
@@ -389,4 +397,10 @@ export function versionRangeToRange(versionRange: string): string {
 export function getLatestVersion(versions: string[]): string {
   const sortedVersions = versions.sort(compareVersionRanges);
   return sortedVersions[sortedVersions.length - 1]; // Latest version will be sorted to end of list.
+}
+
+// Example input: ['~', '^'], output: '^'
+export function getHighestRangeType(ranges: string[]): string {
+  const sorted = ranges.sort(compareRanges);
+  return sorted[sorted.length - 1]; // Range with highest precedence will be sorted to end of list.
 }
