@@ -8,6 +8,7 @@ import {
   compareRanges,
   versionRangeToRange,
   getLatestVersion,
+  getHighestRangeType,
 } from '../../lib/dependency-versions.js';
 import { getPackages } from '../../lib/workspace.js';
 import {
@@ -632,7 +633,7 @@ describe('Utils | dependency-versions', function () {
 
         expect(
           packageJson1.dependencies && packageJson1.dependencies['package2']
-        ).toStrictEqual('2.0.0');
+        ).toStrictEqual('^2.0.0');
 
         expect(
           packageJson2.dependencies && packageJson2.dependencies['package1']
@@ -783,6 +784,16 @@ describe('Utils | dependency-versions', function () {
       expect(() =>
         getLatestVersion(['1.2.3', 'foo'])
       ).toThrowErrorMatchingInlineSnapshot('"Invalid Version: foo"');
+    });
+  });
+
+  describe('#getHighestRangeType', function () {
+    it('behaves correctly', function () {
+      expect(getHighestRangeType(['', ''])).toStrictEqual('');
+      expect(getHighestRangeType(['^', ''])).toStrictEqual('^');
+      expect(getHighestRangeType(['~', ''])).toStrictEqual('~');
+      expect(getHighestRangeType(['~', '^'])).toStrictEqual('^');
+      expect(getHighestRangeType(['^', '~'])).toStrictEqual('^');
     });
   });
 });
