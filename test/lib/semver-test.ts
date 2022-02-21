@@ -5,6 +5,7 @@ import {
   versionRangeToRange,
   getLatestVersion,
   getHighestRangeType,
+  getIncreasedLatestVersion,
 } from '../../lib/semver.js';
 
 describe('Utils | semver', function () {
@@ -110,6 +111,60 @@ describe('Utils | semver', function () {
       expect(getHighestRangeType(['~', ''])).toStrictEqual('~');
       expect(getHighestRangeType(['~', '^'])).toStrictEqual('^');
       expect(getHighestRangeType(['^', '~'])).toStrictEqual('^');
+    });
+  });
+
+  describe('#getIncreasedLatestVersion', function () {
+    it('behaves correctly', function () {
+      // ^
+      expect(getIncreasedLatestVersion(['^1.0.0', '1.5.0'])).toStrictEqual(
+        '^1.5.0'
+      );
+      expect(getIncreasedLatestVersion(['1.5.0', '^1.0.0'])).toStrictEqual(
+        '^1.5.0'
+      );
+      expect(getIncreasedLatestVersion(['^0.4.0', '^0.4.5'])).toStrictEqual(
+        '^0.4.5'
+      );
+      expect(getIncreasedLatestVersion(['^0.4.0', '0.5.0'])).toStrictEqual(
+        '0.5.0'
+      );
+      expect(getIncreasedLatestVersion(['^1.0.0', '2.0.0'])).toStrictEqual(
+        '2.0.0'
+      );
+      expect(getIncreasedLatestVersion(['^1.0.0', '^1.0.0'])).toStrictEqual(
+        '^1.0.0'
+      );
+
+      // ^ ~
+      expect(getIncreasedLatestVersion(['~1.5.0', '^1.0.0'])).toStrictEqual(
+        '^1.5.0'
+      );
+      expect(getIncreasedLatestVersion(['~1.5.0', '^2.0.0'])).toStrictEqual(
+        '^2.0.0'
+      );
+      expect(getIncreasedLatestVersion(['~2.0.0', '^1.5.0'])).toStrictEqual(
+        '~2.0.0'
+      );
+
+      // ~
+      expect(getIncreasedLatestVersion(['~1.4.0', '1.4.5'])).toStrictEqual(
+        '~1.4.5'
+      );
+      expect(getIncreasedLatestVersion(['~1.4.0', '~1.5.0'])).toStrictEqual(
+        '~1.5.0'
+      );
+      expect(getIncreasedLatestVersion(['~1.0.0', '~1.0.0'])).toStrictEqual(
+        '~1.0.0'
+      );
+
+      // no range
+      expect(getIncreasedLatestVersion(['1.5.0', '1.0.0'])).toStrictEqual(
+        '1.5.0'
+      );
+      expect(getIncreasedLatestVersion(['1.0.0', '1.0.0'])).toStrictEqual(
+        '1.0.0'
+      );
     });
   });
 });

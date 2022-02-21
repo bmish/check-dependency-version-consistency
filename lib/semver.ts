@@ -62,3 +62,32 @@ export function getHighestRangeType(ranges: string[]): string {
   const sorted = ranges.sort(compareRanges);
   return sorted[sorted.length - 1]; // Range with highest precedence will be sorted to end of list.
 }
+
+// Example input: ['1.5.0', '^1.0.0'], output: '^1.5.0'
+export function getIncreasedLatestVersion(versions: string[]): string {
+  const latestVersion = getLatestVersion(versions);
+  const latestVersionBare = semver.coerce(latestVersion);
+
+  let result = latestVersion;
+  let resultBare = latestVersionBare;
+  for (const version of versions) {
+    if (version === latestVersion) {
+      continue;
+    }
+
+    const versionBare = semver.coerce(version);
+
+    if (
+      latestVersionBare &&
+      semver.satisfies(latestVersionBare, version) &&
+      versionBare &&
+      semver.gt(latestVersionBare, versionBare) &&
+      resultBare
+    ) {
+      result = version.replace(String(versionBare), String(resultBare));
+      resultBare = semver.coerce(result);
+    }
+  }
+
+  return result;
+}
