@@ -12,6 +12,16 @@
 
 
 
+
+## v2.0.3 (2022-02-22)
+
+#### :bug: Bug Fix
+* [#358](https://github.com/bmish/check-dependency-version-consistency/pull/358) Autofix to increased latest version range ([@bmish](https://github.com/bmish))
+
+#### Committers: 1
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+
+
 ## v2.0.2 (2022-02-20)
 
 #### :bug: Bug Fix
