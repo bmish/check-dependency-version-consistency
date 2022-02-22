@@ -4,7 +4,7 @@ import {
   compareVersionRanges,
   compareVersionRangesSafe,
   versionRangeToRange,
-  getLatestVersion,
+  getIncreasedLatestVersion,
   getHighestRangeType,
 } from './semver.js';
 import semver from 'semver';
@@ -273,7 +273,7 @@ export function fixMismatchingVersions(
     );
     let fixedVersion;
     try {
-      fixedVersion = getLatestVersion(versions);
+      fixedVersion = getIncreasedLatestVersion(versions);
     } catch {
       // Skip this dependency.
       notFixed.push(mismatchingVersion);

@@ -44,3 +44,7 @@ export const FIXTURE_PATH_INCONSISTENT_LOCAL_PACKAGE_VERSION = join(
   FIXTURE_PATH,
   'inconsistent-local-package-version'
 );
+export const FIXTURE_PATH_INCREASABLE_RANGE = join(
+  FIXTURE_PATH,
+  'increasable-range'
+);

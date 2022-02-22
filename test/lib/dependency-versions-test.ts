@@ -684,5 +684,64 @@ describe('Utils | dependency-versions', function () {
         ]);
       });
     });
+
+    describe('increasable range', function () {
+      beforeEach(function () {
+        // Create a mock workspace filesystem for temporary usage in this test because changes will be written to some files.
+        mockFs({
+          'package.json': JSON.stringify({
+            workspaces: ['*'],
+          }),
+          package1: {
+            'package.json': JSON.stringify({
+              name: 'package1',
+              dependencies: {
+                foo: '^1.0.0',
+              },
+            }),
+          },
+          package2: {
+            'package.json': JSON.stringify({
+              name: 'package2',
+              dependencies: {
+                foo: '1.5.0',
+              },
+            }),
+          },
+        });
+      });
+
+      afterEach(function () {
+        mockFs.restore();
+      });
+
+      it('increases the range', function () {
+        const packages = getPackagesHelper('.');
+        const mismatchingVersions = calculateMismatchingVersions(
+          calculateVersionsForEachDependency(packages)
+        );
+        fixMismatchingVersions(packages, mismatchingVersions);
+
+        // Read in package.json files.
+        const packageJson1Contents = readFileSync(
+          'package1/package.json',
+          'utf-8'
+        );
+        const packageJson2Contents = readFileSync(
+          'package2/package.json',
+          'utf-8'
+        );
+        const packageJson1: PackageJson = JSON.parse(packageJson1Contents);
+        const packageJson2: PackageJson = JSON.parse(packageJson2Contents);
+
+        expect(
+          packageJson1.dependencies && packageJson1.dependencies['foo']
+        ).toStrictEqual('^1.5.0');
+
+        expect(
+          packageJson2.dependencies && packageJson2.dependencies['foo']
+        ).toStrictEqual('^1.5.0');
+      });
+    });
   });
 });

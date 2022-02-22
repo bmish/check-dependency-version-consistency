@@ -1,6 +1,9 @@
 import chalk from 'chalk';
 import type { MismatchingDependencyVersions } from './dependency-versions.js';
-import { compareVersionRangesSafe, getLatestVersion } from './semver.js';
+import {
+  compareVersionRangesSafe,
+  getIncreasedLatestVersion,
+} from './semver.js';
 import { table } from 'table';
 
 export function mismatchingVersionsToOutput(
@@ -67,7 +70,7 @@ export function mismatchingVersionsFixedToOutput(
     .flatMap((mismatchingVersion) => {
       let version;
       try {
-        version = getLatestVersion(
+        version = getIncreasedLatestVersion(
           mismatchingVersion.versions.map((v) => v.version)
         );
       } catch {
