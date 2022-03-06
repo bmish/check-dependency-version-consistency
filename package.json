@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "chalk": "^4.1.2",
-    "commander": "^8.1.0",
+    "commander": "^9.0.0",
     "edit-json-file": "^1.7.0",
     "globby": "^13.1.1",
     "semver": "^7.3.5",
