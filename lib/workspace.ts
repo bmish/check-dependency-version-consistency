@@ -109,7 +109,7 @@ export function getWorkspaces(root: string): string[] {
   }
 
   const workspacePackageJson: PackageJson = JSON.parse(
-    readFileSync(join(root, 'package.json'), 'utf-8')
+    readFileSync(join(root, 'package.json'), 'utf8')
   );
 
   if (!workspacePackageJson.workspaces) {

@@ -14,7 +14,7 @@ export class Package {
     this.path = path;
     this.pathWorkspace = pathWorkspace;
     this.pathPackageJson = join(path, 'package.json');
-    const packageJsonContents = readFileSync(this.pathPackageJson, 'utf-8');
+    const packageJsonContents = readFileSync(this.pathPackageJson, 'utf8');
     this.packageJsonEndsInNewline = packageJsonContents.endsWith('\n');
     this.packageJson = JSON.parse(packageJsonContents);
   }

@@ -363,14 +363,14 @@ describe('Utils | dependency-versions', function () {
         );
 
         // Read in package.json files.
-        const packageJsonRootContents = readFileSync('package.json', 'utf-8');
+        const packageJsonRootContents = readFileSync('package.json', 'utf8');
         const packageJson1Contents = readFileSync(
           '@scope1/package1/package.json',
-          'utf-8'
+          'utf8'
         );
         const packageJson2Contents = readFileSync(
           '@scope1/package2/package.json',
-          'utf-8'
+          'utf8'
         );
         const packageJsonRoot: PackageJson = JSON.parse(
           packageJsonRootContents
@@ -611,15 +611,15 @@ describe('Utils | dependency-versions', function () {
         // Read in package.json files.
         const packageJson1Contents = readFileSync(
           'package1/package.json',
-          'utf-8'
+          'utf8'
         );
         const packageJson2Contents = readFileSync(
           'package2/package.json',
-          'utf-8'
+          'utf8'
         );
         const packageJson3Contents = readFileSync(
           'package3/package.json',
-          'utf-8'
+          'utf8'
         );
         const packageJson1: PackageJson = JSON.parse(packageJson1Contents);
         const packageJson2: PackageJson = JSON.parse(packageJson2Contents);
@@ -725,11 +725,11 @@ describe('Utils | dependency-versions', function () {
         // Read in package.json files.
         const packageJson1Contents = readFileSync(
           'package1/package.json',
-          'utf-8'
+          'utf8'
         );
         const packageJson2Contents = readFileSync(
           'package2/package.json',
-          'utf-8'
+          'utf8'
         );
         const packageJson1: PackageJson = JSON.parse(packageJson1Contents);
         const packageJson2: PackageJson = JSON.parse(packageJson2Contents);
