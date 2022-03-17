@@ -11,24 +11,39 @@ export function getPackages(
   ignorePaths: string[],
   ignorePathPatterns: RegExp[]
 ): Package[] {
-  const workspacePackages = getWorkspaces(root).flatMap((workspace) => {
-    if (!workspace.includes('*')) {
-      return workspace;
+  const packageMap: Map<string, Package> = new Map();
+
+  // Expand workspace globs into concrete existing pathnames
+  function expandWorkspaces(workspacePatterns: string[]) {
+    return workspacePatterns.flatMap((workspace) => {
+      if (!workspace.includes('*')) {
+        return [workspace];
+      }
+      // Use cwd instead of passing join()'d paths to globby for Windows support: https://github.com/micromatch/micromatch/blob/34f44b4f57eacbdbcc74f64252e0845cf44bbdbd/README.md?plain=1#L822
+      return globbySync(workspace, { onlyDirectories: true, cwd: root });
+    });
+  }
+
+  // Add packages found at the given paths to the packages array, if there's a package there,
+  // and also any workspaces listed by those packages
+  function accumulatePackages(paths: string[]): void {
+    for (const relativePath of paths) {
+      const path = join(root, relativePath);
+      if (Package.exists(path)) {
+        const package_ = new Package(path, root);
+        packageMap.set(package_.name, package_);
+        const workspacePatterns = package_.workspacePatterns.map(
+          (workspacePath) => join(relativePath, workspacePath)
+        );
+        accumulatePackages(expandWorkspaces(workspacePatterns));
+      }
     }
+  }
 
-    // Use cwd instead of passing join()'d paths to globby for Windows support: https://github.com/micromatch/micromatch/blob/34f44b4f57eacbdbcc74f64252e0845cf44bbdbd/README.md?plain=1#L822
-    return globbySync(workspace, { onlyDirectories: true, cwd: root });
-  });
+  // Now accumulate packages / workspaces starting at the root
+  accumulatePackages(['.']);
 
-  const paths = [
-    '.', // Include workspace root.
-    ...workspacePackages,
-  ].map((path) => join(root, path));
-
-  const packages = paths
-    .filter((path) => Package.exists(path))
-    .map((path) => new Package(path, root));
-
+  const packages = [...packageMap.values()];
   for (const ignoredPackage of ignorePackages) {
     if (
       !Package.some(packages, (package_) => package_.name === ignoredPackage) // eslint-disable-line unicorn/no-array-method-this-argument,unicorn/no-array-callback-reference -- false positive

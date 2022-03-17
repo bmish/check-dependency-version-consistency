@@ -1,0 +1,5 @@
+{
+  "name": "@scope2",
+  "description": "The list of packages in this scope is defined in its own package.json instead of at the top level",
+  "workspaces": ["package1", "package2", "package3"]
+}
