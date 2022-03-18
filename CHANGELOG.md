@@ -13,6 +13,17 @@
 
 
 
+
+## v2.0.4 (2022-03-18)
+
+#### :bug: Bug Fix
+* [#381](https://github.com/bmish/check-dependency-version-consistency/pull/381) Support object-style workspace package config in package.json ([@bipinpoudyal](https://github.com/bipinpoudyal))
+
+#### Committers: 2
+- Bipin Poudyal ([@bipinpoudyal](https://github.com/bipinpoudyal))
+- Darius D. ([@ddzz](https://github.com/ddzz))
+
+
 ## v2.0.3 (2022-02-22)
 
 #### :bug: Bug Fix
