@@ -6,7 +6,7 @@ import {
   FIXTURE_PATH_VALID,
   FIXTURE_PATH_VALID_WITH_PACKAGES,
   FIXTURE_PATH_WORKSPACE_NOT_AN_ARRAY,
-  FIXTURE_PATH_WORKSPACE_PACAKGE_NOT_AN_ARRAY,
+  FIXTURE_PATH_WORKSPACE_PACKAGE_NOT_AN_ARRAY,
 } from '../fixtures/index.js';
 
 describe('Utils | workspace', function () {
@@ -199,7 +199,7 @@ describe('Utils | workspace', function () {
 
     it('throws with fixture that does not have workspace packages specified as array', function () {
       expect(() =>
-        getWorkspaces(FIXTURE_PATH_WORKSPACE_PACAKGE_NOT_AN_ARRAY)
+        getWorkspaces(FIXTURE_PATH_WORKSPACE_PACKAGE_NOT_AN_ARRAY)
       ).toThrowErrorMatchingInlineSnapshot(
         '"package.json `workspaces.packages` is not a string array."'
       );

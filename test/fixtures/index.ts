@@ -54,7 +54,7 @@ export const FIXTURE_PATH_VALID_WITH_PACKAGES = join(
   'valid-with-packages'
 );
 
-export const FIXTURE_PATH_WORKSPACE_PACAKGE_NOT_AN_ARRAY = join(
+export const FIXTURE_PATH_WORKSPACE_PACKAGE_NOT_AN_ARRAY = join(
   FIXTURE_PATH,
   'workspace-packages-not-an-array'
 );
