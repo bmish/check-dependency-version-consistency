@@ -51,13 +51,6 @@ describe('Utils | dependency-versions', function () {
                     'package1'
                   ),
                 }),
-                expect.objectContaining({
-                  path: join(
-                    FIXTURE_PATH_INCONSISTENT_VERSIONS,
-                    '@scope2',
-                    'package1'
-                  ),
-                }),
               ],
             },
             {
@@ -67,13 +60,6 @@ describe('Utils | dependency-versions', function () {
                   path: join(
                     FIXTURE_PATH_INCONSISTENT_VERSIONS,
                     '@scope1',
-                    'package2'
-                  ),
-                }),
-                expect.objectContaining({
-                  path: join(
-                    FIXTURE_PATH_INCONSISTENT_VERSIONS,
-                    '@scope2',
                     'package2'
                   ),
                 }),
@@ -104,20 +90,6 @@ describe('Utils | dependency-versions', function () {
                     'package3'
                   ),
                 }),
-                expect.objectContaining({
-                  path: join(
-                    FIXTURE_PATH_INCONSISTENT_VERSIONS,
-                    '@scope2',
-                    'package2'
-                  ),
-                }),
-                expect.objectContaining({
-                  path: join(
-                    FIXTURE_PATH_INCONSISTENT_VERSIONS,
-                    '@scope2',
-                    'package3'
-                  ),
-                }),
               ],
             },
             {
@@ -127,13 +99,6 @@ describe('Utils | dependency-versions', function () {
                   path: join(
                     FIXTURE_PATH_INCONSISTENT_VERSIONS,
                     '@scope1',
-                    'package1'
-                  ),
-                }),
-                expect.objectContaining({
-                  path: join(
-                    FIXTURE_PATH_INCONSISTENT_VERSIONS,
-                    '@scope2',
                     'package1'
                   ),
                 }),
@@ -230,13 +195,6 @@ describe('Utils | dependency-versions', function () {
                     'package1'
                   ),
                 }),
-                expect.objectContaining({
-                  path: join(
-                    FIXTURE_PATH_INCONSISTENT_VERSIONS,
-                    '@scope2',
-                    'package1'
-                  ),
-                }),
               ],
             },
             {
@@ -246,13 +204,6 @@ describe('Utils | dependency-versions', function () {
                   path: join(
                     FIXTURE_PATH_INCONSISTENT_VERSIONS,
                     '@scope1',
-                    'package2'
-                  ),
-                }),
-                expect.objectContaining({
-                  path: join(
-                    FIXTURE_PATH_INCONSISTENT_VERSIONS,
-                    '@scope2',
                     'package2'
                   ),
                 }),
@@ -289,13 +240,6 @@ describe('Utils | dependency-versions', function () {
                     'package1'
                   ),
                 }),
-                expect.objectContaining({
-                  path: join(
-                    FIXTURE_PATH_INCONSISTENT_VERSIONS,
-                    '@scope2',
-                    'package1'
-                  ),
-                }),
               ],
             },
             {
@@ -305,13 +249,6 @@ describe('Utils | dependency-versions', function () {
                   path: join(
                     FIXTURE_PATH_INCONSISTENT_VERSIONS,
                     '@scope1',
-                    'package2'
-                  ),
-                }),
-                expect.objectContaining({
-                  path: join(
-                    FIXTURE_PATH_INCONSISTENT_VERSIONS,
-                    '@scope2',
                     'package2'
                   ),
                 }),

@@ -1,0 +1,8 @@
+{
+  "workspaces": {
+    "packages": [
+      "n1",
+      "n2"
+    ]
+  }
+}
