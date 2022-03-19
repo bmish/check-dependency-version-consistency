@@ -1,8 +1,0 @@
-{
-  "name": "nested-workspaces",
-  "description": "This has its own workspaces field, so the parent includes this workspace and this includes its own children",
-  "workspaces": [
-    "n1",
-    "n2"
-  ]
-}

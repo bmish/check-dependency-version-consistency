@@ -58,3 +58,8 @@ export const FIXTURE_PATH_WORKSPACE_PACKAGE_NOT_AN_ARRAY = join(
   FIXTURE_PATH,
   'workspace-packages-not-an-array'
 );
+
+export const FIXTURE_PATH_NESTED_WORKSPACES = join(
+  FIXTURE_PATH,
+  'nested-workspaces'
+);
