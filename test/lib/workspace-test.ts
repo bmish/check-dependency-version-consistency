@@ -4,7 +4,9 @@ import {
   FIXTURE_PATH_NOT_A_WORKSPACE,
   FIXTURE_PATH_NO_PACKAGE_JSON,
   FIXTURE_PATH_VALID,
+  FIXTURE_PATH_VALID_WITH_PACKAGES,
   FIXTURE_PATH_WORKSPACE_NOT_AN_ARRAY,
+  FIXTURE_PATH_WORKSPACE_PACKAGE_NOT_AN_ARRAY,
 } from '../fixtures/index.js';
 
 describe('Utils | workspace', function () {
@@ -158,6 +160,19 @@ describe('Utils | workspace', function () {
       `);
     });
 
+    it('behaves correctly with valid fixture for using nohoist', function () {
+      expect(getWorkspaces(FIXTURE_PATH_VALID_WITH_PACKAGES))
+        .toMatchInlineSnapshot(`
+          Array [
+            "@scope1/*",
+            "@scope2/*",
+            "nested-scope/**",
+            "foo*",
+            "package1",
+          ]
+        `);
+    });
+
     it('throws with fixture that has no package.json', function () {
       expect(() =>
         getWorkspaces(FIXTURE_PATH_NO_PACKAGE_JSON)
@@ -179,6 +194,14 @@ describe('Utils | workspace', function () {
         getWorkspaces(FIXTURE_PATH_WORKSPACE_NOT_AN_ARRAY)
       ).toThrowErrorMatchingInlineSnapshot(
         '"package.json `workspaces` is not a string array."'
+      );
+    });
+
+    it('throws with fixture that does not have workspace packages specified as array', function () {
+      expect(() =>
+        getWorkspaces(FIXTURE_PATH_WORKSPACE_PACKAGE_NOT_AN_ARRAY)
+      ).toThrowErrorMatchingInlineSnapshot(
+        '"package.json `workspaces.packages` is not a string array."'
       );
     });
   });

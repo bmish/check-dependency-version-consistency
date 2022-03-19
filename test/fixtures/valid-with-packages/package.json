@@ -1,0 +1,18 @@
+{
+    "workspaces":{
+        "packages": [
+            "@scope1/*",
+            "@scope2/*",
+            "nested-scope/**",
+            "foo*",
+            "package1"
+        ],
+        "nohoist": [
+            "**/react-native",
+            "**/react-native/**"
+        ]
+    },
+    "devDependencies": {
+        "foo": "1.2.3"
+    }
+}

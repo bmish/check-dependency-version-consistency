@@ -134,6 +134,15 @@ export function getWorkspaces(root: string): string[] {
   }
 
   if (!Array.isArray(workspacePackageJson.workspaces)) {
+    if (workspacePackageJson.workspaces.packages) {
+      if (Array.isArray(workspacePackageJson.workspaces.packages)) {
+        return workspacePackageJson.workspaces.packages;
+      } else {
+        throw new TypeError(
+          'package.json `workspaces.packages` is not a string array.'
+        );
+      }
+    }
     throw new TypeError('package.json `workspaces` is not a string array.');
   }
 
