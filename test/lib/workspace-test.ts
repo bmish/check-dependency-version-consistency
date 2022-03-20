@@ -158,6 +158,7 @@ describe('Utils | workspace', function () {
           'nested-workspace',
           'nested-workspace/n1',
           'nested-workspace/n2',
+          'nested-workspace/foo1',
         ].map((path) => join(FIXTURE_PATH_NESTED_WORKSPACES, path))
       );
     });

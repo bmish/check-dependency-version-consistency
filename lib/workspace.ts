@@ -140,9 +140,10 @@ function accumulatePackages(root: string, paths: string[]): Package[] {
         // Add the current package.
         package_,
         // Recursively add any nested workspace packages that might exist here.
+        // This package is the new root.
         ...accumulatePackages(
           path,
-          expandWorkspaces(root, package_.workspacePatterns)
+          expandWorkspaces(path, package_.workspacePatterns)
         )
       );
     }
