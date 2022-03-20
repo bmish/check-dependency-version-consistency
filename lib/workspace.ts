@@ -118,8 +118,8 @@ export function getWorkspaces(root: string): string[] {
   return workspacePackageJson.workspaces;
 }
 
-// Expand workspace globs into concrete existing pathnames.
-function expandWorkspaces(root: string, workspacePatterns: string[]) {
+// Expand workspace globs into concrete paths.
+function expandWorkspaces(root: string, workspacePatterns: string[]): string[] {
   return workspacePatterns.flatMap((workspace) => {
     if (!workspace.includes('*')) {
       return [workspace];
@@ -129,8 +129,7 @@ function expandWorkspaces(root: string, workspacePatterns: string[]) {
   });
 }
 
-// Add packages found at the given paths to the packages array, if there's a package there,
-// and also any workspaces listed by those packages.
+// Recursively collect packages from a workspace.
 function accumulatePackages(root: string, paths: string[]): Package[] {
   const results = [];
   for (const relativePath of paths) {
