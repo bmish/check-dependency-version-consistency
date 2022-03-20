@@ -137,12 +137,14 @@ function accumulatePackages(root: string, paths: string[]): Package[] {
     const path = join(root, relativePath);
     if (Package.exists(path)) {
       const package_ = new Package(path, root);
-      results.push(package_);
-      const workspacePatterns = package_.workspacePatterns.map(
-        (workspacePath) => join(relativePath, workspacePath)
-      );
       results.push(
-        ...accumulatePackages(root, expandWorkspaces(root, workspacePatterns))
+        // Add the current package.
+        package_,
+        // Recursively add any nested workspace packages that might exist here.
+        ...accumulatePackages(
+          path,
+          expandWorkspaces(root, package_.workspacePatterns)
+        )
       );
     }
   }
