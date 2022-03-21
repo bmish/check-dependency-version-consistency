@@ -34,6 +34,18 @@ export class Package {
     return relative(this.pathWorkspace, this.path);
   }
 
+  get workspacePatterns(): string[] {
+    if (this.packageJson.workspaces) {
+      if (Array.isArray(this.packageJson.workspaces)) {
+        return this.packageJson.workspaces;
+      }
+      if (this.packageJson.workspaces.packages) {
+        return this.packageJson.workspaces.packages;
+      }
+    }
+    return [];
+  }
+
   static exists(path: string) {
     const packageJsonPath = join(path, 'package.json');
     return existsSync(packageJsonPath);

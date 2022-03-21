@@ -7,6 +7,7 @@ import {
   FIXTURE_PATH_VALID_WITH_PACKAGES,
   FIXTURE_PATH_WORKSPACE_NOT_AN_ARRAY,
   FIXTURE_PATH_WORKSPACE_PACKAGE_NOT_AN_ARRAY,
+  FIXTURE_PATH_NESTED_WORKSPACES,
 } from '../fixtures/index.js';
 
 describe('Utils | workspace', function () {
@@ -143,6 +144,22 @@ describe('Utils | workspace', function () {
         getPackages(FIXTURE_PATH_VALID, [], [], [], [new RegExp('fake')])
       ).toThrowErrorMatchingInlineSnapshot(
         '"Specified option \'--ignore-path-pattern /fake/\', but no matching paths detected in workspace."'
+      );
+    });
+
+    it('behaves correctly with nested workspaces', function () {
+      expect(
+        getPackages(FIXTURE_PATH_NESTED_WORKSPACES, [], [], [], []).map(
+          (package_) => package_.path
+        )
+      ).toStrictEqual(
+        [
+          '.',
+          'nested-workspace',
+          'nested-workspace/n1',
+          'nested-workspace/n2',
+          'nested-workspace/foo1',
+        ].map((path) => join(FIXTURE_PATH_NESTED_WORKSPACES, path))
       );
     });
   });
