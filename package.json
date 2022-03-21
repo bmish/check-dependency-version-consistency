@@ -1,6 +1,6 @@
 {
   "name": "check-dependency-version-consistency",
-  "version": "2.0.1",
+  "version": "2.0.4",
   "description": "Ensures dependencies are on consistent versions across a monorepo.",
   "keywords": [
     "dependencies",
@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "chalk": "^4.1.2",
-    "commander": "^8.1.0",
+    "commander": "^9.0.0",
     "edit-json-file": "^1.7.0",
     "globby": "^13.1.1",
     "semver": "^7.3.5",
@@ -54,11 +54,11 @@
     "@typescript-eslint/eslint-plugin": "^5.2.0",
     "@typescript-eslint/parser": "^5.2.0",
     "eslint": "^8.1.0",
-    "eslint-plugin-jest": "^25.3.4",
+    "eslint-plugin-jest": "^26.1.1",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-square": "^21.0.0",
+    "eslint-plugin-square": "^22.1.0",
     "jest": "^27.4.7",
-    "markdownlint-cli": "^0.30.0",
+    "markdownlint-cli": "^0.31.1",
     "mock-fs": "^5.0.0",
     "npm-package-json-lint": "^5.2.3",
     "npm-run-all": "^4.1.5",

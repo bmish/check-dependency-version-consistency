@@ -1,6 +1,13 @@
-import semver from 'semver';
 import editJsonFile from 'edit-json-file';
 import { Package } from './package.js';
+import {
+  compareVersionRanges,
+  compareVersionRangesSafe,
+  versionRangeToRange,
+  getIncreasedLatestVersion,
+  getHighestRangeType,
+} from './semver.js';
+import semver from 'semver';
 
 export type DependenciesToVersionsSeen = Map<
   string,
@@ -154,7 +161,9 @@ export function calculateMismatchingVersions(
       }
 
       // Calculate unique versions seen for this dependency.
-      const uniqueVersions = [...new Set(versions)].sort(compareRangesSafe);
+      const uniqueVersions = [...new Set(versions)].sort(
+        compareVersionRangesSafe
+      );
 
       // If we saw more than one unique version for this dependency, we found an inconsistency.
       if (uniqueVersions.length > 1) {
@@ -275,7 +284,7 @@ export function fixMismatchingVersions(
     );
     let fixedVersion;
     try {
-      fixedVersion = getLatestVersion(versions);
+      fixedVersion = getIncreasedLatestVersion(versions);
     } catch {
       // Skip this dependency.
       notFixed.push(mismatchingVersion);
@@ -289,11 +298,19 @@ export function fixMismatchingVersions(
     if (
       localPackage &&
       localPackage.packageJson.version &&
-      compareRanges(fixedVersion, localPackage.packageJson.version) > 0
+      compareVersionRanges(fixedVersion, localPackage.packageJson.version) > 0
     ) {
       // Skip this dependency.
       notFixed.push(mismatchingVersion);
       continue;
+    }
+
+    if (localPackage && localPackage.packageJson.version === fixedVersion) {
+      // When fixing to the version of a local package, don't just use the bare package version, but include the highest range type we have seen.
+      const highestRangeTypeSeen = getHighestRangeType(
+        versions.map((versionRange) => versionRangeToRange(versionRange))
+      );
+      fixedVersion = `${highestRangeTypeSeen}${semver.coerce(fixedVersion)}`;
     }
 
     // Update the dependency version in each package.json.
@@ -357,49 +374,4 @@ export function fixMismatchingVersions(
     fixed,
     notFixed,
   };
-}
-
-// This version doesn't throw for when we want to ignore invalid versions that might be present.
-export function compareRangesSafe(a: string, b: string): 0 | -1 | 1 {
-  try {
-    return compareRanges(a, b);
-  } catch {
-    return 0;
-  }
-}
-
-export function compareRanges(a: string, b: string): 0 | -1 | 1 {
-  // Strip range and coerce to normalized version.
-  const aVersion = semver.coerce(a.replace(/^[\^~]/, ''));
-  const bVersion = semver.coerce(b.replace(/^[\^~]/, ''));
-  if (!aVersion) {
-    throw new Error(`Invalid Version: ${a}`);
-  }
-  if (!bVersion) {
-    throw new Error(`Invalid Version: ${b}`);
-  }
-
-  if (semver.eq(aVersion, bVersion)) {
-    // Same version, but wider range considered higher.
-    if (a.startsWith('^') && !b.startsWith('^')) {
-      return 1;
-    } else if (!a.startsWith('^') && b.startsWith('^')) {
-      return -1;
-    } else if (a.startsWith('~') && !b.startsWith('~')) {
-      return 1;
-    } else if (!a.startsWith('~') && b.startsWith('~')) {
-      return -1;
-    }
-
-    // Same version, same range.
-    return 0;
-  }
-
-  // Greater version considered higher.
-  return semver.gt(aVersion, bVersion) ? 1 : -1;
-}
-
-export function getLatestVersion(versions: string[]): string {
-  const sortedVersions = versions.sort(compareRanges);
-  return sortedVersions[sortedVersions.length - 1]; // Latest version will be sorted to end of list.
 }

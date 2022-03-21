@@ -10,6 +10,7 @@ import { getPackages } from '../../lib/workspace.js';
 import {
   FIXTURE_PATH_TESTING_OUTPUT,
   FIXTURE_PATH_NAMES_NOT_MATCHING_LOCATIONS,
+  FIXTURE_PATH_INCREASABLE_RANGE,
 } from '../fixtures/index.js';
 
 describe('Utils | output', function () {
@@ -121,6 +122,18 @@ describe('Utils | output', function () {
           ).slice(0, 1)
         )
       ).toMatchInlineSnapshot('"Fixed versions for 1 dependency: bar@2.0.0"');
+    });
+
+    it('behaves correctly with an increasable range', function () {
+      expect(
+        mismatchingVersionsFixedToOutput(
+          calculateMismatchingVersions(
+            calculateVersionsForEachDependency(
+              getPackages(FIXTURE_PATH_INCREASABLE_RANGE, [], [], [], [])
+            )
+          ).slice(0, 1)
+        )
+      ).toMatchInlineSnapshot('"Fixed versions for 1 dependency: foo@^1.5.0"');
     });
 
     it('behaves correctly with empty input', function () {

@@ -11,6 +11,37 @@
 
 
 
+
+
+
+## v2.0.4 (2022-03-18)
+
+#### :bug: Bug Fix
+* [#381](https://github.com/bmish/check-dependency-version-consistency/pull/381) Support object-style workspace package config in package.json ([@bipinpoudyal](https://github.com/bipinpoudyal))
+
+#### Committers: 2
+- Bipin Poudyal ([@bipinpoudyal](https://github.com/bipinpoudyal))
+- Darius D. ([@ddzz](https://github.com/ddzz))
+
+
+## v2.0.3 (2022-02-22)
+
+#### :bug: Bug Fix
+* [#358](https://github.com/bmish/check-dependency-version-consistency/pull/358) Autofix to increased latest version range ([@bmish](https://github.com/bmish))
+
+#### Committers: 1
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+
+
+## v2.0.2 (2022-02-20)
+
+#### :bug: Bug Fix
+* [#355](https://github.com/bmish/check-dependency-version-consistency/pull/355) Maintain range type when fixing to local package version ([@bmish](https://github.com/bmish))
+
+#### Committers: 1
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+
+
 ## v2.0.1 (2022-02-17)
 
 #### :bug: Bug Fix

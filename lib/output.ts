@@ -1,6 +1,9 @@
 import chalk from 'chalk';
 import type { MismatchingDependencyVersions } from './dependency-versions.js';
-import { compareRangesSafe, getLatestVersion } from './dependency-versions.js';
+import {
+  compareVersionRangesSafe,
+  getIncreasedLatestVersion,
+} from './semver.js';
 import { table } from 'table';
 
 export function mismatchingVersionsToOutput(
@@ -23,7 +26,7 @@ export function mismatchingVersionsToOutput(
       );
 
       const rows = object.versions
-        .sort((a, b) => compareRangesSafe(b.version, a.version))
+        .sort((a, b) => compareVersionRangesSafe(b.version, a.version))
         .map((versionObject) => {
           const usageCount = versionObject.packages.length;
           const packageNames = versionObject.packages.map(
@@ -67,7 +70,7 @@ export function mismatchingVersionsFixedToOutput(
     .flatMap((mismatchingVersion) => {
       let version;
       try {
-        version = getLatestVersion(
+        version = getIncreasedLatestVersion(
           mismatchingVersion.versions.map((v) => v.version)
         );
       } catch {

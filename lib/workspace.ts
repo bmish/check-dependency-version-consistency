@@ -11,23 +11,7 @@ export function getPackages(
   ignorePaths: string[],
   ignorePathPatterns: RegExp[]
 ): Package[] {
-  const workspacePackages = getWorkspaces(root).flatMap((workspace) => {
-    if (!workspace.includes('*')) {
-      return workspace;
-    }
-
-    // Use cwd instead of passing join()'d paths to globby for Windows support: https://github.com/micromatch/micromatch/blob/34f44b4f57eacbdbcc74f64252e0845cf44bbdbd/README.md?plain=1#L822
-    return globbySync(workspace, { onlyDirectories: true, cwd: root });
-  });
-
-  const paths = [
-    '.', // Include workspace root.
-    ...workspacePackages,
-  ].map((path) => join(root, path));
-
-  const packages = paths
-    .filter((path) => Package.exists(path))
-    .map((path) => new Package(path, root));
+  const packages = accumulatePackages(root, ['.']);
 
   for (const ignoredPackage of ignorePackages) {
     if (
@@ -109,7 +93,7 @@ export function getWorkspaces(root: string): string[] {
   }
 
   const workspacePackageJson: PackageJson = JSON.parse(
-    readFileSync(join(root, 'package.json'), 'utf-8')
+    readFileSync(join(root, 'package.json'), 'utf8')
   );
 
   if (!workspacePackageJson.workspaces) {
@@ -119,8 +103,50 @@ export function getWorkspaces(root: string): string[] {
   }
 
   if (!Array.isArray(workspacePackageJson.workspaces)) {
+    if (workspacePackageJson.workspaces.packages) {
+      if (Array.isArray(workspacePackageJson.workspaces.packages)) {
+        return workspacePackageJson.workspaces.packages;
+      } else {
+        throw new TypeError(
+          'package.json `workspaces.packages` is not a string array.'
+        );
+      }
+    }
     throw new TypeError('package.json `workspaces` is not a string array.');
   }
 
   return workspacePackageJson.workspaces;
+}
+
+// Expand workspace globs into concrete paths.
+function expandWorkspaces(root: string, workspacePatterns: string[]): string[] {
+  return workspacePatterns.flatMap((workspace) => {
+    if (!workspace.includes('*')) {
+      return [workspace];
+    }
+    // Use cwd instead of passing join()'d paths to globby for Windows support: https://github.com/micromatch/micromatch/blob/34f44b4f57eacbdbcc74f64252e0845cf44bbdbd/README.md?plain=1#L822
+    return globbySync(workspace, { onlyDirectories: true, cwd: root });
+  });
+}
+
+// Recursively collect packages from a workspace.
+function accumulatePackages(root: string, paths: string[]): Package[] {
+  const results = [];
+  for (const relativePath of paths) {
+    const path = join(root, relativePath);
+    if (Package.exists(path)) {
+      const package_ = new Package(path, root);
+      results.push(
+        // Add the current package.
+        package_,
+        // Recursively add any nested workspace packages that might exist here.
+        // This package is the new root.
+        ...accumulatePackages(
+          path,
+          expandWorkspaces(path, package_.workspacePatterns)
+        )
+      );
+    }
+  }
+  return results;
 }

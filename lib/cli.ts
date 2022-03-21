@@ -20,7 +20,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 function getCurrentPackageVersion(): string {
   const packageJson: PackageJson = JSON.parse(
-    readFileSync(join(__dirname, '..', '..', 'package.json'), 'utf-8') // Relative to compiled version of this file in the dist folder.
+    readFileSync(join(__dirname, '..', '..', 'package.json'), 'utf8') // Relative to compiled version of this file in the dist folder.
   );
   if (!packageJson.version) {
     throw new Error('Could not find package.json `version`');

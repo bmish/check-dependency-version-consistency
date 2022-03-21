@@ -44,5 +44,20 @@ export const FIXTURE_PATH_INCONSISTENT_LOCAL_PACKAGE_VERSION = join(
   FIXTURE_PATH,
   'inconsistent-local-package-version'
 );
-
+export const FIXTURE_PATH_INCREASABLE_RANGE = join(
+  FIXTURE_PATH,
+  'increasable-range'
+);
+export const FIXTURE_PATH_VALID_WITH_PACKAGES = join(
+  FIXTURE_PATH,
+  'valid-with-packages'
+);
+export const FIXTURE_PATH_WORKSPACE_PACKAGE_NOT_AN_ARRAY = join(
+  FIXTURE_PATH,
+  'workspace-packages-not-an-array'
+);
+export const FIXTURE_PATH_NESTED_WORKSPACES = join(
+  FIXTURE_PATH,
+  'nested-workspaces'
+);
 export const FIXTURE_PATH_RESOLUTIONS = join(FIXTURE_PATH, 'resolutions');

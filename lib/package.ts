@@ -14,7 +14,7 @@ export class Package {
     this.path = path;
     this.pathWorkspace = pathWorkspace;
     this.pathPackageJson = join(path, 'package.json');
-    const packageJsonContents = readFileSync(this.pathPackageJson, 'utf-8');
+    const packageJsonContents = readFileSync(this.pathPackageJson, 'utf8');
     this.packageJsonEndsInNewline = packageJsonContents.endsWith('\n');
     this.packageJson = JSON.parse(packageJsonContents);
   }
@@ -32,6 +32,18 @@ export class Package {
   // Relative to workspace root.
   get pathRelative() {
     return relative(this.pathWorkspace, this.path);
+  }
+
+  get workspacePatterns(): string[] {
+    if (this.packageJson.workspaces) {
+      if (Array.isArray(this.packageJson.workspaces)) {
+        return this.packageJson.workspaces;
+      }
+      if (this.packageJson.workspaces.packages) {
+        return this.packageJson.workspaces.packages;
+      }
+    }
+    return [];
   }
 
   static exists(path: string) {

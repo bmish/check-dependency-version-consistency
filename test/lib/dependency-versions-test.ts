@@ -3,9 +3,6 @@ import {
   calculateMismatchingVersions,
   filterOutIgnoredDependencies,
   fixMismatchingVersions,
-  compareRanges,
-  compareRangesSafe,
-  getLatestVersion,
 } from '../../lib/dependency-versions.js';
 import { getPackages } from '../../lib/workspace.js';
 import {
@@ -404,14 +401,14 @@ describe('Utils | dependency-versions', function () {
         );
 
         // Read in package.json files.
-        const packageJsonRootContents = readFileSync('package.json', 'utf-8');
+        const packageJsonRootContents = readFileSync('package.json', 'utf8');
         const packageJson1Contents = readFileSync(
           '@scope1/package1/package.json',
-          'utf-8'
+          'utf8'
         );
         const packageJson2Contents = readFileSync(
           '@scope1/package2/package.json',
-          'utf-8'
+          'utf8'
         );
         const packageJsonRoot: PackageJson = JSON.parse(
           packageJsonRootContents
@@ -652,15 +649,15 @@ describe('Utils | dependency-versions', function () {
         // Read in package.json files.
         const packageJson1Contents = readFileSync(
           'package1/package.json',
-          'utf-8'
+          'utf8'
         );
         const packageJson2Contents = readFileSync(
           'package2/package.json',
-          'utf-8'
+          'utf8'
         );
         const packageJson3Contents = readFileSync(
           'package3/package.json',
-          'utf-8'
+          'utf8'
         );
         const packageJson1: PackageJson = JSON.parse(packageJson1Contents);
         const packageJson2: PackageJson = JSON.parse(packageJson2Contents);
@@ -668,7 +665,7 @@ describe('Utils | dependency-versions', function () {
 
         expect(
           packageJson1.dependencies && packageJson1.dependencies['package2']
-        ).toStrictEqual('2.0.0');
+        ).toStrictEqual('^2.0.0');
 
         expect(
           packageJson2.dependencies && packageJson2.dependencies['package1']
@@ -767,10 +764,10 @@ describe('Utils | dependency-versions', function () {
         );
 
         // Read in package.json files.
-        const packageJsonRootContents = readFileSync('package.json', 'utf-8');
+        const packageJsonRootContents = readFileSync('package.json', 'utf8');
         const packageJson1Contents = readFileSync(
           'package1/package.json',
-          'utf-8'
+          'utf8'
         );
         const packageJsonRoot: PackageJson = JSON.parse(
           packageJsonRootContents
@@ -825,71 +822,64 @@ describe('Utils | dependency-versions', function () {
         ]);
       });
     });
-  });
 
-  describe('#compareRanges', function () {
-    it('correctly chooses the higher range', function () {
-      // 1 (greater than)
-      expect(compareRanges('1.2.3', '1.2.2')).toStrictEqual(1);
-      expect(compareRanges('5.0.0', '4.0.0')).toStrictEqual(1);
-      expect(compareRanges('8.0.0-beta.1', '^7')).toStrictEqual(1);
-      expect(compareRanges('^5.0.0', '4.0.0')).toStrictEqual(1);
-      expect(compareRanges('^5.0.0', '^4.0.0')).toStrictEqual(1);
-      expect(compareRanges('^5.0.0', '~4.0.0')).toStrictEqual(1);
-      expect(compareRanges('^5.0.0', '~5.0.0')).toStrictEqual(1);
-      expect(compareRanges('~5.0.0', '5.0.0')).toStrictEqual(1);
-      expect(compareRanges('~5.0.0', '~4.0.0')).toStrictEqual(1);
+    describe('increasable range', function () {
+      beforeEach(function () {
+        // Create a mock workspace filesystem for temporary usage in this test because changes will be written to some files.
+        mockFs({
+          'package.json': JSON.stringify({
+            workspaces: ['*'],
+          }),
+          package1: {
+            'package.json': JSON.stringify({
+              name: 'package1',
+              dependencies: {
+                foo: '^1.0.0',
+              },
+            }),
+          },
+          package2: {
+            'package.json': JSON.stringify({
+              name: 'package2',
+              dependencies: {
+                foo: '1.5.0',
+              },
+            }),
+          },
+        });
+      });
 
-      // -1 (less than)
-      expect(compareRanges('4.0.0', '5.0.0')).toStrictEqual(-1);
-      expect(compareRanges('5.0.0', '~5.0.0')).toStrictEqual(-1);
-      expect(compareRanges('^4.0.0', '^5.0.0')).toStrictEqual(-1);
-      expect(compareRanges('~4.0.0', '~5.0.0')).toStrictEqual(-1);
-      expect(compareRanges('~5.0.0', '^5.0.0')).toStrictEqual(-1);
+      afterEach(function () {
+        mockFs.restore();
+      });
 
-      // 0 (equal)
-      expect(compareRanges('6', '6')).toStrictEqual(0);
-      expect(compareRanges('6.0', '6.0')).toStrictEqual(0);
-      expect(compareRanges('6.0.0', '6.0.0')).toStrictEqual(0);
-      expect(compareRanges('^6.0.0', '^6.0.0')).toStrictEqual(0);
-      expect(compareRanges('v6', '6')).toStrictEqual(0);
-      expect(compareRanges('~6.0.0', '~6.0.0')).toStrictEqual(0);
-    });
+      it('increases the range', function () {
+        const packages = getPackagesHelper('.');
+        const mismatchingVersions = calculateMismatchingVersions(
+          calculateVersionsForEachDependency(packages)
+        );
+        fixMismatchingVersions(packages, mismatchingVersions);
 
-    it('throws with invalid ranges', function () {
-      expect(() =>
-        compareRanges('foo', '~6.0.0')
-      ).toThrowErrorMatchingInlineSnapshot('"Invalid Version: foo"');
-      expect(() =>
-        compareRanges('~6.0.0', 'foo')
-      ).toThrowErrorMatchingInlineSnapshot('"Invalid Version: foo"');
-    });
-  });
+        // Read in package.json files.
+        const packageJson1Contents = readFileSync(
+          'package1/package.json',
+          'utf8'
+        );
+        const packageJson2Contents = readFileSync(
+          'package2/package.json',
+          'utf8'
+        );
+        const packageJson1: PackageJson = JSON.parse(packageJson1Contents);
+        const packageJson2: PackageJson = JSON.parse(packageJson2Contents);
 
-  describe('#compareRangesSafe', function () {
-    it('behaves correctly', function () {
-      expect(compareRangesSafe('1.2.3', '1.2.2')).toStrictEqual(1);
-      expect(compareRangesSafe('4.0.0', '5.0.0')).toStrictEqual(-1);
-      expect(compareRangesSafe('6', '6')).toStrictEqual(0);
-    });
+        expect(
+          packageJson1.dependencies && packageJson1.dependencies['foo']
+        ).toStrictEqual('^1.5.0');
 
-    it('does not throw with invalid ranges', function () {
-      expect(compareRangesSafe('foo', '~6.0.0')).toStrictEqual(0);
-      expect(compareRangesSafe('~6.0.0', 'foo')).toStrictEqual(0);
-    });
-  });
-
-  describe('#getLatestVersion', function () {
-    it('correctly chooses the higher range', function () {
-      // Just basic sanity checks to ensure the data is passed through to `compareRanges` which has extensive tests.
-      expect(getLatestVersion(['1.2.3', '1.2.2'])).toStrictEqual('1.2.3');
-      expect(getLatestVersion(['1.2.2', '1.2.3'])).toStrictEqual('1.2.3');
-    });
-
-    it('throws with invalid version', function () {
-      expect(() =>
-        getLatestVersion(['1.2.3', 'foo'])
-      ).toThrowErrorMatchingInlineSnapshot('"Invalid Version: foo"');
+        expect(
+          packageJson2.dependencies && packageJson2.dependencies['foo']
+        ).toStrictEqual('^1.5.0');
+      });
     });
   });
 });
