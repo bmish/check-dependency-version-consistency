@@ -14,6 +14,19 @@
 
 
 
+
+## v3.0.0 (2022-03-27)
+
+#### :boom: Breaking Change
+* [#348](https://github.com/bmish/check-dependency-version-consistency/pull/348) Check `resolutions` for inconsistencies ([@bmish](https://github.com/bmish))
+* [#379](https://github.com/bmish/check-dependency-version-consistency/pull/379) Consider nested workspaces ([@dobesv](https://github.com/dobesv))
+
+#### Committers: 3
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+- Darius D. ([@ddzz](https://github.com/ddzz))
+- Dobes Vandermeer ([@dobesv](https://github.com/dobesv))
+
+
 ## v2.0.4 (2022-03-18)
 
 #### :bug: Bug Fix
