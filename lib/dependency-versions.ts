@@ -72,12 +72,14 @@ function recordDependencyVersionsForPackageJson(
     for (const [dependency, dependencyVersion] of Object.entries(
       package_.packageJson.dependencies
     )) {
-      recordDependencyVersion(
-        dependenciesToVersionsSeen,
-        dependency,
-        dependencyVersion,
-        package_
-      );
+      if (dependencyVersion) {
+        recordDependencyVersion(
+          dependenciesToVersionsSeen,
+          dependency,
+          dependencyVersion,
+          package_
+        );
+      }
     }
   }
 
@@ -85,12 +87,14 @@ function recordDependencyVersionsForPackageJson(
     for (const [dependency, dependencyVersion] of Object.entries(
       package_.packageJson.devDependencies
     )) {
-      recordDependencyVersion(
-        dependenciesToVersionsSeen,
-        dependency,
-        dependencyVersion,
-        package_
-      );
+      if (dependencyVersion) {
+        recordDependencyVersion(
+          dependenciesToVersionsSeen,
+          dependency,
+          dependencyVersion,
+          package_
+        );
+      }
     }
   }
 
@@ -98,12 +102,14 @@ function recordDependencyVersionsForPackageJson(
     for (const [dependency, dependencyVersion] of Object.entries(
       package_.packageJson.resolutions
     )) {
-      recordDependencyVersion(
-        dependenciesToVersionsSeen,
-        dependency,
-        dependencyVersion,
-        package_
-      );
+      if (dependencyVersion) {
+        recordDependencyVersion(
+          dependenciesToVersionsSeen,
+          dependency,
+          dependencyVersion,
+          package_
+        );
+      }
     }
   }
 }
