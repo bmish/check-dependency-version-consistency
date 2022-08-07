@@ -16,9 +16,7 @@
   },
   "license": "MIT",
   "type": "module",
-  "bin": {
-    "check-dependency-version-consistency": "dist/bin/check-dependency-version-consistency.js"
-  },
+  "bin": "dist/bin/check-dependency-version-consistency.js",
   "files": [
     "dist/",
     "README.md"
@@ -88,5 +86,6 @@
       "release": true,
       "tokenRef": "GITHUB_AUTH"
     }
-  }
+  },
+  "packageManager": "yarn@3.2.2"
 }
