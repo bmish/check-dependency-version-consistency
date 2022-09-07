@@ -1,0 +1,37 @@
+{
+    "workspaces": [
+        "*"
+    ],
+    "//": "These dependencies should match the versions in the other package.json in this fixture.",
+    "dependencies": {
+        "semver1": "1",
+        "semver2": "1.0.0",
+        "semver3": "1.0.0-0",
+        "semver4": "~1",
+        "semver5": "^1",
+        "semver6": "^1.0.0",
+        "semver7": "1.x",
+        "file1": "file:/",
+        "file2": "file:packages/a",
+        "file3": "file:./packages/a",
+        "file4": "file:../foo",
+        "patch1": "patch:c@1.3.0#./patches/c+1.3.0.patch",
+        "git1": "git+ssh://org-123@github.com:org/repo.git#v1.2.0",
+        "git2": "git+https://github.com/user/repo.git#commit123abc",
+        "git3": "https://url/repo.git",
+        "git4": "http://asdf.com/asdf.tar.gz",
+        "git5": "expressjs/express",
+        "git6": "mochajs/mocha#4727d357ea",
+        "git7": "user/repo#feature\/branch",
+        "star": "*",
+        "workspace1": "workspace:^",
+        "workspace2": "workspace:*",
+        "latest": "latest",
+        "//": "some comment",
+        "blank": "",
+        "range1": "1.0.0 - 2.9999.9999",
+        "range2": ">=1.0.2 <2.1.2",
+        "range3": ">1.0.2 <=2.3.4",
+        "range4": "<1.0.0 || >=2.3.1 <2.4.5 || >=2.5.2 <3.0.0"
+    }
+}

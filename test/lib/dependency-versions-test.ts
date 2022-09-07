@@ -13,6 +13,7 @@ import {
   FIXTURE_PATH_PACKAGE_MISSING_PACKAGE_JSON,
   FIXTURE_PATH_INCONSISTENT_LOCAL_PACKAGE_VERSION,
   FIXTURE_PATH_RESOLUTIONS,
+  FIXTURE_PATH_ALL_VERSION_TYPES,
 } from '../fixtures/index.js';
 import mockFs from 'mock-fs';
 import { readFileSync } from 'node:fs';
@@ -207,6 +208,15 @@ describe('Utils | dependency-versions', function () {
           ],
         },
       ]);
+    });
+
+    it('has no problem with all version types', function () {
+      const dependencyVersions = calculateVersionsForEachDependency(
+        getPackagesHelper(FIXTURE_PATH_ALL_VERSION_TYPES)
+      );
+      expect(calculateMismatchingVersions(dependencyVersions)).toStrictEqual(
+        []
+      );
     });
   });
 
