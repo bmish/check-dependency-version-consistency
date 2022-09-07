@@ -61,3 +61,8 @@ export const FIXTURE_PATH_NESTED_WORKSPACES = join(
   'nested-workspaces'
 );
 export const FIXTURE_PATH_RESOLUTIONS = join(FIXTURE_PATH, 'resolutions');
+
+export const FIXTURE_PATH_ALL_VERSION_TYPES = join(
+  FIXTURE_PATH,
+  'all-version-types'
+);
