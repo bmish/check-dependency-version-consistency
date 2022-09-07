@@ -15,6 +15,20 @@
 
 
 
+
+## v3.0.1 (2022-09-06)
+
+#### :bug: Bug Fix
+* [#520](https://github.com/bmish/check-dependency-version-consistency/pull/520) Allow referring to local package version with `workspace:` prefix ([@bmish](https://github.com/bmish))
+
+#### :house: Internal
+* [#423](https://github.com/bmish/check-dependency-version-consistency/pull/423) Add Node v18 to CI ([@ddzz](https://github.com/ddzz))
+
+#### Committers: 2
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+- Darius Dzien ([@ddzz](https://github.com/ddzz))
+
+
 ## v3.0.0 (2022-03-27)
 
 #### :boom: Breaking Change
