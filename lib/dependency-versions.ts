@@ -154,15 +154,19 @@ export function calculateMismatchingVersions(
       const localPackageVersions = versionObjectsForDep
         .filter((versionObject) => versionObject.isLocalPackageVersion)
         .map((versionObject) => versionObject.version);
-
+      const allVersionsHaveWorkspacePrefix = versions.every((version) =>
+        version.startsWith('workspace:')
+      );
+      const hasIncompatibilityWithLocalPackageVersion = versions.some(
+        (version) => !semver.satisfies(localPackageVersions[0], version)
+      );
       if (
         localPackageVersions.length === 1 &&
-        versions.some(
-          (uniqueVersion) =>
-            !semver.satisfies(localPackageVersions[0], uniqueVersion)
-        )
+        !allVersionsHaveWorkspacePrefix &&
+        hasIncompatibilityWithLocalPackageVersion
       ) {
         // If we saw a version for this dependency that isn't compatible with its actual local package version, add the local package version to the list of versions seen.
+        // Note that using the `workspace:` prefix to refer to the local package version is allowed.
         versions = [...versions, ...localPackageVersions];
       }
 

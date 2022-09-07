@@ -14,6 +14,8 @@ import {
   FIXTURE_PATH_INCONSISTENT_LOCAL_PACKAGE_VERSION,
   FIXTURE_PATH_RESOLUTIONS,
   FIXTURE_PATH_ALL_VERSION_TYPES,
+  FIXTURE_PATH_VALID_WITH_WORKSPACE_PREFIX,
+  FIXTURE_PATH_INCONSISTENT_WITH_WORKSPACE_PREFIX,
 } from '../fixtures/index.js';
 import mockFs from 'mock-fs';
 import { readFileSync } from 'node:fs';
@@ -217,6 +219,47 @@ describe('Utils | dependency-versions', function () {
       expect(calculateMismatchingVersions(dependencyVersions)).toStrictEqual(
         []
       );
+    });
+
+    it('has no problem with consistent workspace prefixes', function () {
+      const dependencyVersions = calculateVersionsForEachDependency(
+        getPackagesHelper(FIXTURE_PATH_VALID_WITH_WORKSPACE_PREFIX)
+      );
+      expect(calculateMismatchingVersions(dependencyVersions)).toStrictEqual(
+        []
+      );
+    });
+
+    it('has mismatches with inconsistent workspace prefixes', function () {
+      const dependencyVersions = calculateVersionsForEachDependency(
+        getPackagesHelper(FIXTURE_PATH_INCONSISTENT_WITH_WORKSPACE_PREFIX)
+      );
+      expect(calculateMismatchingVersions(dependencyVersions)).toStrictEqual([
+        {
+          dependency: 'package1',
+          versions: [
+            {
+              version: 'workspace:*',
+              packages: [
+                expect.objectContaining({
+                  path: FIXTURE_PATH_INCONSISTENT_WITH_WORKSPACE_PREFIX,
+                }),
+              ],
+            },
+            {
+              version: 'workspace:^',
+              packages: [
+                expect.objectContaining({
+                  path: join(
+                    FIXTURE_PATH_INCONSISTENT_WITH_WORKSPACE_PREFIX,
+                    'package2'
+                  ),
+                }),
+              ],
+            },
+          ],
+        },
+      ]);
     });
   });
 

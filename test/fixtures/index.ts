@@ -66,3 +66,13 @@ export const FIXTURE_PATH_ALL_VERSION_TYPES = join(
   FIXTURE_PATH,
   'all-version-types'
 );
+
+export const FIXTURE_PATH_VALID_WITH_WORKSPACE_PREFIX = join(
+  FIXTURE_PATH,
+  'valid-with-workspace-prefix'
+);
+
+export const FIXTURE_PATH_INCONSISTENT_WITH_WORKSPACE_PREFIX = join(
+  FIXTURE_PATH,
+  'inconsistent-with-workspace-prefix'
+);
