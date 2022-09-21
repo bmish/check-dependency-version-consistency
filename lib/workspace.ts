@@ -125,7 +125,12 @@ function expandWorkspaces(root: string, workspacePatterns: string[]): string[] {
       return [workspace];
     }
     // Use cwd instead of passing join()'d paths to globby for Windows support: https://github.com/micromatch/micromatch/blob/34f44b4f57eacbdbcc74f64252e0845cf44bbdbd/README.md?plain=1#L822
-    return globbySync(workspace, { onlyDirectories: true, cwd: root });
+    // Ignore any node_modules that may be present due to the use of nohoist.
+    return globbySync(workspace, {
+      onlyDirectories: true,
+      cwd: root,
+      ignore: ['**/node_modules'],
+    });
   });
 }
 
