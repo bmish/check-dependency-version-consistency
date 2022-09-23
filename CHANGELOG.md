@@ -16,6 +16,16 @@
 
 
 
+
+## v3.0.2 (2022-09-23)
+
+#### :bug: Bug Fix
+* [#527](https://github.com/bmish/check-dependency-version-consistency/pull/527) Ignore packages inside `node_modules` from `nohoist` usage ([@bmish](https://github.com/bmish))
+
+#### Committers: 1
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+
+
 ## v3.0.1 (2022-09-06)
 
 #### :bug: Bug Fix
