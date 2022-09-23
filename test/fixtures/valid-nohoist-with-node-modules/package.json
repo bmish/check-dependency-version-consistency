@@ -1,0 +1,10 @@
+{
+  "workspaces": {
+    "packages": [
+      "packages/**"
+    ],
+    "nohoist": [
+      "**/resolve"
+    ]
+  }
+}

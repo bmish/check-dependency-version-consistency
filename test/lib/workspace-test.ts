@@ -5,6 +5,7 @@ import {
   FIXTURE_PATH_NO_PACKAGE_JSON,
   FIXTURE_PATH_VALID,
   FIXTURE_PATH_VALID_WITH_PACKAGES,
+  FIXTURE_PATH_VALID_NOHOIST_WITH_NODE_MODULES,
   FIXTURE_PATH_WORKSPACE_NOT_AN_ARRAY,
   FIXTURE_PATH_WORKSPACE_PACKAGE_NOT_AN_ARRAY,
   FIXTURE_PATH_NESTED_WORKSPACES,
@@ -160,6 +161,22 @@ describe('Utils | workspace', function () {
           'nested-workspace/n2',
           'nested-workspace/foo1',
         ].map((path) => join(FIXTURE_PATH_NESTED_WORKSPACES, path))
+      );
+    });
+
+    it('does not include packages in node_modules from nohoist usage (or crash from malformed package.json in node_modules test fixture)', function () {
+      expect(
+        getPackages(
+          FIXTURE_PATH_VALID_NOHOIST_WITH_NODE_MODULES,
+          [],
+          [],
+          [],
+          []
+        ).map((package_) => package_.path)
+      ).toStrictEqual(
+        ['.', '/packages/package-a'].map((path) =>
+          join(FIXTURE_PATH_VALID_NOHOIST_WITH_NODE_MODULES, path)
+        )
       );
     });
   });

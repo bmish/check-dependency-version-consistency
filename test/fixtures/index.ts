@@ -52,6 +52,10 @@ export const FIXTURE_PATH_VALID_WITH_PACKAGES = join(
   FIXTURE_PATH,
   'valid-with-packages'
 );
+export const FIXTURE_PATH_VALID_NOHOIST_WITH_NODE_MODULES = join(
+  FIXTURE_PATH,
+  'valid-nohoist-with-node-modules'
+);
 export const FIXTURE_PATH_WORKSPACE_PACKAGE_NOT_AN_ARRAY = join(
   FIXTURE_PATH,
   'workspace-packages-not-an-array'
