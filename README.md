@@ -42,7 +42,7 @@ If there are any inconsistencies, the program will exit with failure and output 
 {
   "workspaces": ["*"],
   "scripts": {
-    "lint": "npm-run-all --continue-on-error --aggregate-output --parallel lint:*",
+    "lint": "npm-run-all --continue-on-error --aggregate-output --parallel \"lint:*\"",
     "lint:dependency-versions": "check-dependency-version-consistency .",
     "lint:dependency-versions:fix": "npm-run-all \"lint:dependency-versions --fix\""
   },
