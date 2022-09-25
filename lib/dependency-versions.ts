@@ -212,6 +212,9 @@ function versionsObjectsWithSortedPackages(
   });
 }
 
+const HARDCODED_IGNORED_DEPENDENCIES = new Set([
+  '//', // May be used to add comments to package.json files.
+]);
 export function filterOutIgnoredDependencies(
   mismatchingVersions: MismatchingDependencyVersions,
   ignoredDependencies: string[],
@@ -242,13 +245,20 @@ export function filterOutIgnoredDependencies(
     }
   }
 
-  if (ignoredDependencies.length > 0 || ignoredDependencyPatterns.length > 0) {
+  if (
+    ignoredDependencies.length > 0 ||
+    ignoredDependencyPatterns.length > 0 ||
+    mismatchingVersions.some((mismatchingVersion) =>
+      HARDCODED_IGNORED_DEPENDENCIES.has(mismatchingVersion.dependency)
+    )
+  ) {
     return mismatchingVersions.filter(
       (mismatchingVersion) =>
         !ignoredDependencies.includes(mismatchingVersion.dependency) &&
         !ignoredDependencyPatterns.some((ignoreDependencyPattern) =>
           mismatchingVersion.dependency.match(ignoreDependencyPattern)
-        )
+        ) &&
+        !HARDCODED_IGNORED_DEPENDENCIES.has(mismatchingVersion.dependency)
     );
   }
 
