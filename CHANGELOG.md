@@ -17,6 +17,16 @@
 
 
 
+
+## v3.0.3 (2022-09-26)
+
+#### :bug: Bug Fix
+* [#534](https://github.com/bmish/check-dependency-version-consistency/pull/534) Ignore package.json comments ([@bmish](https://github.com/bmish))
+
+#### Committers: 1
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+
+
 ## v3.0.2 (2022-09-23)
 
 #### :bug: Bug Fix
