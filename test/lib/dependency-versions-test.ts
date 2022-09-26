@@ -14,6 +14,7 @@ import {
   FIXTURE_PATH_INCONSISTENT_LOCAL_PACKAGE_VERSION,
   FIXTURE_PATH_RESOLUTIONS,
   FIXTURE_PATH_ALL_VERSION_TYPES,
+  FIXTURE_PATH_VALID_WITH_COMMENTS,
   FIXTURE_PATH_VALID_WITH_WORKSPACE_PREFIX,
   FIXTURE_PATH_INCONSISTENT_WITH_WORKSPACE_PREFIX,
 } from '../fixtures/index.js';
@@ -358,6 +359,17 @@ describe('Utils | dependency-versions', function () {
       );
       expect(
         filterOutIgnoredDependencies(dependencyVersions, ['package2'], [])
+      ).toStrictEqual([]);
+    });
+
+    it('filters out comments', function () {
+      const dependencyVersions = calculateMismatchingVersions(
+        calculateVersionsForEachDependency(
+          getPackagesHelper(FIXTURE_PATH_VALID_WITH_COMMENTS)
+        )
+      );
+      expect(
+        filterOutIgnoredDependencies(dependencyVersions, [], [])
       ).toStrictEqual([]);
     });
 

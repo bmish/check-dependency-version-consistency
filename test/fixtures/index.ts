@@ -48,6 +48,10 @@ export const FIXTURE_PATH_INCREASABLE_RANGE = join(
   FIXTURE_PATH,
   'increasable-range'
 );
+export const FIXTURE_PATH_VALID_WITH_COMMENTS = join(
+  FIXTURE_PATH,
+  'valid-with-comments'
+);
 export const FIXTURE_PATH_VALID_WITH_PACKAGES = join(
   FIXTURE_PATH,
   'valid-with-packages'
