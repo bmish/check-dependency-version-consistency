@@ -6,9 +6,12 @@
     "dependencies",
     "linter",
     "monorepo",
+    "nodejs",
+    "npm",
     "package.json",
     "packages",
-    "workspace"
+    "workspace",
+    "yarn"
   ],
   "repository": {
     "type": "git",
