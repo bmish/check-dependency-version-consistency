@@ -3,7 +3,7 @@
 [![npm version][npm-image]][npm-url]
 [![CI][ci-image]][ci-url]
 
-This CLI tool enforces the following aspects of consistency across a monorepo / yarn workspace:
+This CLI tool enforces the following aspects of consistency across a monorepo with npm or Yarn workspaces:
 
 1. Dependencies are on consistent versions. For example, every package in a workspace that has a dependency on `eslint` should specify the same version for it.
 2. Dependencies on local packages use the local packages directly instead of older versions of them. For example, if one package `package1` in a workspace depends on another package `package2` in the workspace, `package1` should request the current version of `package2`.
@@ -128,7 +128,8 @@ Found 2 dependencies with mismatching versions across the workspace. Fix with `-
 
 ## References
 
-* [Yarn Workspaces](https://classic.yarnpkg.com/lang/en/docs/workspaces/)
+* [npm workspaces](https://docs.npmjs.com/cli/v8/using-npm/workspaces)
+* [Yarn workspaces](https://classic.yarnpkg.com/lang/en/docs/workspaces/)
 
 [npm-image]: https://badge.fury.io/js/check-dependency-version-consistency.svg
 [npm-url]: https://www.npmjs.com/package/check-dependency-version-consistency
