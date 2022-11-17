@@ -129,7 +129,7 @@ Found 2 dependencies with mismatching versions across the workspace. Fix with `-
 
 ## References
 
-* [npm workspaces](https://docs.npmjs.com/cli/v8/using-npm/workspaces)
+* [npm workspaces](https://docs.npmjs.com/cli/using-npm/workspaces)
 * [Yarn workspaces](https://classic.yarnpkg.com/lang/en/docs/workspaces/)
 
 [npm-image]: https://badge.fury.io/js/check-dependency-version-consistency.svg
