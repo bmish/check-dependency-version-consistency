@@ -46,7 +46,7 @@
     "globby": "^13.1.1",
     "semver": "^7.3.5",
     "table": "^6.7.1",
-    "type-fest": "^2.1.0"
+    "type-fest": "^3.5.7"
   },
   "devDependencies": {
     "@types/edit-json-file": "^1.7.0",
