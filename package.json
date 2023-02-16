@@ -40,10 +40,12 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --colors --coverage"
   },
   "dependencies": {
+    "@types/js-yaml": "^4.0.5",
     "chalk": "^5.0.1",
     "commander": "^9.0.0",
     "edit-json-file": "^1.7.0",
     "globby": "^13.1.1",
+    "js-yaml": "^4.1.0",
     "semver": "^7.3.5",
     "table": "^6.7.1",
     "type-fest": "^2.1.0"

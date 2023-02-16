@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { PackageJson } from 'type-fest';
+import { load } from 'js-yaml';
 
 // Class to represent all of the information we need to know about a package in a workspace.
 export class Package {
@@ -9,14 +10,27 @@ export class Package {
   pathPackageJson: string; // Absolute path to package.json.
   packageJson: PackageJson;
   packageJsonEndsInNewline: boolean;
+  pnpmWorkspacePackages?: string[];
 
   constructor(path: string, pathWorkspace: string) {
     this.path = path;
     this.pathWorkspace = pathWorkspace;
+
+    // package.json
     this.pathPackageJson = join(path, 'package.json');
     const packageJsonContents = readFileSync(this.pathPackageJson, 'utf8');
     this.packageJsonEndsInNewline = packageJsonContents.endsWith('\n');
     this.packageJson = JSON.parse(packageJsonContents);
+
+    // pnpm-workspace.yaml
+    const pnpmWorkspacePath = join(path, 'pnpm-workspace.yaml');
+    if (existsSync(pnpmWorkspacePath)) {
+      const pnpmWorkspaceContents = readFileSync(pnpmWorkspacePath, 'utf8');
+      const pnpmWorkspaceYaml = load(pnpmWorkspaceContents) as {
+        packages?: string[];
+      };
+      this.pnpmWorkspacePackages = pnpmWorkspaceYaml.packages;
+    }
   }
 
   get name() {
@@ -49,6 +63,16 @@ export class Package {
         throw new TypeError('package.json `workspaces` is not a string array.');
       }
     }
+
+    if (this.pnpmWorkspacePackages) {
+      if (!Array.isArray(this.pnpmWorkspacePackages)) {
+        throw new TypeError(
+          'pnpm-workspace.yaml `packages` is not a string array.'
+        );
+      }
+      return this.pnpmWorkspacePackages;
+    }
+
     return [];
   }
 
