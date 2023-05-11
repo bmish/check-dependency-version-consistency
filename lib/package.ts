@@ -34,7 +34,7 @@ export class Package {
   }
 
   get name() {
-    if (this.packageJson.workspaces && !this.packageJson.name) {
+    if (this.workspacePatterns.length > 0 && !this.packageJson.name) {
       return '(Root)';
     }
     if (!this.packageJson.name) {
