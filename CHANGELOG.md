@@ -19,6 +19,16 @@
 
 
 
+
+## v3.1.1 (2023-05-11)
+
+#### :bug: Bug Fix
+* [#590](https://github.com/bmish/check-dependency-version-consistency/pull/590) pnpm workspace root package should not require `name` ([@bmish](https://github.com/bmish))
+
+#### Committers: 1
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+
+
 ## v3.1.0 (2023-05-11)
 
 #### :rocket: Enhancement

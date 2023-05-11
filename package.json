@@ -1,6 +1,6 @@
 {
   "name": "check-dependency-version-consistency",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "Ensures dependencies are on consistent versions across a monorepo.",
   "keywords": [
     "dependencies",
