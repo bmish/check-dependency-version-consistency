@@ -64,6 +64,11 @@ export const FIXTURE_PATH_WORKSPACE_PACKAGE_NOT_AN_ARRAY = join(
   FIXTURE_PATH,
   'workspace-packages-not-an-array'
 );
+export const FIXTURE_PATH_WORKSPACE_PNPM = join(FIXTURE_PATH, 'workspace-pnpm');
+export const FIXTURE_PATH_WORKSPACE_PNPM_PACKAGES_WRONG_TYPE = join(
+  FIXTURE_PATH,
+  'workspace-pnpm-packages-wrong-type'
+);
 export const FIXTURE_PATH_NESTED_WORKSPACES = join(
   FIXTURE_PATH,
   'nested-workspaces'

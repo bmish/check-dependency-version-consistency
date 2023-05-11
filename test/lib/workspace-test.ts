@@ -8,6 +8,8 @@ import {
   FIXTURE_PATH_VALID_NOHOIST_WITH_NODE_MODULES,
   FIXTURE_PATH_WORKSPACE_NOT_AN_ARRAY,
   FIXTURE_PATH_WORKSPACE_PACKAGE_NOT_AN_ARRAY,
+  FIXTURE_PATH_WORKSPACE_PNPM,
+  FIXTURE_PATH_WORKSPACE_PNPM_PACKAGES_WRONG_TYPE,
   FIXTURE_PATH_NESTED_WORKSPACES,
 } from '../fixtures/index.js';
 
@@ -184,6 +186,18 @@ describe('Utils | workspace', function () {
       );
     });
 
+    it('behaves correctly with pnpm workspaces', function () {
+      expect(
+        getPackages(FIXTURE_PATH_WORKSPACE_PNPM, [], [], [], []).map(
+          (package_) => package_.path
+        )
+      ).toStrictEqual(
+        ['.', 'packages/package1'].map((path) =>
+          join(FIXTURE_PATH_WORKSPACE_PNPM, path)
+        )
+      );
+    });
+
     it('does not include packages in node_modules from nohoist usage (or crash from malformed package.json in node_modules test fixture)', function () {
       expect(
         getPackages(
@@ -229,6 +243,20 @@ describe('Utils | workspace', function () {
         getPackages(FIXTURE_PATH_WORKSPACE_PACKAGE_NOT_AN_ARRAY, [], [], [], [])
       ).toThrowErrorMatchingInlineSnapshot(
         '"package.json `workspaces.packages` is not a string array."'
+      );
+    });
+
+    it('throws with fixture that has pnpm-workspace.yaml but invalid type for packages', function () {
+      expect(() =>
+        getPackages(
+          FIXTURE_PATH_WORKSPACE_PNPM_PACKAGES_WRONG_TYPE,
+          [],
+          [],
+          [],
+          []
+        )
+      ).toThrowErrorMatchingInlineSnapshot(
+        '"pnpm-workspace.yaml `packages` is not a string array."'
       );
     });
   });
