@@ -38,9 +38,15 @@ export class Package {
     if (this.packageJson.workspaces) {
       if (Array.isArray(this.packageJson.workspaces)) {
         return this.packageJson.workspaces;
-      }
-      if (this.packageJson.workspaces.packages) {
+      } else if (this.packageJson.workspaces.packages) {
+        if (!Array.isArray(this.packageJson.workspaces.packages)) {
+          throw new TypeError(
+            'package.json `workspaces.packages` is not a string array.'
+          );
+        }
         return this.packageJson.workspaces.packages;
+      } else {
+        throw new TypeError('package.json `workspaces` is not a string array.');
       }
     }
     return [];

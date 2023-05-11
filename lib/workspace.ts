@@ -1,6 +1,4 @@
 import { join } from 'node:path';
-import { existsSync, readFileSync } from 'node:fs';
-import type { PackageJson } from 'type-fest';
 import { globbySync } from 'globby';
 import { Package } from './package.js';
 
@@ -11,6 +9,15 @@ export function getPackages(
   ignorePaths: string[],
   ignorePathPatterns: RegExp[]
 ): Package[] {
+  // Check for some error cases first.
+  if (!Package.exists(root)) {
+    throw new Error('No package.json found at provided path.');
+  }
+  const package_ = new Package(root, root);
+  if (package_.workspacePatterns.length === 0) {
+    throw new Error('Package at provided path has no workspaces specified.');
+  }
+
   const packages = accumulatePackages(root, ['.']);
 
   for (const ignoredPackage of ignorePackages) {
@@ -84,38 +91,6 @@ export function getPackages(
   }
 
   return packages;
-}
-
-export function getWorkspaces(root: string): string[] {
-  const workspacePackageJsonPath = join(root, 'package.json');
-  if (!existsSync(workspacePackageJsonPath)) {
-    throw new Error('No package.json found at provided path.');
-  }
-
-  const workspacePackageJson: PackageJson = JSON.parse(
-    readFileSync(join(root, 'package.json'), 'utf8')
-  );
-
-  if (!workspacePackageJson.workspaces) {
-    throw new Error(
-      'package.json at provided path does not specify `workspaces`.'
-    );
-  }
-
-  if (!Array.isArray(workspacePackageJson.workspaces)) {
-    if (workspacePackageJson.workspaces.packages) {
-      if (Array.isArray(workspacePackageJson.workspaces.packages)) {
-        return workspacePackageJson.workspaces.packages;
-      } else {
-        throw new TypeError(
-          'package.json `workspaces.packages` is not a string array.'
-        );
-      }
-    }
-    throw new TypeError('package.json `workspaces` is not a string array.');
-  }
-
-  return workspacePackageJson.workspaces;
 }
 
 // Expand workspace globs into concrete paths.
