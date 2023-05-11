@@ -1,4 +1,5 @@
 {
+    "name": "package2",
     "dependencies": {
         "package1": "workspace:*"
     }

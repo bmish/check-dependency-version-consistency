@@ -4,11 +4,11 @@ import { Package } from './package.js';
 
 export function getPackages(
   root: string,
-  ignorePackages: string[],
-  ignorePackagePatterns: RegExp[],
-  ignorePaths: string[],
-  ignorePathPatterns: RegExp[]
-): Package[] {
+  ignorePackages: readonly string[],
+  ignorePackagePatterns: readonly RegExp[],
+  ignorePaths: readonly string[],
+  ignorePathPatterns: readonly RegExp[]
+): readonly Package[] {
   // Check for some error cases first.
   if (!Package.exists(root)) {
     throw new Error('No package.json found at provided path.');
@@ -94,7 +94,10 @@ export function getPackages(
 }
 
 // Expand workspace globs into concrete paths.
-function expandWorkspaces(root: string, workspacePatterns: string[]): string[] {
+function expandWorkspaces(
+  root: string,
+  workspacePatterns: readonly string[]
+): readonly string[] {
   return workspacePatterns.flatMap((workspace) => {
     if (!workspace.includes('*')) {
       return [workspace];
@@ -110,7 +113,10 @@ function expandWorkspaces(root: string, workspacePatterns: string[]): string[] {
 }
 
 // Recursively collect packages from a workspace.
-function accumulatePackages(root: string, paths: string[]): Package[] {
+function accumulatePackages(
+  root: string,
+  paths: readonly string[]
+): readonly Package[] {
   const results = [];
   for (const relativePath of paths) {
     const path = join(root, relativePath);

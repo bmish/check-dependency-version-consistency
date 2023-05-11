@@ -9,18 +9,19 @@ import {
 } from './semver.js';
 import semver from 'semver';
 
-export type DependenciesToVersionsSeen = Map<
+type DependenciesToVersionsSeen = Map<
   string,
-  { package: Package; version: string; isLocalPackageVersion: boolean }[]
+  { package: Package; version: string; isLocalPackageVersion: boolean }[] // Array can't be readonly since we are adding to it.
 >;
 
-export type MismatchingDependencyVersions = Array<{
+/** A dependency, the versions present of it, and the packages each of those versions are seen in. */
+type DependencyAndVersions = {
   dependency: string;
-  versions: {
+  readonly versions: {
     version: string;
-    packages: Package[];
+    packages: readonly Package[];
   }[];
-}>;
+};
 
 /**
  * Creates a map of each dependency in the workspace to an array of the packages it is used in.
@@ -39,7 +40,7 @@ export type MismatchingDependencyVersions = Array<{
  * }
  */
 export function calculateVersionsForEachDependency(
-  packages: Package[]
+  packages: readonly Package[]
 ): DependenciesToVersionsSeen {
   const dependenciesToVersionsSeen: DependenciesToVersionsSeen = new Map<
     string,
@@ -132,9 +133,9 @@ function recordDependencyVersion(
   }
 }
 
-export function calculateMismatchingVersions(
+export function calculateDependenciesAndVersions(
   dependencyVersions: DependenciesToVersionsSeen
-): MismatchingDependencyVersions {
+): readonly DependencyAndVersions[] {
   // Loop through all dependencies seen.
   return [...dependencyVersions.entries()]
     .sort()
@@ -175,25 +176,20 @@ export function calculateMismatchingVersions(
         compareVersionRangesSafe
       );
 
-      // If we saw more than one unique version for this dependency, we found an inconsistency.
-      if (uniqueVersions.length > 1) {
-        const uniqueVersionsWithInfo = versionsObjectsWithSortedPackages(
-          uniqueVersions,
-          versionObjectsForDep
-        );
-        return {
-          dependency,
-          versions: uniqueVersionsWithInfo,
-        };
-      }
-
-      return [];
+      const uniqueVersionsWithInfo = versionsObjectsWithSortedPackages(
+        uniqueVersions,
+        versionObjectsForDep
+      );
+      return {
+        dependency,
+        versions: uniqueVersionsWithInfo,
+      };
     });
 }
 
 function versionsObjectsWithSortedPackages(
-  versions: string[],
-  versionObjects: {
+  versions: readonly string[],
+  versionObjects: readonly {
     package: Package;
     version: string;
     isLocalPackageVersion: boolean;
@@ -216,10 +212,10 @@ const HARDCODED_IGNORED_DEPENDENCIES = new Set([
   '//', // May be used to add comments to package.json files.
 ]);
 export function filterOutIgnoredDependencies(
-  mismatchingVersions: MismatchingDependencyVersions,
-  ignoredDependencies: string[],
-  ignoredDependencyPatterns: RegExp[]
-): MismatchingDependencyVersions {
+  mismatchingVersions: readonly DependencyAndVersions[],
+  ignoredDependencies: readonly string[],
+  ignoredDependencyPatterns: readonly RegExp[]
+): readonly DependencyAndVersions[] {
   for (const ignoreDependency of ignoredDependencies) {
     if (
       !mismatchingVersions.some(
@@ -287,15 +283,17 @@ function writeDependencyVersion(
   );
 }
 
-export function fixMismatchingVersions(
-  packages: Package[],
-  mismatchingVersions: MismatchingDependencyVersions
+// eslint-disable-next-line complexity
+export function fixVersionsMismatching(
+  packages: readonly Package[],
+  mismatchingVersions: readonly DependencyAndVersions[],
+  dryrun = false
 ): {
-  fixed: MismatchingDependencyVersions;
-  notFixed: MismatchingDependencyVersions;
+  fixable: readonly DependencyAndVersions[];
+  notFixable: readonly DependencyAndVersions[];
 } {
-  const fixed = [];
-  const notFixed = [];
+  const fixable: DependencyAndVersions[] = [];
+  const notFixable: DependencyAndVersions[] = [];
   // Loop through each dependency that has a mismatching versions.
   for (const mismatchingVersion of mismatchingVersions) {
     // Decide what version we should fix to.
@@ -307,7 +305,7 @@ export function fixMismatchingVersions(
       fixedVersion = getIncreasedLatestVersion(versions);
     } catch {
       // Skip this dependency.
-      notFixed.push(mismatchingVersion);
+      notFixable.push(mismatchingVersion);
       continue;
     }
 
@@ -321,7 +319,7 @@ export function fixMismatchingVersions(
       compareVersionRanges(fixedVersion, localPackage.packageJson.version) > 0
     ) {
       // Skip this dependency.
-      notFixed.push(mismatchingVersion);
+      notFixable.push(mismatchingVersion);
       continue;
     }
 
@@ -342,13 +340,15 @@ export function fixMismatchingVersions(
         package_.packageJson.devDependencies[mismatchingVersion.dependency] !==
           fixedVersion
       ) {
-        writeDependencyVersion(
-          package_.pathPackageJson,
-          package_.packageJsonEndsInNewline,
-          'devDependencies',
-          mismatchingVersion.dependency,
-          fixedVersion
-        );
+        if (!dryrun) {
+          writeDependencyVersion(
+            package_.pathPackageJson,
+            package_.packageJsonEndsInNewline,
+            'devDependencies',
+            mismatchingVersion.dependency,
+            fixedVersion
+          );
+        }
         isFixed = true;
       }
 
@@ -358,13 +358,15 @@ export function fixMismatchingVersions(
         package_.packageJson.dependencies[mismatchingVersion.dependency] !==
           fixedVersion
       ) {
-        writeDependencyVersion(
-          package_.pathPackageJson,
-          package_.packageJsonEndsInNewline,
-          'dependencies',
-          mismatchingVersion.dependency,
-          fixedVersion
-        );
+        if (!dryrun) {
+          writeDependencyVersion(
+            package_.pathPackageJson,
+            package_.packageJsonEndsInNewline,
+            'dependencies',
+            mismatchingVersion.dependency,
+            fixedVersion
+          );
+        }
         isFixed = true;
       }
 
@@ -374,24 +376,26 @@ export function fixMismatchingVersions(
         package_.packageJson.resolutions[mismatchingVersion.dependency] !==
           fixedVersion
       ) {
-        writeDependencyVersion(
-          package_.pathPackageJson,
-          package_.packageJsonEndsInNewline,
-          'resolutions',
-          mismatchingVersion.dependency,
-          fixedVersion
-        );
+        if (!dryrun) {
+          writeDependencyVersion(
+            package_.pathPackageJson,
+            package_.packageJsonEndsInNewline,
+            'resolutions',
+            mismatchingVersion.dependency,
+            fixedVersion
+          );
+        }
         isFixed = true;
       }
     }
 
     if (isFixed) {
-      fixed.push(mismatchingVersion);
+      fixable.push(mismatchingVersion);
     }
   }
 
   return {
-    fixed,
-    notFixed,
+    fixable,
+    notFixable,
   };
 }

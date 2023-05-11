@@ -19,6 +19,9 @@
   },
   "license": "MIT",
   "type": "module",
+  "exports": "./dist/lib/index.js",
+  "main": "./dist/lib/index.js",
+  "types": "./dist/lib/index.d.ts",
   "bin": {
     "check-dependency-version-consistency": "dist/bin/check-dependency-version-consistency.js"
   },
