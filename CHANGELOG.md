@@ -18,6 +18,28 @@
 
 
 
+
+## v3.1.0 (2023-05-11)
+
+#### :rocket: Enhancement
+* [#574](https://github.com/bmish/check-dependency-version-consistency/pull/574) Support pnpm workspaces ([@bmish](https://github.com/bmish))
+
+#### :bug: Bug Fix
+* [#586](https://github.com/bmish/check-dependency-version-consistency/pull/586) Add back error messages when unable to detect workspaces ([@bmish](https://github.com/bmish))
+
+#### :memo: Documentation
+* [#543](https://github.com/bmish/check-dependency-version-consistency/pull/543) Mention competing offering Yarn Constraints in readme ([@bmish](https://github.com/bmish))
+* [#544](https://github.com/bmish/check-dependency-version-consistency/pull/544) Mention npm workspaces in readme ([@bmish](https://github.com/bmish))
+
+#### :house: Internal
+* [#561](https://github.com/bmish/check-dependency-version-consistency/pull/561) Add Node v19 to CI ([@ddzz](https://github.com/ddzz))
+* [#548](https://github.com/bmish/check-dependency-version-consistency/pull/548) Add CodeQL ([@bmish](https://github.com/bmish))
+
+#### Committers: 2
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+- Darius Dzien ([@ddzz](https://github.com/ddzz))
+
+
 ## v3.0.3 (2022-09-26)
 
 #### :bug: Bug Fix
