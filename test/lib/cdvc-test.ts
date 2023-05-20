@@ -292,8 +292,12 @@ describe('CDVC', function () {
         'package2/package.json',
         'utf8'
       );
-      const actualPackageJson1: PackageJson = JSON.parse(packageJson1Contents);
-      const actualPackageJson2: PackageJson = JSON.parse(packageJson2Contents);
+      const actualPackageJson1 = JSON.parse(
+        packageJson1Contents
+      ) as PackageJson;
+      const actualPackageJson2 = JSON.parse(
+        packageJson2Contents
+      ) as PackageJson;
 
       expect(actualPackageJson1).toStrictEqual(expectedPackage1);
       expect(actualPackageJson2).toStrictEqual(expectedPackage2);
@@ -364,8 +368,12 @@ describe('CDVC', function () {
         'package2/package.json',
         'utf8'
       );
-      const actualPackageJson1: PackageJson = JSON.parse(packageJson1Contents);
-      const actualPackageJson2: PackageJson = JSON.parse(packageJson2Contents);
+      const actualPackageJson1 = JSON.parse(
+        packageJson1Contents
+      ) as PackageJson;
+      const actualPackageJson2 = JSON.parse(
+        packageJson2Contents
+      ) as PackageJson;
 
       expect(actualPackageJson1).toStrictEqual(expectedPackage1);
       expect(actualPackageJson2).toStrictEqual(expectedPackage2);
@@ -432,8 +440,12 @@ describe('CDVC', function () {
         'package2/package.json',
         'utf8'
       );
-      const actualPackageJson1: PackageJson = JSON.parse(packageJson1Contents);
-      const actualPackageJson2: PackageJson = JSON.parse(packageJson2Contents);
+      const actualPackageJson1 = JSON.parse(
+        packageJson1Contents
+      ) as PackageJson;
+      const actualPackageJson2 = JSON.parse(
+        packageJson2Contents
+      ) as PackageJson;
 
       expect(
         actualPackageJson1.dependencies && actualPackageJson1.dependencies.foo

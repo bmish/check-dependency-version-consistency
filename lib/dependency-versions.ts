@@ -138,7 +138,7 @@ export function calculateDependenciesAndVersions(
 ): readonly DependencyAndVersions[] {
   // Loop through all dependencies seen.
   return [...dependencyVersions.entries()]
-    .sort()
+    .sort((a, b) => a[0].localeCompare(b[0]))
     .flatMap(([dependency, versionObjectsForDep]) => {
       /* istanbul ignore if */
       if (!versionObjectsForDep) {
@@ -203,7 +203,7 @@ function versionsObjectsWithSortedPackages(
       version,
       packages: matchingVersionObjects
         .map((object) => object.package)
-        .sort(Package.comparator),
+        .sort((a, b) => Package.comparator(a, b)),
     };
   });
 }
@@ -236,7 +236,9 @@ export function filterOutIgnoredDependencies(
       )
     ) {
       throw new Error(
-        `Specified option '--ignore-dep-pattern ${ignoredDependencyPattern}', but no matching dependencies with version mismatches detected.`
+        `Specified option '--ignore-dep-pattern ${String(
+          ignoredDependencyPattern
+        )}', but no matching dependencies with version mismatches detected.`
       );
     }
   }
@@ -328,7 +330,9 @@ export function fixVersionsMismatching(
       const highestRangeTypeSeen = getHighestRangeType(
         versions.map((versionRange) => versionRangeToRange(versionRange))
       );
-      fixedVersion = `${highestRangeTypeSeen}${semver.coerce(fixedVersion)}`;
+      fixedVersion = `${highestRangeTypeSeen}${String(
+        semver.coerce(fixedVersion)
+      )}`;
     }
 
     // Update the dependency version in each package.json.

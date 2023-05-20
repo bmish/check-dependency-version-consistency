@@ -3,7 +3,7 @@ import {
   dependenciesToFixedSummary,
   dependenciesToMismatchSummary,
 } from './output.js';
-import { Dependencies } from './types.js';
+import { Dependencies, Options } from './types.js';
 
 /** Relevant public data about a dependency. */
 type Dependency = {
@@ -32,18 +32,7 @@ export class CDVC {
    * @param options.ignorePath - Workspace-relative path(s) of packages to ignore mismatches for
    * @param options.ignorePathPattern - RegExp(s) of workspace-relative path of packages to ignore mismatches for
    */
-  constructor(
-    path: string,
-    options?: {
-      fix?: boolean;
-      ignoreDep?: readonly string[];
-      ignoreDepPattern?: readonly string[];
-      ignorePackage?: readonly string[];
-      ignorePackagePattern?: readonly string[];
-      ignorePath?: readonly string[];
-      ignorePathPattern?: readonly string[];
-    }
-  ) {
+  constructor(path: string, options?: Options) {
     const { dependencies } = check(path, options);
 
     this.dependencies = dependencies;

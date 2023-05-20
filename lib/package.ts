@@ -25,7 +25,7 @@ export class Package {
     this.pathPackageJson = join(path, 'package.json');
     const packageJsonContents = readFileSync(this.pathPackageJson, 'utf8');
     this.packageJsonEndsInNewline = packageJsonContents.endsWith('\n');
-    this.packageJson = JSON.parse(packageJsonContents);
+    this.packageJson = JSON.parse(packageJsonContents) as PackageJson;
 
     // pnpm-workspace.yaml
     const pnpmWorkspacePath = join(path, 'pnpm-workspace.yaml');
@@ -70,7 +70,8 @@ export class Package {
     }
 
     if (this.pnpmWorkspacePackages) {
-      if (!Array.isArray(this.pnpmWorkspacePackages)) {
+      // eslint-disable-next-line unicorn/no-instanceof-array -- using Array.isArray() loses type information about the array.
+      if (!(this.pnpmWorkspacePackages instanceof Array)) {
         throw new TypeError(
           'pnpm-workspace.yaml `packages` is not a string array.'
         );

@@ -4,13 +4,14 @@ import { join, dirname } from 'node:path';
 import type { PackageJson } from 'type-fest';
 import { fileURLToPath } from 'node:url';
 import { CDVC } from './cdvc.js';
+import { Options } from './types.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 function getCurrentPackageVersion(): string {
-  const packageJson: PackageJson = JSON.parse(
+  const packageJson = JSON.parse(
     readFileSync(join(__dirname, '..', '..', 'package.json'), 'utf8') // Relative to compiled version of this file in the dist folder.
-  );
+  ) as PackageJson;
   if (!packageJson.version) {
     throw new Error('Could not find package.json `version`');
   }
@@ -70,7 +71,7 @@ export function run() {
       collect,
       []
     )
-    .action((path, options) => {
+    .action((path: string, options: Options) => {
       const cdvc = new CDVC(path, options);
 
       if (options.fix) {
