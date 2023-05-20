@@ -21,6 +21,16 @@
 
 
 
+
+## v3.2.1 (2023-05-20)
+
+#### :bug: Bug Fix
+* [#597](https://github.com/bmish/check-dependency-version-consistency/pull/597) Fix publishing issue from v3.2.0 ([@bmish](https://github.com/bmish))
+
+#### Committers: 1
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+
+
 ## v3.2.0 (2023-05-20)
 
 #### :rocket: Enhancement
