@@ -1,30 +1,16 @@
 import {
-  calculateVersionsForEachDependency,
-  calculateMismatchingVersions,
-} from '../../lib/dependency-versions.js';
-import {
-  mismatchingVersionsToOutput,
-  mismatchingVersionsFixedToOutput,
-} from '../../lib/output.js';
-import { getPackages } from '../../lib/workspace.js';
-import {
   FIXTURE_PATH_TESTING_OUTPUT,
   FIXTURE_PATH_NAMES_NOT_MATCHING_LOCATIONS,
   FIXTURE_PATH_INCREASABLE_RANGE,
+  FIXTURE_PATH_VALID,
 } from '../fixtures/index.js';
+import { CDVC } from '../../lib/cdvc.js';
 
 describe('Utils | output', function () {
-  describe('#mismatchingVersionsToOutputLines', function () {
+  describe('#dependenciesToMismatchSummary', function () {
     it('behaves correctly', function () {
-      expect(
-        mismatchingVersionsToOutput(
-          calculateMismatchingVersions(
-            calculateVersionsForEachDependency(
-              getPackages(FIXTURE_PATH_TESTING_OUTPUT, [], [], [], [])
-            )
-          )
-        )
-      ).toMatchInlineSnapshot(`
+      const cdvc = new CDVC(FIXTURE_PATH_TESTING_OUTPUT);
+      expect(cdvc.toMismatchSummary()).toMatchInlineSnapshot(`
         "Found 4 dependencies with mismatching versions across the workspace. Fix with \`--fix\`.
         ╔═══════╤════════╤════════════════════════════════════════════╗
         ║ [1mbar[22m   │ Usages │ Packages                                   ║
@@ -61,21 +47,8 @@ describe('Utils | output', function () {
     });
 
     it('behaves correctly when package names do not match locations', function () {
-      expect(
-        mismatchingVersionsToOutput(
-          calculateMismatchingVersions(
-            calculateVersionsForEachDependency(
-              getPackages(
-                FIXTURE_PATH_NAMES_NOT_MATCHING_LOCATIONS,
-                [],
-                [],
-                [],
-                []
-              )
-            )
-          )
-        )
-      ).toMatchInlineSnapshot(`
+      const cdvc = new CDVC(FIXTURE_PATH_NAMES_NOT_MATCHING_LOCATIONS);
+      expect(cdvc.toMismatchSummary()).toMatchInlineSnapshot(`
         "Found 1 dependency with mismatching versions across the workspace. Fix with \`--fix\`.
         ╔═══════╤════════╤══════════════════════════╗
         ║ [1mfoo[22m   │ Usages │ Packages                 ║
@@ -89,57 +62,40 @@ describe('Utils | output', function () {
     });
 
     it('behaves correctly with empty input', function () {
-      expect(() =>
-        mismatchingVersionsToOutput([])
-      ).toThrowErrorMatchingInlineSnapshot(
+      const cdvc = new CDVC(FIXTURE_PATH_VALID);
+      expect(() => cdvc.toMismatchSummary()).toThrowErrorMatchingInlineSnapshot(
         '"No mismatching versions to output."'
       );
     });
   });
 
-  describe('#mismatchingVersionsFixedToOutputLines', function () {
+  describe('#dependenciesToFixedSummary', function () {
     it('behaves correctly', function () {
-      expect(
-        mismatchingVersionsFixedToOutput(
-          calculateMismatchingVersions(
-            calculateVersionsForEachDependency(
-              getPackages(FIXTURE_PATH_TESTING_OUTPUT, [], [], [], [])
-            )
-          )
-        )
-      ).toMatchInlineSnapshot(
+      const cdvc = new CDVC(FIXTURE_PATH_TESTING_OUTPUT);
+      expect(cdvc.toFixedSummary()).toMatchInlineSnapshot(
         '"Fixed versions for 3 dependencies: bar@2.0.0, baz@^2.0.0, foo@4.5.6"'
       );
     });
 
     it('behaves correctly with a single fix', function () {
-      expect(
-        mismatchingVersionsFixedToOutput(
-          calculateMismatchingVersions(
-            calculateVersionsForEachDependency(
-              getPackages(FIXTURE_PATH_TESTING_OUTPUT, [], [], [], [])
-            )
-          ).slice(0, 1)
-        )
-      ).toMatchInlineSnapshot('"Fixed versions for 1 dependency: bar@2.0.0"');
+      const cdvc = new CDVC(FIXTURE_PATH_INCREASABLE_RANGE);
+      expect(cdvc.toFixedSummary()).toMatchInlineSnapshot(
+        '"Fixed versions for 1 dependency: foo@^1.5.0"'
+      );
     });
 
     it('behaves correctly with an increasable range', function () {
-      expect(
-        mismatchingVersionsFixedToOutput(
-          calculateMismatchingVersions(
-            calculateVersionsForEachDependency(
-              getPackages(FIXTURE_PATH_INCREASABLE_RANGE, [], [], [], [])
-            )
-          ).slice(0, 1)
-        )
-      ).toMatchInlineSnapshot('"Fixed versions for 1 dependency: foo@^1.5.0"');
+      const cdvc = new CDVC(FIXTURE_PATH_INCREASABLE_RANGE);
+      expect(cdvc.toFixedSummary()).toMatchInlineSnapshot(
+        '"Fixed versions for 1 dependency: foo@^1.5.0"'
+      );
     });
 
     it('behaves correctly with empty input', function () {
-      expect(() =>
-        mismatchingVersionsFixedToOutput([])
-      ).toThrowErrorMatchingInlineSnapshot('"No fixes to output."');
+      const cdvc = new CDVC(FIXTURE_PATH_VALID);
+      expect(() => cdvc.toFixedSummary()).toThrowErrorMatchingInlineSnapshot(
+        '"No fixes to output."'
+      );
     });
   });
 });

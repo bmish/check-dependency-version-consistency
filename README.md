@@ -24,7 +24,7 @@ To install:
 yarn add --dev check-dependency-version-consistency
 ```
 
-To run, use this command and optionally pass the path to the workspace root (where the `package.json` file containing `workspaces` is located):
+To run, use this command and optionally pass the path to the workspace root (where the `package.json` file containing `workspaces` or `pnpm-workspace.yaml` is located):
 
 ```sh
 yarn check-dependency-version-consistency .
@@ -112,8 +112,10 @@ Found 2 dependencies with mismatching versions across the workspace. Fix with `-
 
 ## Options
 
+These options are available on the CLI and as parameters to the [Node API](#node-api).
+
 | Name | Description |
-| --- | --- |
+| :-- | :-- |
 | `--fix` | Whether to autofix inconsistencies (using latest version present). |
 | `--ignore-dep` | Dependency to ignore mismatches for (option can be repeated). |
 | `--ignore-dep-pattern` | RegExp of dependency names to ignore mismatches for (option can be repeated). |
@@ -121,6 +123,57 @@ Found 2 dependencies with mismatching versions across the workspace. Fix with `-
 | `--ignore-package-pattern` | RegExp of package names to ignore mismatches for (option can be repeated). |
 | `--ignore-path` | Workspace-relative path of packages to ignore mismatches for (option can be repeated). |
 | `--ignore-path-pattern` | RegExp of workspace-relative path of packages to ignore mismatches for (option can be repeated). |
+
+## Node API
+
+```ts
+import { CDVC } from 'check-dependency-version-consistency';
+
+const cdvc = new CDVC(path, options);
+
+const result = cdvc.getDependency('eslint');
+
+// Result could look like this:
+const result = {
+  isFixable: true,
+  isMismatching: true,
+  name: 'eslint',
+  versions: [
+    {
+      packages: ['package1', 'package2'],
+      version: '^7.0.0',
+    },
+    {
+      packages: ['package3'],
+      version: '^8.0.0',
+    },
+  ],
+};
+```
+
+| [`CDVC`](./lib/cdvc.ts) Class Constructor Parameter | Type | Description |
+| :-- | :-- | :-- |
+| `path` | `string` | Path to the workspace root (where the `package.json` file containing `workspaces` or `pnpm-workspace.yaml` is located). |
+| `options` | `object` | See [Options](#options). |
+
+| [`CDVC`](./lib/cdvc.ts) Class Member | Description |
+| :-- | :-- |
+| `getDependencies()` | Returns an array of all dependencies in the workspace. |
+| `getDependency(name: string)` | Returns an object with information about an individual dependency. |
+| `hasMismatchingDependenciesFixable` | `true` if there are any dependencies with mismatching versions that are autofixable. |
+| `hasMismatchingDependenciesNotFixable` | `true` if there are any dependencies with mismatching versions that are not autofixable. |
+| `hasMismatchingDependencies` | `true` if there are any dependencies with mismatching versions. |
+| `toFixedSummary()` | Returns a string summary of the mismatching dependency versions that were fixed (if the `fix` option was specified). |
+| `toMismatchSummary()` | Returns a string of human-readable tables describing the mismatching dependency versions. |
+
+| Dependency Object Property | Description |
+| :-- | :-- |
+| `isFixable` | `true` if the mismatching versions of this dependency are autofixable. |
+| `isMismatching` | `true` if there are multiple versions of this dependency. |
+| `name` | The dependency's name. |
+| `versions` | A list of the versions present of this dependency and the packages each is found in, in the form of: `{ version: string, packages: string[] }`. The `packages` array has relative paths to each package. |
+
+See [`lib/cli.ts`](./lib/cli.ts) for an example of how to use it.
 
 ## Related
 

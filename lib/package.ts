@@ -3,14 +3,19 @@ import { join, relative } from 'node:path';
 import { PackageJson } from 'type-fest';
 import { load } from 'js-yaml';
 
-// Class to represent all of the information we need to know about a package in a workspace.
+/*
+ * Class to represent all of the information we need to know about a package in a workspace.
+ */
 export class Package {
-  path: string; // Absolute path to package.
-  pathWorkspace: string; // Absolute path to workspace.
-  pathPackageJson: string; // Absolute path to package.json.
+  /** Absolute path to package */
+  path: string;
+  /** Absolute path to workspace.*/
+  pathWorkspace: string;
+  /** Absolute path to package.json. */
+  pathPackageJson: string;
   packageJson: PackageJson;
   packageJsonEndsInNewline: boolean;
-  pnpmWorkspacePackages?: string[];
+  pnpmWorkspacePackages?: readonly string[];
 
   constructor(path: string, pathWorkspace: string) {
     this.path = path;
@@ -27,13 +32,13 @@ export class Package {
     if (existsSync(pnpmWorkspacePath)) {
       const pnpmWorkspaceContents = readFileSync(pnpmWorkspacePath, 'utf8');
       const pnpmWorkspaceYaml = load(pnpmWorkspaceContents) as {
-        packages?: string[];
+        packages?: readonly string[];
       };
       this.pnpmWorkspacePackages = pnpmWorkspaceYaml.packages;
     }
   }
 
-  get name() {
+  get name(): string {
     if (this.workspacePatterns.length > 0 && !this.packageJson.name) {
       return '(Root)';
     }
@@ -43,12 +48,12 @@ export class Package {
     return this.packageJson.name;
   }
 
-  // Relative to workspace root.
-  get pathRelative() {
+  /** Relative to workspace root. */
+  get pathRelative(): string {
     return relative(this.pathWorkspace, this.path);
   }
 
-  get workspacePatterns(): string[] {
+  get workspacePatterns(): readonly string[] {
     if (this.packageJson.workspaces) {
       if (Array.isArray(this.packageJson.workspaces)) {
         return this.packageJson.workspaces;
@@ -76,12 +81,15 @@ export class Package {
     return [];
   }
 
-  static exists(path: string) {
+  static exists(path: string): boolean {
     const packageJsonPath = join(path, 'package.json');
     return existsSync(packageJsonPath);
   }
 
-  static some(packages: Package[], callback: (package_: Package) => boolean) {
+  static some(
+    packages: readonly Package[],
+    callback: (package_: Package) => boolean
+  ): boolean {
     return packages.some((package_) => callback(package_));
   }
 
