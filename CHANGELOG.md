@@ -20,6 +20,22 @@
 
 
 
+
+## v3.2.0 (2023-05-20)
+
+#### :rocket: Enhancement
+* [#591](https://github.com/bmish/check-dependency-version-consistency/pull/591) Add Node API ([@bmish](https://github.com/bmish))
+
+#### :house: Internal
+* [#596](https://github.com/bmish/check-dependency-version-consistency/pull/596) Add some additional npm info to package.json ([@bmish](https://github.com/bmish))
+* [#594](https://github.com/bmish/check-dependency-version-consistency/pull/594) Harden CI ([@bmish](https://github.com/bmish))
+* [#595](https://github.com/bmish/check-dependency-version-consistency/pull/595) Test on Node 20 ([@bmish](https://github.com/bmish))
+* [#593](https://github.com/bmish/check-dependency-version-consistency/pull/593) Enable better TypeScript linting ([@bmish](https://github.com/bmish))
+
+#### Committers: 1
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+
+
 ## v3.1.1 (2023-05-11)
 
 #### :bug: Bug Fix
