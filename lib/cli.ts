@@ -24,10 +24,10 @@ function collect(value: string, previous: readonly string[]) {
 }
 
 // Setup CLI.
-export function run() {
+export async function run(argv: readonly string[]) {
   const program = new Command();
 
-  program
+  await program
     .version(getCurrentPackageVersion())
     .addArgument(new Argument('[path]', 'path to workspace root').default('.'))
     .option(
@@ -91,7 +91,7 @@ export function run() {
         process.exitCode = 1;
       }
     })
-    .parse(process.argv);
+    .parseAsync(argv);
 
   return program;
 }

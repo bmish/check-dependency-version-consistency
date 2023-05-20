@@ -3,11 +3,9 @@
 
 import { run } from '../lib/cli.js';
 
-try {
-  run();
-} catch (error) {
+run(process.argv).catch((error) => {
   if (error instanceof Error) {
     console.error(error.message);
   }
   process.exitCode = 1;
-}
+});
