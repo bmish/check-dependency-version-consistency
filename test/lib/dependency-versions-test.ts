@@ -445,11 +445,11 @@ describe('Utils | dependency-versions', function () {
           '@scope1/package2/package.json',
           'utf8'
         );
-        const packageJsonRoot: PackageJson = JSON.parse(
+        const packageJsonRoot = JSON.parse(
           packageJsonRootContents
-        );
-        const packageJson1: PackageJson = JSON.parse(packageJson1Contents);
-        const packageJson2: PackageJson = JSON.parse(packageJson2Contents);
+        ) as PackageJson;
+        const packageJson1 = JSON.parse(packageJson1Contents) as PackageJson;
+        const packageJson2 = JSON.parse(packageJson2Contents) as PackageJson;
 
         // foo
         // updates the package1 `foo` version to the latest version
@@ -694,9 +694,9 @@ describe('Utils | dependency-versions', function () {
           'package3/package.json',
           'utf8'
         );
-        const packageJson1: PackageJson = JSON.parse(packageJson1Contents);
-        const packageJson2: PackageJson = JSON.parse(packageJson2Contents);
-        const packageJson3: PackageJson = JSON.parse(packageJson3Contents);
+        const packageJson1 = JSON.parse(packageJson1Contents) as PackageJson;
+        const packageJson2 = JSON.parse(packageJson2Contents) as PackageJson;
+        const packageJson3 = JSON.parse(packageJson3Contents) as PackageJson;
 
         expect(
           packageJson1.dependencies && packageJson1.dependencies['package2']
@@ -804,10 +804,10 @@ describe('Utils | dependency-versions', function () {
           'package1/package.json',
           'utf8'
         );
-        const packageJsonRoot: PackageJson = JSON.parse(
+        const packageJsonRoot = JSON.parse(
           packageJsonRootContents
-        );
-        const packageJson1: PackageJson = JSON.parse(packageJson1Contents);
+        ) as PackageJson;
+        const packageJson1 = JSON.parse(packageJson1Contents) as PackageJson;
 
         expect(
           packageJsonRoot.devDependencies &&
@@ -904,8 +904,8 @@ describe('Utils | dependency-versions', function () {
           'package2/package.json',
           'utf8'
         );
-        const packageJson1: PackageJson = JSON.parse(packageJson1Contents);
-        const packageJson2: PackageJson = JSON.parse(packageJson2Contents);
+        const packageJson1 = JSON.parse(packageJson1Contents) as PackageJson;
+        const packageJson2 = JSON.parse(packageJson2Contents) as PackageJson;
 
         expect(
           packageJson1.dependencies && packageJson1.dependencies['foo']

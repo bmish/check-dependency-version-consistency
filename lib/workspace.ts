@@ -38,7 +38,9 @@ export function getPackages(
       )
     ) {
       throw new Error(
-        `Specified option '--ignore-package-pattern ${ignoredPackagePattern}', but no matching packages detected in workspace.`
+        `Specified option '--ignore-package-pattern ${String(
+          ignoredPackagePattern
+        )}', but no matching packages detected in workspace.`
       );
     }
   }
@@ -64,7 +66,9 @@ export function getPackages(
       )
     ) {
       throw new Error(
-        `Specified option '--ignore-path-pattern ${ignoredPathPattern}', but no matching paths detected in workspace.`
+        `Specified option '--ignore-path-pattern ${String(
+          ignoredPathPattern
+        )}', but no matching paths detected in workspace.`
       );
     }
   }

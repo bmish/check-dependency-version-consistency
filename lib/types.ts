@@ -12,3 +12,13 @@ export type Dependencies = Record<
     }[];
   }
 >;
+
+export type Options = {
+  fix?: boolean;
+  ignoreDep?: readonly string[];
+  ignoreDepPattern?: readonly string[];
+  ignorePackage?: readonly string[];
+  ignorePackagePattern?: readonly string[];
+  ignorePath?: readonly string[];
+  ignorePathPattern?: readonly string[];
+};

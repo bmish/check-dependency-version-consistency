@@ -4,7 +4,7 @@ import {
   filterOutIgnoredDependencies,
   fixVersionsMismatching,
 } from './dependency-versions.js';
-import { Dependencies } from './types.js';
+import { Dependencies, Options } from './types.js';
 import { getPackages } from './workspace.js';
 
 /**
@@ -23,15 +23,7 @@ import { getPackages } from './workspace.js';
  */
 export function check(
   path: string,
-  options?: {
-    fix?: boolean;
-    ignoreDep?: readonly string[];
-    ignoreDepPattern?: readonly string[];
-    ignorePackage?: readonly string[];
-    ignorePackagePattern?: readonly string[];
-    ignorePath?: readonly string[];
-    ignorePathPattern?: readonly string[];
-  }
+  options?: Options
 ): {
   dependencies: Dependencies;
 } {
