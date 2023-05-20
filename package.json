@@ -10,14 +10,17 @@
     "npm",
     "package.json",
     "packages",
+    "pnpm",
     "workspace",
     "yarn"
   ],
+  "homepage": "https://github.com/bmish/check-dependency-version-consistency#readme",
   "repository": {
     "type": "git",
     "url": "https://github.com/bmish/check-dependency-version-consistency.git"
   },
   "license": "MIT",
+  "author": "Bryan Mishkin",
   "type": "module",
   "exports": "./dist/lib/index.js",
   "main": "./dist/lib/index.js",
@@ -31,7 +34,7 @@
   ],
   "scripts": {
     "build": "rm -rf dist tsc --project tsconfig.build.json",
-    "lint": "npm-run-all --aggregate-output --continue-on-error --parallel lint:*",
+    "lint": "npm-run-all --aggregate-output --continue-on-error --parallel \"lint:*\"",
     "lint:docs": "markdownlint \"**/*.md\"",
     "lint:js": "eslint --cache .",
     "lint:package-json": "npmPkgJsonLint .",
