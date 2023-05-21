@@ -1,0 +1,8 @@
+{
+    "workspaces": [
+        "*"
+    ],
+    "dependencies": {
+        "package1": "workspace:*"
+    }
+}

@@ -1,21 +1,30 @@
 {
   "name": "check-dependency-version-consistency",
-  "version": "3.0.0",
+  "version": "3.2.1",
   "description": "Ensures dependencies are on consistent versions across a monorepo.",
   "keywords": [
     "dependencies",
     "linter",
     "monorepo",
+    "nodejs",
+    "npm",
     "package.json",
     "packages",
-    "workspace"
+    "pnpm",
+    "workspace",
+    "yarn"
   ],
+  "homepage": "https://github.com/bmish/check-dependency-version-consistency#readme",
   "repository": {
     "type": "git",
     "url": "https://github.com/bmish/check-dependency-version-consistency.git"
   },
   "license": "MIT",
+  "author": "Bryan Mishkin",
   "type": "module",
+  "exports": "./dist/lib/index.js",
+  "main": "./dist/lib/index.js",
+  "types": "./dist/lib/index.d.ts",
   "bin": {
     "check-dependency-version-consistency": "dist/bin/check-dependency-version-consistency.js"
   },
@@ -24,23 +33,25 @@
     "README.md"
   ],
   "scripts": {
-    "build": "tsc",
-    "lint": "npm-run-all --aggregate-output --continue-on-error --parallel lint:*",
+    "build": "rm -rf dist && tsc --project tsconfig.build.json",
+    "lint": "npm-run-all --aggregate-output --continue-on-error --parallel \"lint:*\"",
     "lint:docs": "markdownlint \"**/*.md\"",
     "lint:js": "eslint --cache .",
     "lint:package-json": "npmPkgJsonLint .",
     "lint:package-json-sorting": "sort-package-json --check",
     "lint:package-json-sorting:fix": "sort-package-json package.json",
     "lint:types": "tsc",
-    "prepublishOnly": "tsc",
+    "prepublishOnly": "yarn build",
     "release": "release-it",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --colors --coverage"
   },
   "dependencies": {
-    "chalk": "^4.1.2",
+    "@types/js-yaml": "^4.0.5",
+    "chalk": "^5.0.1",
     "commander": "^9.0.0",
     "edit-json-file": "^1.7.0",
     "globby": "^13.1.1",
+    "js-yaml": "^4.1.0",
     "semver": "^7.3.5",
     "table": "^6.7.1",
     "type-fest": "^2.1.0"

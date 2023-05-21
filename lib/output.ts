@@ -1,14 +1,21 @@
 import chalk from 'chalk';
-import type { MismatchingDependencyVersions } from './dependency-versions.js';
 import {
   compareVersionRangesSafe,
   getIncreasedLatestVersion,
 } from './semver.js';
 import { table } from 'table';
+import { Dependencies } from './types.js';
 
-export function mismatchingVersionsToOutput(
-  mismatchingDependencyVersions: MismatchingDependencyVersions
+/**
+ * Returns human-readable tables describing mismatching dependency versions.
+ */
+export function dependenciesToMismatchSummary(
+  dependencies: Dependencies
 ): string {
+  const mismatchingDependencyVersions = Object.entries(dependencies)
+    .filter(([, value]) => value.isMismatching)
+    .map(([dependency, value]) => ({ dependency, versions: value.versions }));
+
   if (mismatchingDependencyVersions.length === 0) {
     throw new Error('No mismatching versions to output.');
   }
@@ -25,7 +32,7 @@ export function mismatchingVersionsToOutput(
         (count) => count === latestUsageCount
       );
 
-      const rows = object.versions
+      const rows = [...object.versions]
         .sort((a, b) => compareVersionRangesSafe(b.version, a.version))
         .map((versionObject) => {
           const usageCount = versionObject.packages.length;
@@ -59,9 +66,14 @@ export function mismatchingVersionsToOutput(
   ].join('\n');
 }
 
-export function mismatchingVersionsFixedToOutput(
-  mismatchingDependencyVersions: MismatchingDependencyVersions
-): string {
+/**
+ * Returns a summary of the mismatching dependency versions that were fixed.
+ */
+export function dependenciesToFixedSummary(dependencies: Dependencies): string {
+  const mismatchingDependencyVersions = Object.entries(dependencies)
+    .filter(([, value]) => value.isMismatching)
+    .map(([dependency, value]) => ({ dependency, versions: value.versions }));
+
   if (mismatchingDependencyVersions.length === 0) {
     throw new Error('No fixes to output.');
   }

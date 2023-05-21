@@ -1,5 +1,8 @@
 node_modules/
 
+# Any node_modules in test fixtures are allowed.
+!test/fixtures/**/node_modules/
+
 dist/
 
 .eslintcache

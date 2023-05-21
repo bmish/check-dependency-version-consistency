@@ -1,12 +1,15 @@
-import { getPackages, getWorkspaces } from '../../lib/workspace.js';
+import { getPackages } from '../../lib/workspace.js';
 import { join } from 'node:path';
 import {
   FIXTURE_PATH_NOT_A_WORKSPACE,
   FIXTURE_PATH_NO_PACKAGE_JSON,
   FIXTURE_PATH_VALID,
   FIXTURE_PATH_VALID_WITH_PACKAGES,
+  FIXTURE_PATH_VALID_NOHOIST_WITH_NODE_MODULES,
   FIXTURE_PATH_WORKSPACE_NOT_AN_ARRAY,
   FIXTURE_PATH_WORKSPACE_PACKAGE_NOT_AN_ARRAY,
+  FIXTURE_PATH_WORKSPACE_PNPM,
+  FIXTURE_PATH_WORKSPACE_PNPM_PACKAGES_WRONG_TYPE,
   FIXTURE_PATH_NESTED_WORKSPACES,
 } from '../fixtures/index.js';
 
@@ -29,6 +32,26 @@ describe('Utils | workspace', function () {
           'foo2',
           'package1',
         ].map((path) => join(FIXTURE_PATH_VALID, path))
+      );
+    });
+
+    it('behaves correctly with valid fixture for using nohoist', function () {
+      expect(
+        getPackages(FIXTURE_PATH_VALID_WITH_PACKAGES, [], [], [], []).map(
+          (package_) => package_.path
+        )
+      ).toStrictEqual(
+        [
+          '.',
+          '@scope1/package1',
+          '@scope1/package2',
+          '@scope2/deps-only',
+          '@scope2/dev-deps-only',
+          'nested-scope/@nested-level/package',
+          'foo1',
+          'foo2',
+          'package1',
+        ].map((path) => join(FIXTURE_PATH_VALID_WITH_PACKAGES, path))
       );
     });
 
@@ -162,37 +185,38 @@ describe('Utils | workspace', function () {
         ].map((path) => join(FIXTURE_PATH_NESTED_WORKSPACES, path))
       );
     });
-  });
 
-  describe('#getWorkspaces', function () {
-    it('behaves correctly with valid fixture', function () {
-      expect(getWorkspaces(FIXTURE_PATH_VALID)).toMatchInlineSnapshot(`
-        Array [
-          "@scope1/*",
-          "@scope2/*",
-          "nested-scope/**",
-          "foo*",
-          "package1",
-        ]
-      `);
+    it('behaves correctly with pnpm workspaces', function () {
+      expect(
+        getPackages(FIXTURE_PATH_WORKSPACE_PNPM, [], [], [], []).map(
+          (package_) => package_.path
+        )
+      ).toStrictEqual(
+        ['.', 'packages/package1'].map((path) =>
+          join(FIXTURE_PATH_WORKSPACE_PNPM, path)
+        )
+      );
     });
 
-    it('behaves correctly with valid fixture for using nohoist', function () {
-      expect(getWorkspaces(FIXTURE_PATH_VALID_WITH_PACKAGES))
-        .toMatchInlineSnapshot(`
-          Array [
-            "@scope1/*",
-            "@scope2/*",
-            "nested-scope/**",
-            "foo*",
-            "package1",
-          ]
-        `);
+    it('does not include packages in node_modules from nohoist usage (or crash from malformed package.json in node_modules test fixture)', function () {
+      expect(
+        getPackages(
+          FIXTURE_PATH_VALID_NOHOIST_WITH_NODE_MODULES,
+          [],
+          [],
+          [],
+          []
+        ).map((package_) => package_.path)
+      ).toStrictEqual(
+        ['.', '/packages/package-a'].map((path) =>
+          join(FIXTURE_PATH_VALID_NOHOIST_WITH_NODE_MODULES, path)
+        )
+      );
     });
 
     it('throws with fixture that has no package.json', function () {
       expect(() =>
-        getWorkspaces(FIXTURE_PATH_NO_PACKAGE_JSON)
+        getPackages(FIXTURE_PATH_NO_PACKAGE_JSON, [], [], [], [])
       ).toThrowErrorMatchingInlineSnapshot(
         '"No package.json found at provided path."'
       );
@@ -200,15 +224,15 @@ describe('Utils | workspace', function () {
 
     it('throws with fixture that does not have workspace specified', function () {
       expect(() =>
-        getWorkspaces(FIXTURE_PATH_NOT_A_WORKSPACE)
+        getPackages(FIXTURE_PATH_NOT_A_WORKSPACE, [], [], [], [])
       ).toThrowErrorMatchingInlineSnapshot(
-        '"package.json at provided path does not specify `workspaces`."'
+        '"Package at provided path has no workspaces specified."'
       );
     });
 
     it('throws with fixture that does not have workspace specified as array', function () {
       expect(() =>
-        getWorkspaces(FIXTURE_PATH_WORKSPACE_NOT_AN_ARRAY)
+        getPackages(FIXTURE_PATH_WORKSPACE_NOT_AN_ARRAY, [], [], [], [])
       ).toThrowErrorMatchingInlineSnapshot(
         '"package.json `workspaces` is not a string array."'
       );
@@ -216,9 +240,23 @@ describe('Utils | workspace', function () {
 
     it('throws with fixture that does not have workspace packages specified as array', function () {
       expect(() =>
-        getWorkspaces(FIXTURE_PATH_WORKSPACE_PACKAGE_NOT_AN_ARRAY)
+        getPackages(FIXTURE_PATH_WORKSPACE_PACKAGE_NOT_AN_ARRAY, [], [], [], [])
       ).toThrowErrorMatchingInlineSnapshot(
         '"package.json `workspaces.packages` is not a string array."'
+      );
+    });
+
+    it('throws with fixture that has pnpm-workspace.yaml but invalid type for packages', function () {
+      expect(() =>
+        getPackages(
+          FIXTURE_PATH_WORKSPACE_PNPM_PACKAGES_WRONG_TYPE,
+          [],
+          [],
+          [],
+          []
+        )
+      ).toThrowErrorMatchingInlineSnapshot(
+        '"pnpm-workspace.yaml `packages` is not a string array."'
       );
     });
   });

@@ -40,6 +40,10 @@ export const FIXTURE_PATH_PACKAGE_MISSING_NAME = join(
   FIXTURE_PATH,
   'package-missing-name'
 );
+export const FIXTURE_PATH_WORKSPACE_PNPM_MISSING_NAME = join(
+  FIXTURE_PATH,
+  'workspace-pnpm-missing-name'
+);
 export const FIXTURE_PATH_INCONSISTENT_LOCAL_PACKAGE_VERSION = join(
   FIXTURE_PATH,
   'inconsistent-local-package-version'
@@ -48,16 +52,44 @@ export const FIXTURE_PATH_INCREASABLE_RANGE = join(
   FIXTURE_PATH,
   'increasable-range'
 );
+export const FIXTURE_PATH_VALID_WITH_COMMENTS = join(
+  FIXTURE_PATH,
+  'valid-with-comments'
+);
 export const FIXTURE_PATH_VALID_WITH_PACKAGES = join(
   FIXTURE_PATH,
   'valid-with-packages'
 );
+export const FIXTURE_PATH_VALID_NOHOIST_WITH_NODE_MODULES = join(
+  FIXTURE_PATH,
+  'valid-nohoist-with-node-modules'
+);
 export const FIXTURE_PATH_WORKSPACE_PACKAGE_NOT_AN_ARRAY = join(
   FIXTURE_PATH,
   'workspace-packages-not-an-array'
+);
+export const FIXTURE_PATH_WORKSPACE_PNPM = join(FIXTURE_PATH, 'workspace-pnpm');
+export const FIXTURE_PATH_WORKSPACE_PNPM_PACKAGES_WRONG_TYPE = join(
+  FIXTURE_PATH,
+  'workspace-pnpm-packages-wrong-type'
 );
 export const FIXTURE_PATH_NESTED_WORKSPACES = join(
   FIXTURE_PATH,
   'nested-workspaces'
 );
 export const FIXTURE_PATH_RESOLUTIONS = join(FIXTURE_PATH, 'resolutions');
+
+export const FIXTURE_PATH_ALL_VERSION_TYPES = join(
+  FIXTURE_PATH,
+  'all-version-types'
+);
+
+export const FIXTURE_PATH_VALID_WITH_WORKSPACE_PREFIX = join(
+  FIXTURE_PATH,
+  'valid-with-workspace-prefix'
+);
+
+export const FIXTURE_PATH_INCONSISTENT_WITH_WORKSPACE_PREFIX = join(
+  FIXTURE_PATH,
+  'inconsistent-with-workspace-prefix'
+);

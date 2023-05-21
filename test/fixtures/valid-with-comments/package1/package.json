@@ -1,0 +1,7 @@
+{
+    "name": "package1",
+    "dependencies": {
+        "//": "comment about foo",
+        "foo": "^1.2.3"
+    }
+}

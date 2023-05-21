@@ -5,7 +5,7 @@ module.exports = {
     sourceType: 'module',
   },
   extends: [
-    'plugin:square/base',
+    'plugin:square/typescript',
     'plugin:node/recommended',
     'plugin:unicorn/recommended', // Turn eslint-plugin-unicorn recommended rules on again because many were turned off by eslint-plugin-square.
     'plugin:jest/recommended',
@@ -28,13 +28,23 @@ module.exports = {
   overrides: [
     {
       parser: '@typescript-eslint/parser',
+      parserOptions: {
+        tsconfigRootDir: __dirname,
+        project: ['./tsconfig.json'],
+      },
       files: ['*.ts'],
-      extends: ['plugin:@typescript-eslint/recommended'],
+      extends: [
+        'plugin:@typescript-eslint/recommended',
+        'plugin:@typescript-eslint/recommended-requiring-type-checking',
+      ],
       rules: {
         'node/no-unsupported-features/es-syntax': [
           'error',
           { ignores: ['modules'] },
         ],
+
+        '@typescript-eslint/prefer-readonly': 'error',
+        '@typescript-eslint/require-array-sort-compare': 'error',
       },
     },
   ],

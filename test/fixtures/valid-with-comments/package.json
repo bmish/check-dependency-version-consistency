@@ -1,0 +1,9 @@
+{
+    "workspaces": ["*"],
+    "devDependencies": {
+        "//": "comment about bar",
+        "bar": "^2.0.0",
+        "//": "comment about baz",
+        "baz": "^3.0.0"
+    }
+}

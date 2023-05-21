@@ -1,0 +1,6 @@
+{
+  "name": "package-a",
+  "dependencies": {
+    "resolve": "^1.22.1"
+  }
+}

@@ -15,6 +15,98 @@
 
 
 
+
+
+
+
+
+
+
+## v3.2.1 (2023-05-20)
+
+#### :bug: Bug Fix
+* [#597](https://github.com/bmish/check-dependency-version-consistency/pull/597) Fix publishing issue from v3.2.0 ([@bmish](https://github.com/bmish))
+
+#### Committers: 1
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+
+
+## v3.2.0 (2023-05-20)
+
+#### :rocket: Enhancement
+* [#591](https://github.com/bmish/check-dependency-version-consistency/pull/591) Add Node API ([@bmish](https://github.com/bmish))
+
+#### :house: Internal
+* [#596](https://github.com/bmish/check-dependency-version-consistency/pull/596) Add some additional npm info to package.json ([@bmish](https://github.com/bmish))
+* [#594](https://github.com/bmish/check-dependency-version-consistency/pull/594) Harden CI ([@bmish](https://github.com/bmish))
+* [#595](https://github.com/bmish/check-dependency-version-consistency/pull/595) Test on Node 20 ([@bmish](https://github.com/bmish))
+* [#593](https://github.com/bmish/check-dependency-version-consistency/pull/593) Enable better TypeScript linting ([@bmish](https://github.com/bmish))
+
+#### Committers: 1
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+
+
+## v3.1.1 (2023-05-11)
+
+#### :bug: Bug Fix
+* [#590](https://github.com/bmish/check-dependency-version-consistency/pull/590) pnpm workspace root package should not require `name` ([@bmish](https://github.com/bmish))
+
+#### Committers: 1
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+
+
+## v3.1.0 (2023-05-11)
+
+#### :rocket: Enhancement
+* [#574](https://github.com/bmish/check-dependency-version-consistency/pull/574) Support pnpm workspaces ([@bmish](https://github.com/bmish))
+
+#### :bug: Bug Fix
+* [#586](https://github.com/bmish/check-dependency-version-consistency/pull/586) Add back error messages when unable to detect workspaces ([@bmish](https://github.com/bmish))
+
+#### :memo: Documentation
+* [#543](https://github.com/bmish/check-dependency-version-consistency/pull/543) Mention competing offering Yarn Constraints in readme ([@bmish](https://github.com/bmish))
+* [#544](https://github.com/bmish/check-dependency-version-consistency/pull/544) Mention npm workspaces in readme ([@bmish](https://github.com/bmish))
+
+#### :house: Internal
+* [#561](https://github.com/bmish/check-dependency-version-consistency/pull/561) Add Node v19 to CI ([@ddzz](https://github.com/ddzz))
+* [#548](https://github.com/bmish/check-dependency-version-consistency/pull/548) Add CodeQL ([@bmish](https://github.com/bmish))
+
+#### Committers: 2
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+- Darius Dzien ([@ddzz](https://github.com/ddzz))
+
+
+## v3.0.3 (2022-09-26)
+
+#### :bug: Bug Fix
+* [#534](https://github.com/bmish/check-dependency-version-consistency/pull/534) Ignore package.json comments ([@bmish](https://github.com/bmish))
+
+#### Committers: 1
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+
+
+## v3.0.2 (2022-09-23)
+
+#### :bug: Bug Fix
+* [#527](https://github.com/bmish/check-dependency-version-consistency/pull/527) Ignore packages inside `node_modules` from `nohoist` usage ([@bmish](https://github.com/bmish))
+
+#### Committers: 1
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+
+
+## v3.0.1 (2022-09-06)
+
+#### :bug: Bug Fix
+* [#520](https://github.com/bmish/check-dependency-version-consistency/pull/520) Allow referring to local package version with `workspace:` prefix ([@bmish](https://github.com/bmish))
+
+#### :house: Internal
+* [#423](https://github.com/bmish/check-dependency-version-consistency/pull/423) Add Node v18 to CI ([@ddzz](https://github.com/ddzz))
+
+#### Committers: 2
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+- Darius Dzien ([@ddzz](https://github.com/ddzz))
+
+
 ## v3.0.0 (2022-03-27)
 
 #### :boom: Breaking Change

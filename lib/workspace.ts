@@ -1,16 +1,23 @@
 import { join } from 'node:path';
-import { existsSync, readFileSync } from 'node:fs';
-import type { PackageJson } from 'type-fest';
 import { globbySync } from 'globby';
 import { Package } from './package.js';
 
 export function getPackages(
   root: string,
-  ignorePackages: string[],
-  ignorePackagePatterns: RegExp[],
-  ignorePaths: string[],
-  ignorePathPatterns: RegExp[]
-): Package[] {
+  ignorePackages: readonly string[],
+  ignorePackagePatterns: readonly RegExp[],
+  ignorePaths: readonly string[],
+  ignorePathPatterns: readonly RegExp[]
+): readonly Package[] {
+  // Check for some error cases first.
+  if (!Package.exists(root)) {
+    throw new Error('No package.json found at provided path.');
+  }
+  const package_ = new Package(root, root);
+  if (package_.workspacePatterns.length === 0) {
+    throw new Error('Package at provided path has no workspaces specified.');
+  }
+
   const packages = accumulatePackages(root, ['.']);
 
   for (const ignoredPackage of ignorePackages) {
@@ -31,7 +38,9 @@ export function getPackages(
       )
     ) {
       throw new Error(
-        `Specified option '--ignore-package-pattern ${ignoredPackagePattern}', but no matching packages detected in workspace.`
+        `Specified option '--ignore-package-pattern ${String(
+          ignoredPackagePattern
+        )}', but no matching packages detected in workspace.`
       );
     }
   }
@@ -57,7 +66,9 @@ export function getPackages(
       )
     ) {
       throw new Error(
-        `Specified option '--ignore-path-pattern ${ignoredPathPattern}', but no matching paths detected in workspace.`
+        `Specified option '--ignore-path-pattern ${String(
+          ignoredPathPattern
+        )}', but no matching paths detected in workspace.`
       );
     }
   }
@@ -86,51 +97,30 @@ export function getPackages(
   return packages;
 }
 
-export function getWorkspaces(root: string): string[] {
-  const workspacePackageJsonPath = join(root, 'package.json');
-  if (!existsSync(workspacePackageJsonPath)) {
-    throw new Error('No package.json found at provided path.');
-  }
-
-  const workspacePackageJson: PackageJson = JSON.parse(
-    readFileSync(join(root, 'package.json'), 'utf8')
-  );
-
-  if (!workspacePackageJson.workspaces) {
-    throw new Error(
-      'package.json at provided path does not specify `workspaces`.'
-    );
-  }
-
-  if (!Array.isArray(workspacePackageJson.workspaces)) {
-    if (workspacePackageJson.workspaces.packages) {
-      if (Array.isArray(workspacePackageJson.workspaces.packages)) {
-        return workspacePackageJson.workspaces.packages;
-      } else {
-        throw new TypeError(
-          'package.json `workspaces.packages` is not a string array.'
-        );
-      }
-    }
-    throw new TypeError('package.json `workspaces` is not a string array.');
-  }
-
-  return workspacePackageJson.workspaces;
-}
-
 // Expand workspace globs into concrete paths.
-function expandWorkspaces(root: string, workspacePatterns: string[]): string[] {
+function expandWorkspaces(
+  root: string,
+  workspacePatterns: readonly string[]
+): readonly string[] {
   return workspacePatterns.flatMap((workspace) => {
     if (!workspace.includes('*')) {
       return [workspace];
     }
     // Use cwd instead of passing join()'d paths to globby for Windows support: https://github.com/micromatch/micromatch/blob/34f44b4f57eacbdbcc74f64252e0845cf44bbdbd/README.md?plain=1#L822
-    return globbySync(workspace, { onlyDirectories: true, cwd: root });
+    // Ignore any node_modules that may be present due to the use of nohoist.
+    return globbySync(workspace, {
+      onlyDirectories: true,
+      cwd: root,
+      ignore: ['**/node_modules'],
+    });
   });
 }
 
 // Recursively collect packages from a workspace.
-function accumulatePackages(root: string, paths: string[]): Package[] {
+function accumulatePackages(
+  root: string,
+  paths: readonly string[]
+): readonly Package[] {
   const results = [];
   for (const relativePath of paths) {
     const path = join(root, relativePath);

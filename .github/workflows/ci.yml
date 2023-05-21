@@ -5,9 +5,12 @@ name: CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
+
+permissions:
+  contents: read # to fetch code (actions/checkout)
 
 jobs:
   build:
@@ -17,10 +20,12 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu, windows ]
-        node-version: [14.x, 16.x, 18.x]
+        node-version: [14.x, 16.x, 18.x, 19.x, 20.x]
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        persist-credentials: false
 
     - name: Use Node.js version ${{ matrix.node-version }}
       uses: actions/setup-node@v3
