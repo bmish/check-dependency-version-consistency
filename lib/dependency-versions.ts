@@ -59,6 +59,7 @@ export function calculateVersionsForEachDependency(
   return dependenciesToVersionsSeen;
 }
 
+// eslint-disable-next-line complexity
 function recordDependencyVersionsForPackageJson(
   dependenciesToVersionsSeen: DependenciesToVersionsSeen,
   package_: Package,
@@ -98,6 +99,24 @@ function recordDependencyVersionsForPackageJson(
   ) {
     for (const [dependency, dependencyVersion] of Object.entries(
       package_.packageJson.devDependencies
+    )) {
+      if (dependencyVersion) {
+        recordDependencyVersion(
+          dependenciesToVersionsSeen,
+          dependency,
+          dependencyVersion,
+          package_
+        );
+      }
+    }
+  }
+
+  if (
+    depType.includes(DEPENDENCY_TYPE.optionalDependencies) &&
+    package_.packageJson.optionalDependencies
+  ) {
+    for (const [dependency, dependencyVersion] of Object.entries(
+      package_.packageJson.optionalDependencies
     )) {
       if (dependencyVersion) {
         recordDependencyVersion(
@@ -399,6 +418,27 @@ export function fixVersionsMismatching(
             package_.pathPackageJson,
             package_.packageJsonEndsInNewline,
             DEPENDENCY_TYPE.dependencies,
+            mismatchingVersion.dependency,
+            fixedVersion
+          );
+        }
+        isFixed = true;
+      }
+
+      if (
+        package_.packageJson.optionalDependencies &&
+        package_.packageJson.optionalDependencies[
+          mismatchingVersion.dependency
+        ] &&
+        package_.packageJson.optionalDependencies[
+          mismatchingVersion.dependency
+        ] !== fixedVersion
+      ) {
+        if (!dryrun) {
+          writeDependencyVersion(
+            package_.pathPackageJson,
+            package_.packageJsonEndsInNewline,
+            DEPENDENCY_TYPE.optionalDependencies,
             mismatchingVersion.dependency,
             fixedVersion
           );

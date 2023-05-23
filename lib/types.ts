@@ -16,9 +16,9 @@ export type Dependencies = Record<
 export enum DEPENDENCY_TYPE {
   'dependencies' = 'dependencies',
   'devDependencies' = 'devDependencies',
+  'optionalDependencies' = 'optionalDependencies',
   'peerDependencies' = 'peerDependencies',
   'resolutions' = 'resolutions',
-  // TODO: `optionalDependencies`
 }
 
 export type Options = {
