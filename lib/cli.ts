@@ -4,7 +4,7 @@ import { join, dirname } from 'node:path';
 import type { PackageJson } from 'type-fest';
 import { fileURLToPath } from 'node:url';
 import { CDVC } from './cdvc.js';
-import { Options } from './types.js';
+import { DEPENDENCY_TYPE, Options } from './types.js';
 import { DEFAULT_DEP_TYPES } from './defaults.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -34,6 +34,8 @@ export function run() {
     .option(
       '--dep-type <dependency-type>',
       `Type of dependency to check (default: ${DEFAULT_DEP_TYPES.join(
+        ', '
+      )}) (choices: ${Object.keys(DEPENDENCY_TYPE).join(
         ', '
       )}) (option can be repeated)`,
       collect,
