@@ -54,7 +54,7 @@
     "js-yaml": "^4.1.0",
     "semver": "^7.3.5",
     "table": "^6.7.1",
-    "type-fest": "^2.1.0"
+    "type-fest": "^3.11.0"
   },
   "devDependencies": {
     "@types/edit-json-file": "^1.7.0",
