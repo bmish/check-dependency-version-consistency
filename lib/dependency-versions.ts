@@ -111,6 +111,24 @@ function recordDependencyVersionsForPackageJson(
   }
 
   if (
+    depType.includes(DEPENDENCY_TYPE.peerDependencies) &&
+    package_.packageJson.peerDependencies
+  ) {
+    for (const [dependency, dependencyVersion] of Object.entries(
+      package_.packageJson.peerDependencies
+    )) {
+      if (dependencyVersion) {
+        recordDependencyVersion(
+          dependenciesToVersionsSeen,
+          dependency,
+          dependencyVersion,
+          package_
+        );
+      }
+    }
+  }
+
+  if (
     depType.includes(DEPENDENCY_TYPE.resolutions) &&
     package_.packageJson.resolutions
   ) {
@@ -381,6 +399,24 @@ export function fixVersionsMismatching(
             package_.pathPackageJson,
             package_.packageJsonEndsInNewline,
             DEPENDENCY_TYPE.dependencies,
+            mismatchingVersion.dependency,
+            fixedVersion
+          );
+        }
+        isFixed = true;
+      }
+
+      if (
+        package_.packageJson.peerDependencies &&
+        package_.packageJson.peerDependencies[mismatchingVersion.dependency] &&
+        package_.packageJson.peerDependencies[mismatchingVersion.dependency] !==
+          fixedVersion
+      ) {
+        if (!dryrun) {
+          writeDependencyVersion(
+            package_.pathPackageJson,
+            package_.packageJsonEndsInNewline,
+            DEPENDENCY_TYPE.peerDependencies,
             mismatchingVersion.dependency,
             fixedVersion
           );

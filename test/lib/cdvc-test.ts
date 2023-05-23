@@ -1,5 +1,6 @@
 import {
   FIXTURE_PATH_INCONSISTENT_VERSIONS,
+  FIXTURE_PATH_PEER_DEPENDENCIES,
   FIXTURE_PATH_RESOLUTIONS,
   FIXTURE_PATH_VALID,
 } from '../fixtures/index.js';
@@ -8,6 +9,7 @@ import mockFs from 'mock-fs';
 import { readFileSync } from 'node:fs';
 import type { PackageJson } from 'type-fest';
 import path from 'node:path';
+import { DEPENDENCY_TYPE } from '../../lib/types.js';
 
 describe('CDVC', function () {
   describe('valid fixture', function () {
@@ -251,6 +253,143 @@ describe('CDVC', function () {
       });
     });
 
+    describe('peer dependencies', function () {
+      it('behaves correctly', function () {
+        const cdvc = new CDVC(FIXTURE_PATH_PEER_DEPENDENCIES, {
+          depType: ['peerDependencies'],
+        });
+        const dependencies = cdvc.getDependencies();
+
+        expect(cdvc.hasMismatchingDependencies).toBe(false);
+        expect(cdvc.hasMismatchingDependenciesFixable).toBe(false);
+        expect(cdvc.hasMismatchingDependenciesNotFixable).toBe(false);
+        expect(dependencies).toStrictEqual([
+          {
+            isFixable: false,
+            isMismatching: false,
+            name: 'bar',
+            versions: [
+              {
+                packages: [''],
+                version: '^1.0.0',
+              },
+            ],
+          },
+          {
+            isFixable: false,
+            isMismatching: false,
+            name: 'foo',
+            versions: [
+              {
+                packages: [''],
+                version: '^2.0.0',
+              },
+            ],
+          },
+        ]);
+      });
+
+      describe('mock fs', function () {
+        beforeEach(function () {
+          // Create a mock workspace filesystem for temporary usage in this test because changes will be written to some files.
+          mockFs({
+            'package.json': JSON.stringify({
+              workspaces: ['*'],
+              devDependencies: {
+                foo: '^1.2.0',
+              },
+              peerDependencies: {
+                foo: '^1.0.0',
+                bar: '^1.0.0',
+              },
+            }),
+            package1: {
+              'package.json': JSON.stringify({
+                name: 'package1',
+                dependencies: {
+                  foo: '^2.0.0',
+                  bar: '^1.0.0',
+                },
+              }),
+            },
+          });
+        });
+
+        afterEach(function () {
+          mockFs.restore();
+        });
+
+        it('fixes the fixable inconsistencies', function () {
+          const cdvc = new CDVC('.', {
+            fix: true,
+            depType: [
+              DEPENDENCY_TYPE.peerDependencies,
+              DEPENDENCY_TYPE.devDependencies,
+              DEPENDENCY_TYPE.dependencies,
+            ],
+          });
+
+          // Read in package.json files.
+          const packageJsonRootContents = readFileSync('package.json', 'utf8');
+          const packageJson1Contents = readFileSync(
+            'package1/package.json',
+            'utf8'
+          );
+          const packageJsonRoot = JSON.parse(
+            packageJsonRootContents
+          ) as PackageJson;
+          const packageJson1 = JSON.parse(packageJson1Contents) as PackageJson;
+
+          expect(
+            packageJsonRoot.devDependencies &&
+              packageJsonRoot.devDependencies['foo']
+          ).toStrictEqual('^2.0.0');
+
+          expect(
+            packageJsonRoot.peerDependencies &&
+              packageJsonRoot.peerDependencies['foo']
+          ).toStrictEqual('^2.0.0');
+
+          expect(
+            packageJson1.dependencies && packageJson1.dependencies['foo']
+          ).toStrictEqual('^2.0.0');
+
+          expect(cdvc.getDependencies()).toStrictEqual([
+            {
+              name: 'bar',
+              isFixable: false,
+              isMismatching: false,
+              versions: [
+                {
+                  version: '^1.0.0',
+                  packages: ['', 'package1'],
+                },
+              ],
+            },
+            {
+              name: 'foo',
+              isFixable: true,
+              isMismatching: true,
+              versions: [
+                {
+                  version: '^1.0.0',
+                  packages: [''],
+                },
+                {
+                  version: '^1.2.0',
+                  packages: [''],
+                },
+                {
+                  version: '^2.0.0',
+                  packages: ['package1'],
+                },
+              ],
+            },
+          ]);
+        });
+      });
+    });
+
     describe('resolutions', () => {
       it('behaves correctly', function () {
         const cdvc = new CDVC(FIXTURE_PATH_RESOLUTIONS, {
@@ -297,7 +436,7 @@ describe('CDVC', function () {
               depType: ['fake'],
             })
         ).toThrowErrorMatchingInlineSnapshot(
-          '"Invalid depType provided. Choices are: dependencies, devDependencies, resolutions."'
+          '"Invalid depType provided. Choices are: dependencies, devDependencies, peerDependencies, resolutions."'
         );
       });
     });
