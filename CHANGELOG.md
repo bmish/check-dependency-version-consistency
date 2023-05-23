@@ -22,6 +22,18 @@
 
 
 
+
+## v3.3.0 (2023-05-23)
+
+#### :rocket: Enhancement
+* [#605](https://github.com/bmish/check-dependency-version-consistency/pull/605) Add new option `--dep-type` ([@bmish](https://github.com/bmish))
+* [#606](https://github.com/bmish/check-dependency-version-consistency/pull/606) Add `optionalDependencies` option to `--dep-type` ([@bmish](https://github.com/bmish))
+* [#601](https://github.com/bmish/check-dependency-version-consistency/pull/601) Add `peerDependencies` option to `--dep-type` ([@bmish](https://github.com/bmish))
+
+#### Committers: 1
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+
+
 ## v3.2.1 (2023-05-20)
 
 #### :bug: Bug Fix
