@@ -323,11 +323,6 @@ describe('CDVC', function () {
         it('fixes the fixable inconsistencies', function () {
           const cdvc = new CDVC('.', {
             fix: true,
-            depType: [
-              DEPENDENCY_TYPE.optionalDependencies,
-              DEPENDENCY_TYPE.devDependencies,
-              DEPENDENCY_TYPE.dependencies,
-            ],
           });
 
           // Read in package.json files.
