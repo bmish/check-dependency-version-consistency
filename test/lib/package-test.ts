@@ -11,7 +11,7 @@ describe('Utils | Package', function () {
       join(FIXTURE_PATH_PACKAGE_MISSING_NAME, 'package1'),
       FIXTURE_PATH_PACKAGE_MISSING_NAME
     );
-    expect(() => package_.name).toThrowError(
+    expect(() => package_.name).toThrow(
       `${join(
         FIXTURE_PATH_PACKAGE_MISSING_NAME,
         'package1',
