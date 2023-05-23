@@ -5,6 +5,7 @@ import type { PackageJson } from 'type-fest';
 import { fileURLToPath } from 'node:url';
 import { CDVC } from './cdvc.js';
 import { Options } from './types.js';
+import { DEFAULT_DEP_TYPES } from './defaults.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -30,6 +31,14 @@ export function run() {
   program
     .version(getCurrentPackageVersion())
     .addArgument(new Argument('[path]', 'path to workspace root').default('.'))
+    .option(
+      '--dep-type <dependency-type>',
+      `Type of dependency to check (default: ${DEFAULT_DEP_TYPES.join(
+        ', '
+      )}) (option can be repeated)`,
+      collect,
+      []
+    )
     .option(
       '--fix',
       'Whether to autofix inconsistencies (using highest version present)',

@@ -116,6 +116,7 @@ These options are available on the CLI and as parameters to the [Node API](#node
 
 | Name | Description |
 | :-- | :-- |
+| `--dep-type` | Type of dependency to check (`dependencies`, `devDependencies`, `resolutions`) (default: `dependencies`, `devDependencies`, `resolutions`) (option can be repeated). |
 | `--fix` | Whether to autofix inconsistencies (using latest version present). |
 | `--ignore-dep` | Dependency to ignore mismatches for (option can be repeated). |
 | `--ignore-dep-pattern` | RegExp of dependency names to ignore mismatches for (option can be repeated). |

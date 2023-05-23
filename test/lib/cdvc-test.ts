@@ -1,5 +1,6 @@
 import {
   FIXTURE_PATH_INCONSISTENT_VERSIONS,
+  FIXTURE_PATH_RESOLUTIONS,
   FIXTURE_PATH_VALID,
 } from '../fixtures/index.js';
 import { CDVC } from '../../lib/cdvc.js';
@@ -80,14 +81,6 @@ describe('CDVC', function () {
         },
       ]);
 
-      // Generated property.
-      expect(dependencies.map((dep) => dep.isMismatching)).toStrictEqual([
-        false,
-        false,
-        false,
-        false,
-      ]);
-
       expect(cdvc.getDependency('foo')).toStrictEqual({
         isFixable: false,
         isMismatching: false,
@@ -166,16 +159,149 @@ describe('CDVC', function () {
           ],
         },
       ]);
-
-      // Generated property.
-      expect(dependencies.map((dep) => dep.isMismatching)).toStrictEqual([
-        false,
-        true,
-        true,
-      ]);
     });
   });
 
+  describe('option: depType', function () {
+    describe('devDependencies', () => {
+      it('behaves correctly', function () {
+        const cdvc = new CDVC(FIXTURE_PATH_INCONSISTENT_VERSIONS, {
+          depType: ['devDependencies'],
+        });
+        const dependencies = cdvc.getDependencies();
+
+        expect(cdvc.hasMismatchingDependencies).toBe(true);
+        expect(cdvc.hasMismatchingDependenciesFixable).toBe(true);
+        expect(cdvc.hasMismatchingDependenciesNotFixable).toBe(false);
+        expect(dependencies).toStrictEqual([
+          {
+            isFixable: true,
+            isMismatching: true,
+            name: 'baz',
+            versions: [
+              {
+                packages: [path.join('@scope1', 'package1')],
+                version: '^7.8.9',
+              },
+              {
+                packages: [path.join('@scope1', 'package2')],
+                version: '^8.0.0',
+              },
+            ],
+          },
+          {
+            isFixable: false,
+            isMismatching: false,
+            name: 'foo',
+            versions: [
+              {
+                packages: [''],
+                version: '1.2.0',
+              },
+            ],
+          },
+        ]);
+      });
+    });
+
+    describe('dependencies', () => {
+      it('behaves correctly', function () {
+        const cdvc = new CDVC(FIXTURE_PATH_INCONSISTENT_VERSIONS, {
+          depType: ['dependencies'],
+        });
+        const dependencies = cdvc.getDependencies();
+
+        expect(cdvc.hasMismatchingDependencies).toBe(true);
+        expect(cdvc.hasMismatchingDependenciesFixable).toBe(true);
+        expect(cdvc.hasMismatchingDependenciesNotFixable).toBe(false);
+        expect(dependencies).toStrictEqual([
+          {
+            isFixable: false,
+            isMismatching: false,
+            name: 'bar',
+            versions: [
+              {
+                packages: [
+                  path.join('@scope1', 'package1'),
+                  path.join('@scope1', 'package2'),
+                ],
+                version: '^4.5.6',
+              },
+            ],
+          },
+          {
+            isFixable: true,
+            isMismatching: true,
+            name: 'foo',
+            versions: [
+              {
+                packages: [
+                  path.join('@scope1', 'package2'),
+                  path.join('@scope1', 'package3'),
+                ],
+                version: '1.2.0',
+              },
+              {
+                packages: [path.join('@scope1', 'package1')],
+                version: '1.3.0',
+              },
+            ],
+          },
+        ]);
+      });
+    });
+
+    describe('resolutions', () => {
+      it('behaves correctly', function () {
+        const cdvc = new CDVC(FIXTURE_PATH_RESOLUTIONS, {
+          depType: ['resolutions'],
+        });
+        const dependencies = cdvc.getDependencies();
+
+        expect(cdvc.hasMismatchingDependencies).toBe(false);
+        expect(cdvc.hasMismatchingDependenciesFixable).toBe(false);
+        expect(cdvc.hasMismatchingDependenciesNotFixable).toBe(false);
+        expect(dependencies).toStrictEqual([
+          {
+            isFixable: false,
+            isMismatching: false,
+            name: 'bar',
+            versions: [
+              {
+                packages: [''],
+                version: '^1.0.0',
+              },
+            ],
+          },
+          {
+            isFixable: false,
+            isMismatching: false,
+            name: 'foo',
+            versions: [
+              {
+                packages: [''],
+                version: '^2.0.0',
+              },
+            ],
+          },
+        ]);
+      });
+    });
+
+    describe('invalid depType parameter', function () {
+      it('behaves correctly', function () {
+        expect(
+          () =>
+            new CDVC(FIXTURE_PATH_INCONSISTENT_VERSIONS, {
+              // @ts-expect-error -- testing invalid type
+              depType: ['fake'],
+            })
+        ).toThrowErrorMatchingInlineSnapshot(
+          '"Invalid depType provided. Choices are: dependencies, devDependencies, resolutions."'
+        );
+      });
+    });
+  });
   describe('invalid fixture and ignore patterns', function () {
     it('behaves correctly', function () {
       const cdvc = new CDVC(FIXTURE_PATH_INCONSISTENT_VERSIONS, {
@@ -218,12 +344,6 @@ describe('CDVC', function () {
             },
           ],
         },
-      ]);
-
-      // Generated property.
-      expect(dependencies.map((dep) => dep.isMismatching)).toStrictEqual([
-        false,
-        true,
       ]);
     });
   });
