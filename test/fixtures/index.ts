@@ -82,6 +82,10 @@ export const FIXTURE_PATH_PEER_DEPENDENCIES = join(
   FIXTURE_PATH,
   'peer-dependencies'
 );
+export const FIXTURE_PATH_OPTIONAL_DEPENDENCIES = join(
+  FIXTURE_PATH,
+  'optional-dependencies'
+);
 
 export const FIXTURE_PATH_ALL_VERSION_TYPES = join(
   FIXTURE_PATH,

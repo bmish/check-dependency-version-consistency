@@ -1,0 +1,12 @@
+{
+    "workspaces": [
+        "*"
+    ],
+    "devDependencies": {
+        "foo": "^1.2.0"
+    },
+    "optionalDependencies": {
+        "foo": "^2.0.0",
+        "bar": "^1.0.0"
+    }
+}
