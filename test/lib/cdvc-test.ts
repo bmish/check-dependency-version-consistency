@@ -29,10 +29,10 @@ describe('CDVC', function () {
           versions: [
             {
               packages: [
-                path.join('@scope1', 'package1'),
-                path.join('@scope1', 'package2'),
-                path.join('@scope2', 'deps-only'),
-                'package1',
+                { pathRelative: path.join('@scope1', 'package1') },
+                { pathRelative: path.join('@scope1', 'package2') },
+                { pathRelative: path.join('@scope2', 'deps-only') },
+                { pathRelative: 'package1' },
               ],
               version: '^4.5.6',
             },
@@ -45,10 +45,10 @@ describe('CDVC', function () {
           versions: [
             {
               packages: [
-                path.join('@scope1', 'package1'),
-                path.join('@scope1', 'package2'),
-                path.join('@scope2', 'dev-deps-only'),
-                'package1',
+                { pathRelative: path.join('@scope1', 'package1') },
+                { pathRelative: path.join('@scope1', 'package2') },
+                { pathRelative: path.join('@scope2', 'dev-deps-only') },
+                { pathRelative: 'package1' },
               ],
               version: '^7.8.9',
             },
@@ -61,11 +61,11 @@ describe('CDVC', function () {
           versions: [
             {
               packages: [
-                '',
-                path.join('@scope1', 'package1'),
-                path.join('@scope1', 'package2'),
-                path.join('@scope2', 'deps-only'),
-                'package1',
+                { pathRelative: '' },
+                { pathRelative: path.join('@scope1', 'package1') },
+                { pathRelative: path.join('@scope1', 'package2') },
+                { pathRelative: path.join('@scope2', 'deps-only') },
+                { pathRelative: 'package1' },
               ],
               version: '1.2.3',
             },
@@ -77,7 +77,7 @@ describe('CDVC', function () {
           name: 'foo1',
           versions: [
             {
-              packages: ['package1'],
+              packages: [{ pathRelative: 'package1' }],
               version: '^1.0.0',
             },
           ],
@@ -91,11 +91,11 @@ describe('CDVC', function () {
         versions: [
           {
             packages: [
-              '',
-              path.join('@scope1', 'package1'),
-              path.join('@scope1', 'package2'),
-              path.join('@scope2', 'deps-only'),
-              'package1',
+              { pathRelative: '' },
+              { pathRelative: path.join('@scope1', 'package1') },
+              { pathRelative: path.join('@scope1', 'package2') },
+              { pathRelative: path.join('@scope2', 'deps-only') },
+              { pathRelative: 'package1' },
             ],
             version: '1.2.3',
           },
@@ -120,8 +120,8 @@ describe('CDVC', function () {
           versions: [
             {
               packages: [
-                path.join('@scope1', 'package1'),
-                path.join('@scope1', 'package2'),
+                { pathRelative: path.join('@scope1', 'package1') },
+                { pathRelative: path.join('@scope1', 'package2') },
               ],
               version: '^4.5.6',
             },
@@ -133,11 +133,11 @@ describe('CDVC', function () {
           name: 'baz',
           versions: [
             {
-              packages: [path.join('@scope1', 'package1')],
+              packages: [{ pathRelative: path.join('@scope1', 'package1') }],
               version: '^7.8.9',
             },
             {
-              packages: [path.join('@scope1', 'package2')],
+              packages: [{ pathRelative: path.join('@scope1', 'package2') }],
               version: '^8.0.0',
             },
           ],
@@ -149,14 +149,14 @@ describe('CDVC', function () {
           versions: [
             {
               packages: [
-                '',
-                path.join('@scope1', 'package2'),
-                path.join('@scope1', 'package3'),
+                { pathRelative: '' },
+                { pathRelative: path.join('@scope1', 'package2') },
+                { pathRelative: path.join('@scope1', 'package3') },
               ],
               version: '1.2.0',
             },
             {
-              packages: [path.join('@scope1', 'package1')],
+              packages: [{ pathRelative: path.join('@scope1', 'package1') }],
               version: '1.3.0',
             },
           ],
@@ -183,11 +183,11 @@ describe('CDVC', function () {
             name: 'baz',
             versions: [
               {
-                packages: [path.join('@scope1', 'package1')],
+                packages: [{ pathRelative: path.join('@scope1', 'package1') }],
                 version: '^7.8.9',
               },
               {
-                packages: [path.join('@scope1', 'package2')],
+                packages: [{ pathRelative: path.join('@scope1', 'package2') }],
                 version: '^8.0.0',
               },
             ],
@@ -198,7 +198,7 @@ describe('CDVC', function () {
             name: 'foo',
             versions: [
               {
-                packages: [''],
+                packages: [{ pathRelative: '' }],
                 version: '1.2.0',
               },
             ],
@@ -225,8 +225,8 @@ describe('CDVC', function () {
             versions: [
               {
                 packages: [
-                  path.join('@scope1', 'package1'),
-                  path.join('@scope1', 'package2'),
+                  { pathRelative: path.join('@scope1', 'package1') },
+                  { pathRelative: path.join('@scope1', 'package2') },
                 ],
                 version: '^4.5.6',
               },
@@ -239,13 +239,13 @@ describe('CDVC', function () {
             versions: [
               {
                 packages: [
-                  path.join('@scope1', 'package2'),
-                  path.join('@scope1', 'package3'),
+                  { pathRelative: path.join('@scope1', 'package2') },
+                  { pathRelative: path.join('@scope1', 'package3') },
                 ],
                 version: '1.2.0',
               },
               {
-                packages: [path.join('@scope1', 'package1')],
+                packages: [{ pathRelative: path.join('@scope1', 'package1') }],
                 version: '1.3.0',
               },
             ],
@@ -271,7 +271,7 @@ describe('CDVC', function () {
             name: 'bar',
             versions: [
               {
-                packages: [''],
+                packages: [{ pathRelative: '' }],
                 version: '^1.0.0',
               },
             ],
@@ -282,7 +282,7 @@ describe('CDVC', function () {
             name: 'foo',
             versions: [
               {
-                packages: [''],
+                packages: [{ pathRelative: '' }],
                 version: '^2.0.0',
               },
             ],
@@ -358,7 +358,10 @@ describe('CDVC', function () {
               versions: [
                 {
                   version: '^1.0.0',
-                  packages: ['', 'package1'],
+                  packages: [
+                    { pathRelative: '' },
+                    { pathRelative: 'package1' },
+                  ],
                 },
               ],
             },
@@ -369,15 +372,15 @@ describe('CDVC', function () {
               versions: [
                 {
                   version: '^1.0.0',
-                  packages: [''],
+                  packages: [{ pathRelative: '' }],
                 },
                 {
                   version: '^1.2.0',
-                  packages: [''],
+                  packages: [{ pathRelative: '' }],
                 },
                 {
                   version: '^2.0.0',
-                  packages: ['package1'],
+                  packages: [{ pathRelative: 'package1' }],
                 },
               ],
             },
@@ -403,7 +406,7 @@ describe('CDVC', function () {
             name: 'bar',
             versions: [
               {
-                packages: [''],
+                packages: [{ pathRelative: '' }],
                 version: '^1.0.0',
               },
             ],
@@ -414,7 +417,7 @@ describe('CDVC', function () {
             name: 'foo',
             versions: [
               {
-                packages: [''],
+                packages: [{ pathRelative: '' }],
                 version: '^2.0.0',
               },
             ],
@@ -495,7 +498,10 @@ describe('CDVC', function () {
               versions: [
                 {
                   version: '^1.0.0',
-                  packages: ['', 'package1'],
+                  packages: [
+                    { pathRelative: '' },
+                    { pathRelative: 'package1' },
+                  ],
                 },
               ],
             },
@@ -506,15 +512,15 @@ describe('CDVC', function () {
               versions: [
                 {
                   version: '^1.0.0',
-                  packages: [''],
+                  packages: [{ pathRelative: '' }],
                 },
                 {
                   version: '^1.2.0',
-                  packages: [''],
+                  packages: [{ pathRelative: '' }],
                 },
                 {
                   version: '^2.0.0',
-                  packages: ['package1'],
+                  packages: [{ pathRelative: 'package1' }],
                 },
               ],
             },
@@ -540,7 +546,7 @@ describe('CDVC', function () {
             name: 'bar',
             versions: [
               {
-                packages: [''],
+                packages: [{ pathRelative: '' }],
                 version: '^1.0.0',
               },
             ],
@@ -551,7 +557,7 @@ describe('CDVC', function () {
             name: 'foo',
             versions: [
               {
-                packages: [''],
+                packages: [{ pathRelative: '' }],
                 version: '^2.0.0',
               },
             ],
@@ -594,8 +600,8 @@ describe('CDVC', function () {
           versions: [
             {
               packages: [
-                path.join('@scope1', 'package1'),
-                path.join('@scope1', 'package2'),
+                { pathRelative: path.join('@scope1', 'package1') },
+                { pathRelative: path.join('@scope1', 'package2') },
               ],
               version: '^4.5.6',
             },
@@ -607,11 +613,11 @@ describe('CDVC', function () {
           name: 'baz',
           versions: [
             {
-              packages: [path.join('@scope1', 'package1')],
+              packages: [{ pathRelative: path.join('@scope1', 'package1') }],
               version: '^7.8.9',
             },
             {
-              packages: [path.join('@scope1', 'package2')],
+              packages: [{ pathRelative: path.join('@scope1', 'package2') }],
               version: '^8.0.0',
             },
           ],
@@ -664,11 +670,11 @@ describe('CDVC', function () {
           name: 'foo',
           versions: [
             {
-              packages: ['package1'],
+              packages: [{ pathRelative: 'package1' }],
               version: '^1.0.0',
             },
             {
-              packages: ['package2'],
+              packages: [{ pathRelative: 'package2' }],
               version: '*',
             },
           ],
@@ -740,11 +746,11 @@ describe('CDVC', function () {
           name: 'foo',
           versions: [
             {
-              packages: ['package1'],
+              packages: [{ pathRelative: 'package1' }],
               version: '^1.0.0',
             },
             {
-              packages: ['package2'],
+              packages: [{ pathRelative: 'package2' }],
               version: '1.5.0',
             },
           ],
@@ -812,11 +818,11 @@ describe('CDVC', function () {
           name: 'foo',
           versions: [
             {
-              packages: ['package1'],
+              packages: [{ pathRelative: 'package1' }],
               version: '^1.0.0',
             },
             {
-              packages: ['package2'],
+              packages: [{ pathRelative: 'package2' }],
               version: '1.5.0',
             },
           ],

@@ -12,8 +12,7 @@ type Dependency = {
   isMismatching: boolean;
   versions: readonly {
     version: string;
-    /** Relative path to each package.*/
-    packages: readonly string[];
+    packages: readonly { pathRelative: string }[];
   }[];
 };
 
@@ -60,7 +59,9 @@ export class CDVC {
       isMismatching: this.dependencies[name].isMismatching,
       versions: this.dependencies[name].versions.map((version) => ({
         version: version.version,
-        packages: version.packages.map((package_) => package_.pathRelative),
+        packages: version.packages.map((package_) => ({
+          pathRelative: package_.pathRelative,
+        })),
       })),
     };
   }

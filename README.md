@@ -141,11 +141,11 @@ const result = {
   name: 'eslint',
   versions: [
     {
-      packages: ['package1', 'package2'],
+      packages: [{ pathRelative: 'package1' }, { pathRelative: 'package2' }],
       version: '^7.0.0',
     },
     {
-      packages: ['package3'],
+      packages: [{ pathRelative: 'package3' }],
       version: '^8.0.0',
     },
   ],
@@ -172,7 +172,7 @@ const result = {
 | `isFixable` | `true` if the mismatching versions of this dependency are autofixable. |
 | `isMismatching` | `true` if there are multiple versions of this dependency. |
 | `name` | The dependency's name. |
-| `versions` | A list of the versions present of this dependency and the packages each is found in, in the form of: `{ version: string, packages: string[] }`. The `packages` array has relative paths to each package. |
+| `versions` | A list of the versions present of this dependency and the packages each is found in, in the form of: `{ version: string, packages: { pathRelative: string }[] }`. |
 
 See [`lib/cli.ts`](./lib/cli.ts) for an example of how to use it.
 
