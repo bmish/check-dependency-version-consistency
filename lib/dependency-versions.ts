@@ -8,6 +8,8 @@ import {
   getHighestRangeType,
 } from './semver.js';
 import semver from 'semver';
+import { DEPENDENCY_TYPE } from './types.js';
+import { DEFAULT_DEP_TYPES } from './defaults.js';
 
 type DependenciesToVersionsSeen = Map<
   string,
@@ -40,7 +42,8 @@ type DependencyAndVersions = {
  * }
  */
 export function calculateVersionsForEachDependency(
-  packages: readonly Package[]
+  packages: readonly Package[],
+  depType: readonly DEPENDENCY_TYPE[] = DEFAULT_DEP_TYPES
 ): DependenciesToVersionsSeen {
   const dependenciesToVersionsSeen: DependenciesToVersionsSeen = new Map<
     string,
@@ -49,7 +52,8 @@ export function calculateVersionsForEachDependency(
   for (const package_ of packages) {
     recordDependencyVersionsForPackageJson(
       dependenciesToVersionsSeen,
-      package_
+      package_,
+      depType
     );
   }
   return dependenciesToVersionsSeen;
@@ -57,7 +61,8 @@ export function calculateVersionsForEachDependency(
 
 function recordDependencyVersionsForPackageJson(
   dependenciesToVersionsSeen: DependenciesToVersionsSeen,
-  package_: Package
+  package_: Package,
+  depType: readonly DEPENDENCY_TYPE[]
 ) {
   if (package_.packageJson.name && package_.packageJson.version) {
     recordDependencyVersion(
@@ -69,7 +74,10 @@ function recordDependencyVersionsForPackageJson(
     );
   }
 
-  if (package_.packageJson.dependencies) {
+  if (
+    depType.includes(DEPENDENCY_TYPE.dependencies) &&
+    package_.packageJson.dependencies
+  ) {
     for (const [dependency, dependencyVersion] of Object.entries(
       package_.packageJson.dependencies
     )) {
@@ -84,7 +92,10 @@ function recordDependencyVersionsForPackageJson(
     }
   }
 
-  if (package_.packageJson.devDependencies) {
+  if (
+    depType.includes(DEPENDENCY_TYPE.devDependencies) &&
+    package_.packageJson.devDependencies
+  ) {
     for (const [dependency, dependencyVersion] of Object.entries(
       package_.packageJson.devDependencies
     )) {
@@ -99,7 +110,10 @@ function recordDependencyVersionsForPackageJson(
     }
   }
 
-  if (package_.packageJson.resolutions) {
+  if (
+    depType.includes(DEPENDENCY_TYPE.resolutions) &&
+    package_.packageJson.resolutions
+  ) {
     for (const [dependency, dependencyVersion] of Object.entries(
       package_.packageJson.resolutions
     )) {
@@ -266,7 +280,7 @@ export function filterOutIgnoredDependencies(
 function writeDependencyVersion(
   packageJsonPath: string,
   packageJsonEndsInNewline: boolean,
-  type: 'dependencies' | 'devDependencies' | 'resolutions',
+  type: DEPENDENCY_TYPE,
   dependencyName: string,
   newVersion: string
 ) {
@@ -348,7 +362,7 @@ export function fixVersionsMismatching(
           writeDependencyVersion(
             package_.pathPackageJson,
             package_.packageJsonEndsInNewline,
-            'devDependencies',
+            DEPENDENCY_TYPE.devDependencies,
             mismatchingVersion.dependency,
             fixedVersion
           );
@@ -366,7 +380,7 @@ export function fixVersionsMismatching(
           writeDependencyVersion(
             package_.pathPackageJson,
             package_.packageJsonEndsInNewline,
-            'dependencies',
+            DEPENDENCY_TYPE.dependencies,
             mismatchingVersion.dependency,
             fixedVersion
           );
@@ -384,7 +398,7 @@ export function fixVersionsMismatching(
           writeDependencyVersion(
             package_.pathPackageJson,
             package_.packageJsonEndsInNewline,
-            'resolutions',
+            DEPENDENCY_TYPE.resolutions,
             mismatchingVersion.dependency,
             fixedVersion
           );
