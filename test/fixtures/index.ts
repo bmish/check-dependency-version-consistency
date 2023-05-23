@@ -78,6 +78,14 @@ export const FIXTURE_PATH_NESTED_WORKSPACES = join(
   'nested-workspaces'
 );
 export const FIXTURE_PATH_RESOLUTIONS = join(FIXTURE_PATH, 'resolutions');
+export const FIXTURE_PATH_PEER_DEPENDENCIES = join(
+  FIXTURE_PATH,
+  'peer-dependencies'
+);
+export const FIXTURE_PATH_OPTIONAL_DEPENDENCIES = join(
+  FIXTURE_PATH,
+  'optional-dependencies'
+);
 
 export const FIXTURE_PATH_ALL_VERSION_TYPES = join(
   FIXTURE_PATH,
