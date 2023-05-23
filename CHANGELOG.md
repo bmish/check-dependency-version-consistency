@@ -23,6 +23,26 @@
 
 
 
+
+## v4.0.0 (2023-05-23)
+
+#### :boom: Breaking Change
+* [#609](https://github.com/bmish/check-dependency-version-consistency/pull/609) Use object instead of string to represent package in Node API ([@bmish](https://github.com/bmish))
+* [#608](https://github.com/bmish/check-dependency-version-consistency/pull/608) Consider `optionalDependencies` by default ([@bmish](https://github.com/bmish))
+* [#607](https://github.com/bmish/check-dependency-version-consistency/pull/607) Drop support for Node 14 and Node 19 ([@bmish](https://github.com/bmish))
+* [#495](https://github.com/bmish/check-dependency-version-consistency/pull/495) Drop support for Node 12 and Node 17 ([@ddzz](https://github.com/ddzz))
+
+#### :memo: Documentation
+* [#611](https://github.com/bmish/check-dependency-version-consistency/pull/611) Show choices in help text for `--dep-type` ([@bmish](https://github.com/bmish))
+
+#### :house: Internal
+* [#610](https://github.com/bmish/check-dependency-version-consistency/pull/610) Update all dependencies ([@bmish](https://github.com/bmish))
+
+#### Committers: 2
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+- Darius Dzien ([@ddzz](https://github.com/ddzz))
+
+
 ## v3.3.0 (2023-05-23)
 
 #### :rocket: Enhancement
