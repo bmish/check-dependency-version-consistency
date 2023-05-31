@@ -24,6 +24,19 @@
 
 
 
+
+## v4.1.0 (2023-05-31)
+
+#### :rocket: Enhancement
+* [#617](https://github.com/bmish/check-dependency-version-consistency/pull/617) Allow `--dep-type` option to be specified with CSV ([@bmish](https://github.com/bmish))
+
+#### :memo: Documentation
+* [#616](https://github.com/bmish/check-dependency-version-consistency/pull/616) Tweak readme example and CLI help text ([@bmish](https://github.com/bmish))
+
+#### Committers: 1
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+
+
 ## v4.0.0 (2023-05-23)
 
 #### :boom: Breaking Change
