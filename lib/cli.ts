@@ -19,9 +19,26 @@ function getCurrentPackageVersion(): string {
   return packageJson.version;
 }
 
-// Used for collecting repeated CLI options into an array.
-function collect(value: string, previous: readonly string[]) {
+/**
+ * Used for collecting repeated CLI options into an array.
+ * Example: --foo bar --foo baz => ['bar', 'baz']
+ */
+function collect(
+  value: string,
+  previous: readonly string[]
+): readonly string[] {
   return [...previous, value];
+}
+
+/**
+ * Used for collecting both repeated and CSV CLI options into an array.
+ * Example: --foo bar,baz,buz --foo biz => ['bar', 'baz', 'buz', 'biz']
+ * */
+function collectCSV(
+  value: string,
+  previous: readonly string[]
+): readonly string[] {
+  return [...previous, ...value.split(',')];
 }
 
 // Setup CLI.
@@ -41,7 +58,7 @@ export function run() {
       ).join(', ')}) (default: ${DEFAULT_DEP_TYPES.join(
         ', '
       )}) (option can be repeated)`,
-      collect,
+      collectCSV,
       []
     )
     .option(
