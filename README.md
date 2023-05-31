@@ -141,11 +141,11 @@ const result = {
   name: 'eslint',
   versions: [
     {
-      packages: [{ pathRelative: 'package1' }, { pathRelative: 'package2' }],
+      packages: [{ pathRelative: 'packages/package1' }, { pathRelative: 'packages/package2' }],
       version: '^7.0.0',
     },
     {
-      packages: [{ pathRelative: 'package3' }],
+      packages: [{ pathRelative: 'packages/package3' }],
       version: '^8.0.0',
     },
   ],

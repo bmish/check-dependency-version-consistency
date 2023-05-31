@@ -29,13 +29,16 @@ export function run() {
   const program = new Command();
 
   program
+    .description(
+      'CLI tool which checks that dependencies are on consistent versions across a monorepo / npm/pnpm/Yarn workspace.'
+    )
     .version(getCurrentPackageVersion())
     .addArgument(new Argument('[path]', 'path to workspace root').default('.'))
     .option(
       '--dep-type <dependency-type>',
-      `Type of dependency to check (default: ${DEFAULT_DEP_TYPES.join(
-        ', '
-      )}) (choices: ${Object.keys(DEPENDENCY_TYPE).join(
+      `Type of dependency to check (choices: ${Object.keys(
+        DEPENDENCY_TYPE
+      ).join(', ')}) (default: ${DEFAULT_DEP_TYPES.join(
         ', '
       )}) (option can be repeated)`,
       collect,
