@@ -54,7 +54,7 @@
     "js-yaml": "^4.1.0",
     "semver": "^7.5.1",
     "table": "^6.8.1",
-    "type-fest": "^3.11.0"
+    "type-fest": "^4.3.3"
   },
   "devDependencies": {
     "@release-it-plugins/lerna-changelog": "^5.0.0",
