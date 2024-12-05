@@ -7,9 +7,9 @@
     "declaration": true,
     "experimentalDecorators": true,
     "lib": [
-      "es2021"
+      "es2023"
     ],
-    "module": "ES2020",
+    "module": "ES2022",
     "moduleResolution": "node",
     "noEmitOnError": true,
     "noFallthroughCasesInSwitch": true,
@@ -17,7 +17,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "outDir": "dist",
-    "target": "es2021",
+    "target": "es2023",
     "types": [
       "node",
       "@types/jest"
