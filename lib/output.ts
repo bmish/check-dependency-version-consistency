@@ -10,7 +10,7 @@ import { Dependencies } from './types.js';
  * Returns human-readable tables describing mismatching dependency versions.
  */
 export function dependenciesToMismatchSummary(
-  dependencies: Dependencies
+  dependencies: Dependencies,
 ): string {
   const mismatchingDependencyVersions = Object.entries(dependencies)
     .filter(([, value]) => value.isMismatching)
@@ -25,11 +25,11 @@ export function dependenciesToMismatchSummary(
       const headers = [chalk.bold(object.dependency), 'Usages', 'Packages'];
 
       const usageCounts = object.versions.map(
-        (versionObject) => versionObject.packages.length
+        (versionObject) => versionObject.packages.length,
       );
       const latestUsageCount = Math.max(...usageCounts);
       const hasMultipleUsageCounts = !usageCounts.every(
-        (count) => count === latestUsageCount
+        (count) => count === latestUsageCount,
       );
 
       const rows = [...object.versions]
@@ -37,7 +37,7 @@ export function dependenciesToMismatchSummary(
         .map((versionObject) => {
           const usageCount = versionObject.packages.length;
           const packageNames = versionObject.packages.map(
-            (package_) => package_.name
+            (package_) => package_.name,
           );
           const packageListSentence =
             usageCount > 3
@@ -83,7 +83,7 @@ export function dependenciesToFixedSummary(dependencies: Dependencies): string {
       let version;
       try {
         version = getIncreasedLatestVersion(
-          mismatchingVersion.versions.map((v) => v.version)
+          mismatchingVersion.versions.map((v) => v.version),
         );
       } catch {
         return []; // Ignore this dependency since unable to get the version that we would have fixed it to.

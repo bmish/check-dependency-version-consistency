@@ -25,7 +25,7 @@ import { DEFAULT_DEP_TYPES } from './defaults.js';
  */
 export function check(
   path: string,
-  options?: Options
+  options?: Options,
 ): {
   dependencies: Dependencies;
 } {
@@ -36,8 +36,8 @@ export function check(
   ) {
     throw new Error(
       `Invalid depType provided. Choices are: ${Object.keys(
-        DEPENDENCY_TYPE
-      ).join(', ')}.`
+        DEPENDENCY_TYPE,
+      ).join(', ')}.`,
     );
   }
 
@@ -64,24 +64,24 @@ export function check(
     optionsWithDefaults.ignorePackage,
     optionsWithDefaults.ignorePackagePattern.map((s) => new RegExp(s)),
     optionsWithDefaults.ignorePath,
-    optionsWithDefaults.ignorePathPattern.map((s) => new RegExp(s))
+    optionsWithDefaults.ignorePathPattern.map((s) => new RegExp(s)),
   );
 
   const dependencies = calculateVersionsForEachDependency(
     packages,
-    optionsWithDefaults.depType.map((dt) => DEPENDENCY_TYPE[dt]) // Convert string to enum.
+    optionsWithDefaults.depType.map((dt) => DEPENDENCY_TYPE[dt]), // Convert string to enum.
   );
   const dependenciesAndVersions =
     calculateDependenciesAndVersions(dependencies);
   const dependenciesAndVersionsWithMismatches = dependenciesAndVersions.filter(
-    ({ versions }) => versions.length > 1
+    ({ versions }) => versions.length > 1,
   );
 
   // Information about all dependencies.
   const dependenciesAndVersionsWithoutIgnored = filterOutIgnoredDependencies(
     dependenciesAndVersions,
     optionsWithDefaults.ignoreDep,
-    optionsWithDefaults.ignoreDepPattern.map((s) => new RegExp(s))
+    optionsWithDefaults.ignoreDepPattern.map((s) => new RegExp(s)),
   );
 
   // Information about mismatches.
@@ -89,12 +89,12 @@ export function check(
     filterOutIgnoredDependencies(
       dependenciesAndVersionsWithMismatches,
       optionsWithDefaults.ignoreDep,
-      optionsWithDefaults.ignoreDepPattern.map((s) => new RegExp(s))
+      optionsWithDefaults.ignoreDepPattern.map((s) => new RegExp(s)),
     );
   const resultsAfterFix = fixVersionsMismatching(
     packages,
     dependenciesAndVersionsMismatchesWithoutIgnored,
-    !optionsWithDefaults.fix // Do dry-run if not fixing.
+    !optionsWithDefaults.fix, // Do dry-run if not fixing.
   );
   const versionsMismatchingFixable = resultsAfterFix.fixable;
 
@@ -106,15 +106,15 @@ export function check(
           dependency,
           {
             isFixable: versionsMismatchingFixable.some(
-              (dep) => dep.dependency === dependency
+              (dep) => dep.dependency === dependency,
             ),
             isMismatching: dependenciesAndVersionsMismatchesWithoutIgnored.some(
-              (dep) => dep.dependency === dependency
+              (dep) => dep.dependency === dependency,
             ),
             versions,
           },
         ];
-      })
+      }),
     ),
   };
 }

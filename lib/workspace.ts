@@ -7,7 +7,7 @@ export function getPackages(
   ignorePackages: readonly string[],
   ignorePackagePatterns: readonly RegExp[],
   ignorePaths: readonly string[],
-  ignorePathPatterns: readonly RegExp[]
+  ignorePathPatterns: readonly RegExp[],
 ): readonly Package[] {
   // Check for some error cases first.
   if (!Package.exists(root)) {
@@ -25,7 +25,7 @@ export function getPackages(
       !Package.some(packages, (package_) => package_.name === ignoredPackage) // eslint-disable-line unicorn/no-array-method-this-argument,unicorn/no-array-callback-reference -- false positive
     ) {
       throw new Error(
-        `Specified option '--ignore-package ${ignoredPackage}', but no such package detected in workspace.`
+        `Specified option '--ignore-package ${ignoredPackage}', but no such package detected in workspace.`,
       );
     }
   }
@@ -34,13 +34,13 @@ export function getPackages(
     if (
       // eslint-disable-next-line unicorn/no-array-method-this-argument,unicorn/no-array-callback-reference -- false positive
       !Package.some(packages, (package_) =>
-        ignoredPackagePattern.test(package_.name)
+        ignoredPackagePattern.test(package_.name),
       )
     ) {
       throw new Error(
         `Specified option '--ignore-package-pattern ${String(
-          ignoredPackagePattern
-        )}', but no matching packages detected in workspace.`
+          ignoredPackagePattern,
+        )}', but no matching packages detected in workspace.`,
       );
     }
   }
@@ -49,11 +49,11 @@ export function getPackages(
     if (
       // eslint-disable-next-line unicorn/no-array-method-this-argument,unicorn/no-array-callback-reference -- false positive
       !Package.some(packages, (package_) =>
-        package_.pathRelative.includes(ignoredPath)
+        package_.pathRelative.includes(ignoredPath),
       )
     ) {
       throw new Error(
-        `Specified option '--ignore-path ${ignoredPath}', but no matching paths detected in workspace.`
+        `Specified option '--ignore-path ${ignoredPath}', but no matching paths detected in workspace.`,
       );
     }
   }
@@ -62,13 +62,13 @@ export function getPackages(
     if (
       // eslint-disable-next-line unicorn/no-array-method-this-argument,unicorn/no-array-callback-reference -- false positive
       !Package.some(packages, (package_) =>
-        ignoredPathPattern.test(package_.pathRelative)
+        ignoredPathPattern.test(package_.pathRelative),
       )
     ) {
       throw new Error(
         `Specified option '--ignore-path-pattern ${String(
-          ignoredPathPattern
-        )}', but no matching paths detected in workspace.`
+          ignoredPathPattern,
+        )}', but no matching paths detected in workspace.`,
       );
     }
   }
@@ -83,14 +83,14 @@ export function getPackages(
       (package_) =>
         !ignorePackages.includes(package_.name) &&
         !ignorePackagePatterns.some((ignorePackagePattern) =>
-          package_.name.match(ignorePackagePattern)
+          package_.name.match(ignorePackagePattern),
         ) &&
         !ignorePaths.some((ignorePath) =>
-          package_.pathRelative.includes(ignorePath)
+          package_.pathRelative.includes(ignorePath),
         ) &&
         !ignorePathPatterns.some((ignorePathPattern) =>
-          package_.pathRelative.match(ignorePathPattern)
-        )
+          package_.pathRelative.match(ignorePathPattern),
+        ),
     );
   }
 
@@ -100,7 +100,7 @@ export function getPackages(
 // Expand workspace globs into concrete paths.
 function expandWorkspaces(
   root: string,
-  workspacePatterns: readonly string[]
+  workspacePatterns: readonly string[],
 ): readonly string[] {
   return workspacePatterns.flatMap((workspace) => {
     if (!workspace.includes('*')) {
@@ -119,7 +119,7 @@ function expandWorkspaces(
 // Recursively collect packages from a workspace.
 function accumulatePackages(
   root: string,
-  paths: readonly string[]
+  paths: readonly string[],
 ): readonly Package[] {
   const results = [];
   for (const relativePath of paths) {
@@ -133,8 +133,8 @@ function accumulatePackages(
         // This package is the new root.
         ...accumulatePackages(
           path,
-          expandWorkspaces(path, package_.workspacePatterns)
-        )
+          expandWorkspaces(path, package_.workspacePatterns),
+        ),
       );
     }
   }

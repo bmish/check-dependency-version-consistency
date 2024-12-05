@@ -1,7 +1,7 @@
-// https://kulshekhar.github.io/ts-jest/docs/guides/esm-support/
+import type { Config } from 'jest';
 
-/** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
-module.exports = {
+// https://kulshekhar.github.io/ts-jest/docs/guides/esm-support/
+const config: Config = {
   preset: 'ts-jest/presets/default-esm',
   testEnvironment: 'node',
   testMatch: ['<rootDir>/test/**/*-test.ts'],
@@ -24,3 +24,5 @@ module.exports = {
     },
   },
 };
+
+export default config;

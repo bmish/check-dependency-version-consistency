@@ -329,25 +329,25 @@ describe('CDVC', function () {
           const packageJsonRootContents = readFileSync('package.json', 'utf8');
           const packageJson1Contents = readFileSync(
             'package1/package.json',
-            'utf8'
+            'utf8',
           );
           const packageJsonRoot = JSON.parse(
-            packageJsonRootContents
+            packageJsonRootContents,
           ) as PackageJson;
           const packageJson1 = JSON.parse(packageJson1Contents) as PackageJson;
 
           expect(
             packageJsonRoot.devDependencies &&
-              packageJsonRoot.devDependencies['foo']
+              packageJsonRoot.devDependencies['foo'],
           ).toStrictEqual('^2.0.0');
 
           expect(
             packageJsonRoot.optionalDependencies &&
-              packageJsonRoot.optionalDependencies['foo']
+              packageJsonRoot.optionalDependencies['foo'],
           ).toStrictEqual('^2.0.0');
 
           expect(
-            packageJson1.dependencies && packageJson1.dependencies['foo']
+            packageJson1.dependencies && packageJson1.dependencies['foo'],
           ).toStrictEqual('^2.0.0');
 
           expect(cdvc.getDependencies()).toStrictEqual([
@@ -469,25 +469,25 @@ describe('CDVC', function () {
           const packageJsonRootContents = readFileSync('package.json', 'utf8');
           const packageJson1Contents = readFileSync(
             'package1/package.json',
-            'utf8'
+            'utf8',
           );
           const packageJsonRoot = JSON.parse(
-            packageJsonRootContents
+            packageJsonRootContents,
           ) as PackageJson;
           const packageJson1 = JSON.parse(packageJson1Contents) as PackageJson;
 
           expect(
             packageJsonRoot.devDependencies &&
-              packageJsonRoot.devDependencies['foo']
+              packageJsonRoot.devDependencies['foo'],
           ).toStrictEqual('^2.0.0');
 
           expect(
             packageJsonRoot.peerDependencies &&
-              packageJsonRoot.peerDependencies['foo']
+              packageJsonRoot.peerDependencies['foo'],
           ).toStrictEqual('^2.0.0');
 
           expect(
-            packageJson1.dependencies && packageJson1.dependencies['foo']
+            packageJson1.dependencies && packageJson1.dependencies['foo'],
           ).toStrictEqual('^2.0.0');
 
           expect(cdvc.getDependencies()).toStrictEqual([
@@ -573,9 +573,9 @@ describe('CDVC', function () {
             new CDVC(FIXTURE_PATH_INCONSISTENT_VERSIONS, {
               // @ts-expect-error -- testing invalid type
               depType: ['fake'],
-            })
+            }),
         ).toThrowErrorMatchingInlineSnapshot(
-          '"Invalid depType provided. Choices are: dependencies, devDependencies, optionalDependencies, peerDependencies, resolutions."'
+          '"Invalid depType provided. Choices are: dependencies, devDependencies, optionalDependencies, peerDependencies, resolutions."',
         );
       });
     });
@@ -684,17 +684,17 @@ describe('CDVC', function () {
       // Read in package.json files.
       const packageJson1Contents = readFileSync(
         'package1/package.json',
-        'utf8'
+        'utf8',
       );
       const packageJson2Contents = readFileSync(
         'package2/package.json',
-        'utf8'
+        'utf8',
       );
       const actualPackageJson1 = JSON.parse(
-        packageJson1Contents
+        packageJson1Contents,
       ) as PackageJson;
       const actualPackageJson2 = JSON.parse(
-        packageJson2Contents
+        packageJson2Contents,
       ) as PackageJson;
 
       expect(actualPackageJson1).toStrictEqual(expectedPackage1);
@@ -760,17 +760,17 @@ describe('CDVC', function () {
       // Read in package.json files.
       const packageJson1Contents = readFileSync(
         'package1/package.json',
-        'utf8'
+        'utf8',
       );
       const packageJson2Contents = readFileSync(
         'package2/package.json',
-        'utf8'
+        'utf8',
       );
       const actualPackageJson1 = JSON.parse(
-        packageJson1Contents
+        packageJson1Contents,
       ) as PackageJson;
       const actualPackageJson2 = JSON.parse(
-        packageJson2Contents
+        packageJson2Contents,
       ) as PackageJson;
 
       expect(actualPackageJson1).toStrictEqual(expectedPackage1);
@@ -832,24 +832,24 @@ describe('CDVC', function () {
       // Read in package.json files.
       const packageJson1Contents = readFileSync(
         'package1/package.json',
-        'utf8'
+        'utf8',
       );
       const packageJson2Contents = readFileSync(
         'package2/package.json',
-        'utf8'
+        'utf8',
       );
       const actualPackageJson1 = JSON.parse(
-        packageJson1Contents
+        packageJson1Contents,
       ) as PackageJson;
       const actualPackageJson2 = JSON.parse(
-        packageJson2Contents
+        packageJson2Contents,
       ) as PackageJson;
 
       expect(
-        actualPackageJson1.dependencies && actualPackageJson1.dependencies.foo
+        actualPackageJson1.dependencies && actualPackageJson1.dependencies.foo,
       ).toStrictEqual('^1.5.0');
       expect(
-        actualPackageJson2.dependencies && actualPackageJson2.dependencies.foo
+        actualPackageJson2.dependencies && actualPackageJson2.dependencies.foo,
       ).toStrictEqual('^1.5.0');
     });
   });

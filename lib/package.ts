@@ -60,7 +60,7 @@ export class Package {
       } else if (this.packageJson.workspaces.packages) {
         if (!Array.isArray(this.packageJson.workspaces.packages)) {
           throw new TypeError(
-            'package.json `workspaces.packages` is not a string array.'
+            'package.json `workspaces.packages` is not a string array.',
           );
         }
         return this.packageJson.workspaces.packages;
@@ -73,7 +73,7 @@ export class Package {
       // eslint-disable-next-line unicorn/no-instanceof-array -- using Array.isArray() loses type information about the array.
       if (!(this.pnpmWorkspacePackages instanceof Array)) {
         throw new TypeError(
-          'pnpm-workspace.yaml `packages` is not a string array.'
+          'pnpm-workspace.yaml `packages` is not a string array.',
         );
       }
       return this.pnpmWorkspacePackages;
@@ -89,7 +89,7 @@ export class Package {
 
   static some(
     packages: readonly Package[],
-    callback: (package_: Package) => boolean
+    callback: (package_: Package) => boolean,
   ): boolean {
     return packages.some((package_) => callback(package_));
   }
