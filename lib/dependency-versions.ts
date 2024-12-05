@@ -59,6 +59,7 @@ export function calculateVersionsForEachDependency(
   return dependenciesToVersionsSeen;
 }
 
+// eslint-disable-next-line complexity
 function recordDependencyVersionsForPackageJson(
   dependenciesToVersionsSeen: DependenciesToVersionsSeen,
   package_: Package,
@@ -190,12 +191,6 @@ export function calculateDependenciesAndVersions(
   return [...dependencyVersions.entries()]
     .sort((a, b) => a[0].localeCompare(b[0]))
     .flatMap(([dependency, versionObjectsForDep]) => {
-      /* istanbul ignore if */
-      if (!versionObjectsForDep) {
-        // Should always exist at this point, this if statement is just to please TypeScript.
-        return [];
-      }
-
       // Check what versions we have seen for this dependency.
       let versions = versionObjectsForDep
         .filter((versionObject) => !versionObject.isLocalPackageVersion)
@@ -335,6 +330,7 @@ function writeDependencyVersion(
   );
 }
 
+// eslint-disable-next-line complexity
 export function fixVersionsMismatching(
   packages: readonly Package[],
   mismatchingVersions: readonly DependencyAndVersions[],
