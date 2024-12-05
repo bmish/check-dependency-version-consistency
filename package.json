@@ -1,6 +1,6 @@
 {
   "name": "check-dependency-version-consistency",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "description": "Ensures dependencies are on consistent versions across a monorepo.",
   "keywords": [
     "dependencies",
@@ -48,7 +48,7 @@
   "dependencies": {
     "@types/js-yaml": "^4.0.5",
     "chalk": "^5.2.0",
-    "commander": "^10.0.1",
+    "commander": "^11.0.0",
     "edit-json-file": "^1.7.0",
     "globby": "^13.1.4",
     "js-yaml": "^4.1.0",

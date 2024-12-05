@@ -17,17 +17,11 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "outDir": "dist",
-    "paths": {
-      "*": [
-        "types/*"
-      ]
-    },
     "target": "es2021",
     "types": [
       "node",
       "@types/jest"
-    ],
-    "typeRoots": ["./types"]
+    ]
   },
   "include": [
     "bin/**/*",
