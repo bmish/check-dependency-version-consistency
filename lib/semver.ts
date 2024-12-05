@@ -54,13 +54,19 @@ export function versionRangeToRange(versionRange: string): string {
 
 export function getLatestVersion(versions: readonly string[]): string {
   const sortedVersions = [...versions].sort(compareVersionRanges);
-  return sortedVersions[sortedVersions.length - 1]; // Latest version will be sorted to end of list.
+  if (sortedVersions.length === 0) {
+    throw new Error('No versions provided.');
+  }
+  return sortedVersions.at(-1) as string; // Latest version will be sorted to end of list.
 }
 
 // Example input: ['~', '^'], output: '^'
 export function getHighestRangeType(ranges: readonly string[]): string {
   const sorted = [...ranges].sort(compareRanges);
-  return sorted[sorted.length - 1]; // Range with highest precedence will be sorted to end of list.
+  if (sorted.length === 0) {
+    throw new Error('No ranges provided.');
+  }
+  return sorted.at(-1) as string; // Range with highest precedence will be sorted to end of list.
 }
 
 // Example input: ['1.5.0', '^1.0.0'], output: '^1.5.0'

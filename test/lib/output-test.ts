@@ -64,7 +64,7 @@ describe('Utils | output', function () {
     it('behaves correctly with empty input', function () {
       const cdvc = new CDVC(FIXTURE_PATH_VALID);
       expect(() => cdvc.toMismatchSummary()).toThrowErrorMatchingInlineSnapshot(
-        '"No mismatching versions to output."'
+        '"No mismatching versions to output."',
       );
     });
   });
@@ -73,28 +73,28 @@ describe('Utils | output', function () {
     it('behaves correctly', function () {
       const cdvc = new CDVC(FIXTURE_PATH_TESTING_OUTPUT);
       expect(cdvc.toFixedSummary()).toMatchInlineSnapshot(
-        '"Fixed versions for 3 dependencies: bar@2.0.0, baz@^2.0.0, foo@4.5.6"'
+        '"Fixed versions for 3 dependencies: bar@2.0.0, baz@^2.0.0, foo@4.5.6"',
       );
     });
 
     it('behaves correctly with a single fix', function () {
       const cdvc = new CDVC(FIXTURE_PATH_INCREASABLE_RANGE);
       expect(cdvc.toFixedSummary()).toMatchInlineSnapshot(
-        '"Fixed versions for 1 dependency: foo@^1.5.0"'
+        '"Fixed versions for 1 dependency: foo@^1.5.0"',
       );
     });
 
     it('behaves correctly with an increasable range', function () {
       const cdvc = new CDVC(FIXTURE_PATH_INCREASABLE_RANGE);
       expect(cdvc.toFixedSummary()).toMatchInlineSnapshot(
-        '"Fixed versions for 1 dependency: foo@^1.5.0"'
+        '"Fixed versions for 1 dependency: foo@^1.5.0"',
       );
     });
 
     it('behaves correctly with empty input', function () {
       const cdvc = new CDVC(FIXTURE_PATH_VALID);
       expect(() => cdvc.toFixedSummary()).toThrowErrorMatchingInlineSnapshot(
-        '"No fixes to output."'
+        '"No fixes to output."',
       );
     });
   });

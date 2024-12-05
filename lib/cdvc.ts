@@ -47,7 +47,7 @@ export class CDVC {
 
   public getDependencies(): readonly Dependency[] {
     return Object.keys(this.dependencies).map((dependency) =>
-      this.getDependency(dependency)
+      this.getDependency(dependency),
     );
   }
 
@@ -72,13 +72,13 @@ export class CDVC {
 
   public get hasMismatchingDependenciesFixable(): boolean {
     return Object.values(this.dependencies).some(
-      (dep) => dep.isMismatching && dep.isFixable
+      (dep) => dep.isMismatching && dep.isFixable,
     );
   }
 
   public get hasMismatchingDependenciesNotFixable(): boolean {
     return Object.values(this.dependencies).some(
-      (dep) => dep.isMismatching && !dep.isFixable
+      (dep) => dep.isMismatching && !dep.isFixable,
     );
   }
 }

@@ -18,8 +18,8 @@ describe('Utils | workspace', function () {
     it('behaves correctly', function () {
       expect(
         getPackages(FIXTURE_PATH_VALID, [], [], [], []).map(
-          (package_) => package_.path
-        )
+          (package_) => package_.path,
+        ),
       ).toStrictEqual(
         [
           '.',
@@ -31,15 +31,15 @@ describe('Utils | workspace', function () {
           'foo1',
           'foo2',
           'package1',
-        ].map((path) => join(FIXTURE_PATH_VALID, path))
+        ].map((path) => join(FIXTURE_PATH_VALID, path)),
       );
     });
 
     it('behaves correctly with valid fixture for using nohoist', function () {
       expect(
         getPackages(FIXTURE_PATH_VALID_WITH_PACKAGES, [], [], [], []).map(
-          (package_) => package_.path
-        )
+          (package_) => package_.path,
+        ),
       ).toStrictEqual(
         [
           '.',
@@ -51,15 +51,15 @@ describe('Utils | workspace', function () {
           'foo1',
           'foo2',
           'package1',
-        ].map((path) => join(FIXTURE_PATH_VALID_WITH_PACKAGES, path))
+        ].map((path) => join(FIXTURE_PATH_VALID_WITH_PACKAGES, path)),
       );
     });
 
     it('filters out ignored package', function () {
       expect(
         getPackages(FIXTURE_PATH_VALID, ['@scope1/package1'], [], [], []).map(
-          (package_) => package_.path
-        )
+          (package_) => package_.path,
+        ),
       ).toStrictEqual(
         [
           '.',
@@ -70,15 +70,15 @@ describe('Utils | workspace', function () {
           'foo1',
           'foo2',
           'package1',
-        ].map((path) => join(FIXTURE_PATH_VALID, path))
+        ].map((path) => join(FIXTURE_PATH_VALID, path)),
       );
     });
 
     it('throws when filtering out ignored package that does not exist', function () {
       expect(() =>
-        getPackages(FIXTURE_PATH_VALID, ['does-not-exist'], [], [], [])
+        getPackages(FIXTURE_PATH_VALID, ['does-not-exist'], [], [], []),
       ).toThrowErrorMatchingInlineSnapshot(
-        '"Specified option \'--ignore-package does-not-exist\', but no such package detected in workspace."'
+        '"Specified option \'--ignore-package does-not-exist\', but no such package detected in workspace."',
       );
     });
 
@@ -89,8 +89,8 @@ describe('Utils | workspace', function () {
           [],
           [new RegExp('^@scope1/.+')],
           [],
-          []
-        ).map((package_) => package_.path)
+          [],
+        ).map((package_) => package_.path),
       ).toStrictEqual(
         [
           '.',
@@ -100,23 +100,23 @@ describe('Utils | workspace', function () {
           'foo1',
           'foo2',
           'package1',
-        ].map((path) => join(FIXTURE_PATH_VALID, path))
+        ].map((path) => join(FIXTURE_PATH_VALID, path)),
       );
     });
 
     it('throws when filtering out using regexp ignored package that does not exist', function () {
       expect(() =>
-        getPackages(FIXTURE_PATH_VALID, [], [new RegExp('fake')], [], [])
+        getPackages(FIXTURE_PATH_VALID, [], [new RegExp('fake')], [], []),
       ).toThrowErrorMatchingInlineSnapshot(
-        '"Specified option \'--ignore-package-pattern /fake/\', but no matching packages detected in workspace."'
+        '"Specified option \'--ignore-package-pattern /fake/\', but no matching packages detected in workspace."',
       );
     });
 
     it('filters out ignored path', function () {
       expect(
         getPackages(FIXTURE_PATH_VALID, [], [], ['nested-scope'], []).map(
-          (package_) => package_.path
-        )
+          (package_) => package_.path,
+        ),
       ).toStrictEqual(
         [
           '.',
@@ -127,15 +127,15 @@ describe('Utils | workspace', function () {
           'foo1',
           'foo2',
           'package1',
-        ].map((path) => join(FIXTURE_PATH_VALID, path))
+        ].map((path) => join(FIXTURE_PATH_VALID, path)),
       );
     });
 
     it('throws when filtering out ignored path that does not exist', function () {
       expect(() =>
-        getPackages(FIXTURE_PATH_VALID, [], [], ['fake'], [])
+        getPackages(FIXTURE_PATH_VALID, [], [], ['fake'], []),
       ).toThrowErrorMatchingInlineSnapshot(
-        '"Specified option \'--ignore-path fake\', but no matching paths detected in workspace."'
+        '"Specified option \'--ignore-path fake\', but no matching paths detected in workspace."',
       );
     });
 
@@ -146,8 +146,8 @@ describe('Utils | workspace', function () {
           [],
           [],
           [],
-          [new RegExp('^nested-scope.+')]
-        ).map((package_) => package_.path)
+          [new RegExp('^nested-scope.+')],
+        ).map((package_) => package_.path),
       ).toStrictEqual(
         [
           '.',
@@ -158,23 +158,23 @@ describe('Utils | workspace', function () {
           'foo1',
           'foo2',
           'package1',
-        ].map((path) => join(FIXTURE_PATH_VALID, path))
+        ].map((path) => join(FIXTURE_PATH_VALID, path)),
       );
     });
 
     it('throws when filtering out using regexp ignored path that does not exist', function () {
       expect(() =>
-        getPackages(FIXTURE_PATH_VALID, [], [], [], [new RegExp('fake')])
+        getPackages(FIXTURE_PATH_VALID, [], [], [], [new RegExp('fake')]),
       ).toThrowErrorMatchingInlineSnapshot(
-        '"Specified option \'--ignore-path-pattern /fake/\', but no matching paths detected in workspace."'
+        '"Specified option \'--ignore-path-pattern /fake/\', but no matching paths detected in workspace."',
       );
     });
 
     it('behaves correctly with nested workspaces', function () {
       expect(
         getPackages(FIXTURE_PATH_NESTED_WORKSPACES, [], [], [], []).map(
-          (package_) => package_.path
-        )
+          (package_) => package_.path,
+        ),
       ).toStrictEqual(
         [
           '.',
@@ -182,19 +182,19 @@ describe('Utils | workspace', function () {
           'nested-workspace/n1',
           'nested-workspace/n2',
           'nested-workspace/foo1',
-        ].map((path) => join(FIXTURE_PATH_NESTED_WORKSPACES, path))
+        ].map((path) => join(FIXTURE_PATH_NESTED_WORKSPACES, path)),
       );
     });
 
     it('behaves correctly with pnpm workspaces', function () {
       expect(
         getPackages(FIXTURE_PATH_WORKSPACE_PNPM, [], [], [], []).map(
-          (package_) => package_.path
-        )
+          (package_) => package_.path,
+        ),
       ).toStrictEqual(
         ['.', 'packages/package1'].map((path) =>
-          join(FIXTURE_PATH_WORKSPACE_PNPM, path)
-        )
+          join(FIXTURE_PATH_WORKSPACE_PNPM, path),
+        ),
       );
     });
 
@@ -205,44 +205,50 @@ describe('Utils | workspace', function () {
           [],
           [],
           [],
-          []
-        ).map((package_) => package_.path)
+          [],
+        ).map((package_) => package_.path),
       ).toStrictEqual(
         ['.', '/packages/package-a'].map((path) =>
-          join(FIXTURE_PATH_VALID_NOHOIST_WITH_NODE_MODULES, path)
-        )
+          join(FIXTURE_PATH_VALID_NOHOIST_WITH_NODE_MODULES, path),
+        ),
       );
     });
 
     it('throws with fixture that has no package.json', function () {
       expect(() =>
-        getPackages(FIXTURE_PATH_NO_PACKAGE_JSON, [], [], [], [])
+        getPackages(FIXTURE_PATH_NO_PACKAGE_JSON, [], [], [], []),
       ).toThrowErrorMatchingInlineSnapshot(
-        '"No package.json found at provided path."'
+        '"No package.json found at provided path."',
       );
     });
 
     it('throws with fixture that does not have workspace specified', function () {
       expect(() =>
-        getPackages(FIXTURE_PATH_NOT_A_WORKSPACE, [], [], [], [])
+        getPackages(FIXTURE_PATH_NOT_A_WORKSPACE, [], [], [], []),
       ).toThrowErrorMatchingInlineSnapshot(
-        '"Package at provided path has no workspaces specified."'
+        '"Package at provided path has no workspaces specified."',
       );
     });
 
     it('throws with fixture that does not have workspace specified as array', function () {
       expect(() =>
-        getPackages(FIXTURE_PATH_WORKSPACE_NOT_AN_ARRAY, [], [], [], [])
+        getPackages(FIXTURE_PATH_WORKSPACE_NOT_AN_ARRAY, [], [], [], []),
       ).toThrowErrorMatchingInlineSnapshot(
-        '"package.json `workspaces` is not a string array."'
+        '"package.json `workspaces` is not a string array."',
       );
     });
 
     it('throws with fixture that does not have workspace packages specified as array', function () {
       expect(() =>
-        getPackages(FIXTURE_PATH_WORKSPACE_PACKAGE_NOT_AN_ARRAY, [], [], [], [])
+        getPackages(
+          FIXTURE_PATH_WORKSPACE_PACKAGE_NOT_AN_ARRAY,
+          [],
+          [],
+          [],
+          [],
+        ),
       ).toThrowErrorMatchingInlineSnapshot(
-        '"package.json `workspaces.packages` is not a string array."'
+        '"package.json `workspaces.packages` is not a string array."',
       );
     });
 
@@ -253,10 +259,10 @@ describe('Utils | workspace', function () {
           [],
           [],
           [],
-          []
-        )
+          [],
+        ),
       ).toThrowErrorMatchingInlineSnapshot(
-        '"pnpm-workspace.yaml `packages` is not a string array."'
+        '"pnpm-workspace.yaml `packages` is not a string array."',
       );
     });
   });

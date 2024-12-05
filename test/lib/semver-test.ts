@@ -40,10 +40,10 @@ describe('Utils | semver', function () {
 
     it('throws with invalid ranges', function () {
       expect(() =>
-        compareVersionRanges('foo', '~6.0.0')
+        compareVersionRanges('foo', '~6.0.0'),
       ).toThrowErrorMatchingInlineSnapshot('"Invalid Version: foo"');
       expect(() =>
-        compareVersionRanges('~6.0.0', 'foo')
+        compareVersionRanges('~6.0.0', 'foo'),
       ).toThrowErrorMatchingInlineSnapshot('"Invalid Version: foo"');
     });
   });
@@ -99,8 +99,11 @@ describe('Utils | semver', function () {
 
     it('throws with invalid version', function () {
       expect(() =>
-        getLatestVersion(['1.2.3', 'foo'])
+        getLatestVersion(['1.2.3', 'foo']),
       ).toThrowErrorMatchingInlineSnapshot('"Invalid Version: foo"');
+      expect(() => getLatestVersion([])).toThrowErrorMatchingInlineSnapshot(
+        '"No versions provided."',
+      );
     });
   });
 
@@ -111,6 +114,9 @@ describe('Utils | semver', function () {
       expect(getHighestRangeType(['~', ''])).toStrictEqual('~');
       expect(getHighestRangeType(['~', '^'])).toStrictEqual('^');
       expect(getHighestRangeType(['^', '~'])).toStrictEqual('^');
+      expect(() => getHighestRangeType([])).toThrowErrorMatchingInlineSnapshot(
+        '"No ranges provided."',
+      );
     });
   });
 
@@ -118,52 +124,52 @@ describe('Utils | semver', function () {
     it('behaves correctly', function () {
       // ^
       expect(getIncreasedLatestVersion(['^1.0.0', '1.5.0'])).toStrictEqual(
-        '^1.5.0'
+        '^1.5.0',
       );
       expect(getIncreasedLatestVersion(['1.5.0', '^1.0.0'])).toStrictEqual(
-        '^1.5.0'
+        '^1.5.0',
       );
       expect(getIncreasedLatestVersion(['^0.4.0', '^0.4.5'])).toStrictEqual(
-        '^0.4.5'
+        '^0.4.5',
       );
       expect(getIncreasedLatestVersion(['^0.4.0', '0.5.0'])).toStrictEqual(
-        '0.5.0'
+        '0.5.0',
       );
       expect(getIncreasedLatestVersion(['^1.0.0', '2.0.0'])).toStrictEqual(
-        '2.0.0'
+        '2.0.0',
       );
       expect(getIncreasedLatestVersion(['^1.0.0', '^1.0.0'])).toStrictEqual(
-        '^1.0.0'
+        '^1.0.0',
       );
 
       // ^ ~
       expect(getIncreasedLatestVersion(['~1.5.0', '^1.0.0'])).toStrictEqual(
-        '^1.5.0'
+        '^1.5.0',
       );
       expect(getIncreasedLatestVersion(['~1.5.0', '^2.0.0'])).toStrictEqual(
-        '^2.0.0'
+        '^2.0.0',
       );
       expect(getIncreasedLatestVersion(['~2.0.0', '^1.5.0'])).toStrictEqual(
-        '~2.0.0'
+        '~2.0.0',
       );
 
       // ~
       expect(getIncreasedLatestVersion(['~1.4.0', '1.4.5'])).toStrictEqual(
-        '~1.4.5'
+        '~1.4.5',
       );
       expect(getIncreasedLatestVersion(['~1.4.0', '~1.5.0'])).toStrictEqual(
-        '~1.5.0'
+        '~1.5.0',
       );
       expect(getIncreasedLatestVersion(['~1.0.0', '~1.0.0'])).toStrictEqual(
-        '~1.0.0'
+        '~1.0.0',
       );
 
       // no range
       expect(getIncreasedLatestVersion(['1.5.0', '1.0.0'])).toStrictEqual(
-        '1.5.0'
+        '1.5.0',
       );
       expect(getIncreasedLatestVersion(['1.0.0', '1.0.0'])).toStrictEqual(
-        '1.0.0'
+        '1.0.0',
       );
     });
   });

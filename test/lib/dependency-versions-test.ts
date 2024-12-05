@@ -31,7 +31,7 @@ describe('Utils | dependency-versions', function () {
   describe('#calculateDependenciesAndVersions', function () {
     it('has no mismatches with valid fixture', function () {
       const dependencyVersions = calculateVersionsForEachDependency(
-        getPackagesHelper(FIXTURE_PATH_VALID)
+        getPackagesHelper(FIXTURE_PATH_VALID),
       );
       const dependenciesAndVersions =
         calculateDependenciesAndVersions(dependencyVersions);
@@ -42,7 +42,7 @@ describe('Utils | dependency-versions', function () {
 
     it('has mismatches with fixture with inconsistent versions', function () {
       const dependencyVersions = calculateVersionsForEachDependency(
-        getPackagesHelper(FIXTURE_PATH_INCONSISTENT_VERSIONS)
+        getPackagesHelper(FIXTURE_PATH_INCONSISTENT_VERSIONS),
       );
       const dependenciesAndVersions =
         calculateDependenciesAndVersions(dependencyVersions);
@@ -59,7 +59,7 @@ describe('Utils | dependency-versions', function () {
                   path: join(
                     FIXTURE_PATH_INCONSISTENT_VERSIONS,
                     '@scope1',
-                    'package1'
+                    'package1',
                   ),
                 }),
               ],
@@ -71,7 +71,7 @@ describe('Utils | dependency-versions', function () {
                   path: join(
                     FIXTURE_PATH_INCONSISTENT_VERSIONS,
                     '@scope1',
-                    'package2'
+                    'package2',
                   ),
                 }),
               ],
@@ -91,14 +91,14 @@ describe('Utils | dependency-versions', function () {
                   path: join(
                     FIXTURE_PATH_INCONSISTENT_VERSIONS,
                     '@scope1',
-                    'package2'
+                    'package2',
                   ),
                 }),
                 expect.objectContaining({
                   path: join(
                     FIXTURE_PATH_INCONSISTENT_VERSIONS,
                     '@scope1',
-                    'package3'
+                    'package3',
                   ),
                 }),
               ],
@@ -110,7 +110,7 @@ describe('Utils | dependency-versions', function () {
                   path: join(
                     FIXTURE_PATH_INCONSISTENT_VERSIONS,
                     '@scope1',
-                    'package1'
+                    'package1',
                   ),
                 }),
               ],
@@ -122,37 +122,37 @@ describe('Utils | dependency-versions', function () {
 
     it('has empty results when no packages', function () {
       const dependencyVersions = calculateVersionsForEachDependency(
-        getPackagesHelper(FIXTURE_PATH_NO_PACKAGES)
+        getPackagesHelper(FIXTURE_PATH_NO_PACKAGES),
       );
       expect(
-        calculateDependenciesAndVersions(dependencyVersions)
+        calculateDependenciesAndVersions(dependencyVersions),
       ).toStrictEqual([]);
     });
 
     it('has empty results when no dependencies', function () {
       const dependencyVersions = calculateVersionsForEachDependency(
-        getPackagesHelper(FIXTURE_PATH_NO_DEPENDENCIES)
+        getPackagesHelper(FIXTURE_PATH_NO_DEPENDENCIES),
       );
       expect(
-        calculateDependenciesAndVersions(dependencyVersions)
+        calculateDependenciesAndVersions(dependencyVersions),
       ).toStrictEqual([]);
     });
 
     it('has empty results when a package is missing package.json', function () {
       const dependencyVersions = calculateVersionsForEachDependency(
-        getPackagesHelper(FIXTURE_PATH_PACKAGE_MISSING_PACKAGE_JSON)
+        getPackagesHelper(FIXTURE_PATH_PACKAGE_MISSING_PACKAGE_JSON),
       );
       expect(
-        calculateDependenciesAndVersions(dependencyVersions)
+        calculateDependenciesAndVersions(dependencyVersions),
       ).toStrictEqual([]);
     });
 
     it('has mismatches with inconsistent local package version', function () {
       const dependencyVersions = calculateVersionsForEachDependency(
-        getPackagesHelper(FIXTURE_PATH_INCONSISTENT_LOCAL_PACKAGE_VERSION)
+        getPackagesHelper(FIXTURE_PATH_INCONSISTENT_LOCAL_PACKAGE_VERSION),
       );
       expect(
-        calculateDependenciesAndVersions(dependencyVersions)
+        calculateDependenciesAndVersions(dependencyVersions),
       ).toStrictEqual([
         {
           dependency: 'package2',
@@ -163,7 +163,7 @@ describe('Utils | dependency-versions', function () {
                 expect.objectContaining({
                   path: join(
                     FIXTURE_PATH_INCONSISTENT_LOCAL_PACKAGE_VERSION,
-                    'package1'
+                    'package1',
                   ),
                 }),
               ],
@@ -174,7 +174,7 @@ describe('Utils | dependency-versions', function () {
                 expect.objectContaining({
                   path: join(
                     FIXTURE_PATH_INCONSISTENT_LOCAL_PACKAGE_VERSION,
-                    'package2'
+                    'package2',
                   ),
                 }),
               ],
@@ -186,7 +186,7 @@ describe('Utils | dependency-versions', function () {
 
     it('has mismatches with resolutions', function () {
       const dependencyVersions = calculateVersionsForEachDependency(
-        getPackagesHelper(FIXTURE_PATH_RESOLUTIONS)
+        getPackagesHelper(FIXTURE_PATH_RESOLUTIONS),
       );
       const dependenciesAndVersions =
         calculateDependenciesAndVersions(dependencyVersions);
@@ -227,7 +227,7 @@ describe('Utils | dependency-versions', function () {
 
     it('has no problem with all version types', function () {
       const dependencyVersions = calculateVersionsForEachDependency(
-        getPackagesHelper(FIXTURE_PATH_ALL_VERSION_TYPES)
+        getPackagesHelper(FIXTURE_PATH_ALL_VERSION_TYPES),
       );
       const dependenciesAndVersions =
         calculateDependenciesAndVersions(dependencyVersions);
@@ -238,7 +238,7 @@ describe('Utils | dependency-versions', function () {
 
     it('has no problem with consistent workspace prefixes', function () {
       const dependencyVersions = calculateVersionsForEachDependency(
-        getPackagesHelper(FIXTURE_PATH_VALID_WITH_WORKSPACE_PREFIX)
+        getPackagesHelper(FIXTURE_PATH_VALID_WITH_WORKSPACE_PREFIX),
       );
       const dependenciesAndVersions =
         calculateDependenciesAndVersions(dependencyVersions);
@@ -249,7 +249,7 @@ describe('Utils | dependency-versions', function () {
 
     it('has mismatches with inconsistent workspace prefixes', function () {
       const dependencyVersions = calculateVersionsForEachDependency(
-        getPackagesHelper(FIXTURE_PATH_INCONSISTENT_WITH_WORKSPACE_PREFIX)
+        getPackagesHelper(FIXTURE_PATH_INCONSISTENT_WITH_WORKSPACE_PREFIX),
       );
       const dependenciesAndVersions =
         calculateDependenciesAndVersions(dependencyVersions);
@@ -273,7 +273,7 @@ describe('Utils | dependency-versions', function () {
                 expect.objectContaining({
                   path: join(
                     FIXTURE_PATH_INCONSISTENT_WITH_WORKSPACE_PREFIX,
-                    'package2'
+                    'package2',
                   ),
                 }),
               ],
@@ -288,11 +288,11 @@ describe('Utils | dependency-versions', function () {
     it('filters out an ignored dependency', function () {
       const dependencyVersions = calculateDependenciesAndVersions(
         calculateVersionsForEachDependency(
-          getPackagesHelper(FIXTURE_PATH_INCONSISTENT_VERSIONS)
-        )
+          getPackagesHelper(FIXTURE_PATH_INCONSISTENT_VERSIONS),
+        ),
       );
       expect(
-        filterOutIgnoredDependencies(dependencyVersions, ['foo'], [])
+        filterOutIgnoredDependencies(dependencyVersions, ['foo'], []),
       ).toStrictEqual([
         expect.objectContaining({ dependency: 'bar' }),
         expect.objectContaining({ dependency: 'baz' }),
@@ -302,15 +302,15 @@ describe('Utils | dependency-versions', function () {
     it('filters out an ignored dependency with regexp', function () {
       const dependencyVersions = calculateDependenciesAndVersions(
         calculateVersionsForEachDependency(
-          getPackagesHelper(FIXTURE_PATH_INCONSISTENT_VERSIONS)
-        )
+          getPackagesHelper(FIXTURE_PATH_INCONSISTENT_VERSIONS),
+        ),
       );
       expect(
         filterOutIgnoredDependencies(
           dependencyVersions,
           [],
-          [new RegExp('^f.+$')]
-        )
+          [new RegExp('^f.+$')],
+        ),
       ).toStrictEqual([
         expect.objectContaining({ dependency: 'bar' }),
         expect.objectContaining({ dependency: 'baz' }),
@@ -320,22 +320,22 @@ describe('Utils | dependency-versions', function () {
     it('filters out a local package inconsistency', function () {
       const dependencyVersions = calculateDependenciesAndVersions(
         calculateVersionsForEachDependency(
-          getPackagesHelper(FIXTURE_PATH_INCONSISTENT_LOCAL_PACKAGE_VERSION)
-        )
+          getPackagesHelper(FIXTURE_PATH_INCONSISTENT_LOCAL_PACKAGE_VERSION),
+        ),
       );
       expect(
-        filterOutIgnoredDependencies(dependencyVersions, ['package2'], [])
+        filterOutIgnoredDependencies(dependencyVersions, ['package2'], []),
       ).toStrictEqual([]);
     });
 
     it('filters out comments', function () {
       const dependencyVersions = calculateDependenciesAndVersions(
         calculateVersionsForEachDependency(
-          getPackagesHelper(FIXTURE_PATH_VALID_WITH_COMMENTS)
-        )
+          getPackagesHelper(FIXTURE_PATH_VALID_WITH_COMMENTS),
+        ),
       );
       expect(
-        filterOutIgnoredDependencies(dependencyVersions, [], [])
+        filterOutIgnoredDependencies(dependencyVersions, [], []),
       ).toStrictEqual([
         expect.objectContaining({ dependency: 'bar' }),
         expect.objectContaining({ dependency: 'baz' }),
@@ -346,41 +346,45 @@ describe('Utils | dependency-versions', function () {
     it('throws when unnecessarily ignoring a dependency that has no mismatches', function () {
       const dependencyVersions = calculateDependenciesAndVersions(
         calculateVersionsForEachDependency(
-          getPackagesHelper(FIXTURE_PATH_INCONSISTENT_VERSIONS)
-        )
+          getPackagesHelper(FIXTURE_PATH_INCONSISTENT_VERSIONS),
+        ),
       );
       expect(() =>
-        filterOutIgnoredDependencies(dependencyVersions, ['nonexistentDep'], [])
+        filterOutIgnoredDependencies(
+          dependencyVersions,
+          ['nonexistentDep'],
+          [],
+        ),
       ).toThrowErrorMatchingInlineSnapshot(
-        '"Specified option \'--ignore-dep nonexistentDep\', but no version mismatches detected for this dependency."'
+        '"Specified option \'--ignore-dep nonexistentDep\', but no version mismatches detected for this dependency."',
       );
     });
 
     it('throws when unnecessarily regexp-ignoring a dependency that has no mismatches', function () {
       const dependencyVersions = calculateDependenciesAndVersions(
         calculateVersionsForEachDependency(
-          getPackagesHelper(FIXTURE_PATH_INCONSISTENT_VERSIONS)
-        )
+          getPackagesHelper(FIXTURE_PATH_INCONSISTENT_VERSIONS),
+        ),
       );
       expect(() =>
         filterOutIgnoredDependencies(
           dependencyVersions,
           [],
-          [new RegExp('nonexistentDep')]
-        )
+          [new RegExp('nonexistentDep')],
+        ),
       ).toThrowErrorMatchingInlineSnapshot(
-        '"Specified option \'--ignore-dep-pattern /nonexistentDep/\', but no matching dependencies with version mismatches detected."'
+        '"Specified option \'--ignore-dep-pattern /nonexistentDep/\', but no matching dependencies with version mismatches detected."',
       );
     });
 
     it('does not filter anything out when nothing to ignore', function () {
       const dependencyVersions = calculateDependenciesAndVersions(
         calculateVersionsForEachDependency(
-          getPackagesHelper(FIXTURE_PATH_INCONSISTENT_VERSIONS)
-        )
+          getPackagesHelper(FIXTURE_PATH_INCONSISTENT_VERSIONS),
+        ),
       );
       expect(
-        filterOutIgnoredDependencies(dependencyVersions, [], []).length
+        filterOutIgnoredDependencies(dependencyVersions, [], []).length,
       ).toStrictEqual(3);
     });
   });
@@ -428,25 +432,25 @@ describe('Utils | dependency-versions', function () {
       it('fixes the fixable inconsistencies', function () {
         const packages = getPackagesHelper('.');
         const versionsMismatching = calculateDependenciesAndVersions(
-          calculateVersionsForEachDependency(packages)
+          calculateVersionsForEachDependency(packages),
         );
         const { fixable, notFixable } = fixVersionsMismatching(
           packages,
-          versionsMismatching
+          versionsMismatching,
         );
 
         // Read in package.json files.
         const packageJsonRootContents = readFileSync('package.json', 'utf8');
         const packageJson1Contents = readFileSync(
           '@scope1/package1/package.json',
-          'utf8'
+          'utf8',
         );
         const packageJson2Contents = readFileSync(
           '@scope1/package2/package.json',
-          'utf8'
+          'utf8',
         );
         const packageJsonRoot = JSON.parse(
-          packageJsonRootContents
+          packageJsonRootContents,
         ) as PackageJson;
         const packageJson1 = JSON.parse(packageJson1Contents) as PackageJson;
         const packageJson2 = JSON.parse(packageJson2Contents) as PackageJson;
@@ -454,59 +458,60 @@ describe('Utils | dependency-versions', function () {
         // foo
         // updates the package1 `foo` version to the latest version
         expect(
-          packageJson1.dependencies && packageJson1.dependencies.foo
+          packageJson1.dependencies && packageJson1.dependencies.foo,
         ).toStrictEqual('^2.0.0');
         // does not change package2 `foo` version since already at latest version
         expect(
-          packageJson2.dependencies && packageJson2.dependencies.foo
+          packageJson2.dependencies && packageJson2.dependencies.foo,
         ).toStrictEqual('^2.0.0');
         // updates the root package `foo` version to the latest version
         expect(
-          packageJsonRoot.devDependencies && packageJsonRoot.devDependencies.foo
+          packageJsonRoot.devDependencies &&
+            packageJsonRoot.devDependencies.foo,
         ).toStrictEqual('^2.0.0');
 
         // bar
         // does not change package1 `bar` version due to abnormal version present
         expect(
-          packageJson1.dependencies && packageJson1.dependencies.bar
+          packageJson1.dependencies && packageJson1.dependencies.bar,
         ).toStrictEqual('^3.0.0');
         // does not change package2 `bar` version due to abnormal version present
         expect(
-          packageJson2.dependencies && packageJson2.dependencies.bar
+          packageJson2.dependencies && packageJson2.dependencies.bar,
         ).toStrictEqual('invalidVersion');
 
         // a.b.c
         // updates the package1 `a.b.c` version to the latest version
         expect(
-          packageJson1.dependencies && packageJson1.dependencies['a.b.c']
+          packageJson1.dependencies && packageJson1.dependencies['a.b.c'],
         ).toStrictEqual('~5.5.0');
         // does not change package2 `a.b.c` version since already at latest version
         expect(
-          packageJson2.dependencies && packageJson2.dependencies['a.b.c']
+          packageJson2.dependencies && packageJson2.dependencies['a.b.c'],
         ).toStrictEqual('~5.5.0');
 
         // one.two.three
         // does not change package1 `one.two.three` version since already at latest version
         expect(
           packageJson1.devDependencies &&
-            packageJson1.devDependencies['one.two.three']
+            packageJson1.devDependencies['one.two.three'],
         ).toStrictEqual('^4.1.0');
         // updates the package2 `one.two.three` version to the latest version
         expect(
           packageJson2.devDependencies &&
-            packageJson2.devDependencies['one.two.three']
+            packageJson2.devDependencies['one.two.three'],
         ).toStrictEqual('^4.1.0');
 
         // @types/one
         // does not change package1 `@types/one` version since already at latest version
         expect(
           packageJson1.devDependencies &&
-            packageJson1.devDependencies['@types/one']
+            packageJson1.devDependencies['@types/one'],
         ).toStrictEqual('1.0.1');
         // updates the package2 `@types/one` version to the latest version
         expect(
           packageJson2.devDependencies &&
-            packageJson2.devDependencies['@types/one']
+            packageJson2.devDependencies['@types/one'],
         ).toStrictEqual('1.0.1');
 
         // Check return value.
@@ -674,40 +679,40 @@ describe('Utils | dependency-versions', function () {
       it('fixes the fixable inconsistencies', function () {
         const packages = getPackagesHelper('.');
         const versionsMismatching = calculateDependenciesAndVersions(
-          calculateVersionsForEachDependency(packages)
+          calculateVersionsForEachDependency(packages),
         );
         const { fixable, notFixable } = fixVersionsMismatching(
           packages,
-          versionsMismatching
+          versionsMismatching,
         );
 
         // Read in package.json files.
         const packageJson1Contents = readFileSync(
           'package1/package.json',
-          'utf8'
+          'utf8',
         );
         const packageJson2Contents = readFileSync(
           'package2/package.json',
-          'utf8'
+          'utf8',
         );
         const packageJson3Contents = readFileSync(
           'package3/package.json',
-          'utf8'
+          'utf8',
         );
         const packageJson1 = JSON.parse(packageJson1Contents) as PackageJson;
         const packageJson2 = JSON.parse(packageJson2Contents) as PackageJson;
         const packageJson3 = JSON.parse(packageJson3Contents) as PackageJson;
 
         expect(
-          packageJson1.dependencies && packageJson1.dependencies['package2']
+          packageJson1.dependencies && packageJson1.dependencies['package2'],
         ).toStrictEqual('^2.0.0');
 
         expect(
-          packageJson2.dependencies && packageJson2.dependencies['package1']
+          packageJson2.dependencies && packageJson2.dependencies['package1'],
         ).toStrictEqual('^2.0.0');
 
         expect(
-          packageJson3.dependencies && packageJson3.dependencies['package1']
+          packageJson3.dependencies && packageJson3.dependencies['package1'],
         ).toStrictEqual('^0.0.0');
 
         expect(notFixable).toStrictEqual([
@@ -791,35 +796,35 @@ describe('Utils | dependency-versions', function () {
       it('fixes the fixable inconsistencies', function () {
         const packages = getPackagesHelper('.');
         const versionsMismatching = calculateDependenciesAndVersions(
-          calculateVersionsForEachDependency(packages)
+          calculateVersionsForEachDependency(packages),
         );
         const { fixable, notFixable } = fixVersionsMismatching(
           packages,
-          versionsMismatching
+          versionsMismatching,
         );
 
         // Read in package.json files.
         const packageJsonRootContents = readFileSync('package.json', 'utf8');
         const packageJson1Contents = readFileSync(
           'package1/package.json',
-          'utf8'
+          'utf8',
         );
         const packageJsonRoot = JSON.parse(
-          packageJsonRootContents
+          packageJsonRootContents,
         ) as PackageJson;
         const packageJson1 = JSON.parse(packageJson1Contents) as PackageJson;
 
         expect(
           packageJsonRoot.devDependencies &&
-            packageJsonRoot.devDependencies['foo']
+            packageJsonRoot.devDependencies['foo'],
         ).toStrictEqual('^2.0.0');
 
         expect(
-          packageJsonRoot.resolutions && packageJsonRoot.resolutions['foo']
+          packageJsonRoot.resolutions && packageJsonRoot.resolutions['foo'],
         ).toStrictEqual('^2.0.0');
 
         expect(
-          packageJson1.dependencies && packageJson1.dependencies['foo']
+          packageJson1.dependencies && packageJson1.dependencies['foo'],
         ).toStrictEqual('^2.0.0');
 
         expect(notFixable).toStrictEqual([]);
@@ -891,28 +896,28 @@ describe('Utils | dependency-versions', function () {
       it('increases the range', function () {
         const packages = getPackagesHelper('.');
         const versionsMismatching = calculateDependenciesAndVersions(
-          calculateVersionsForEachDependency(packages)
+          calculateVersionsForEachDependency(packages),
         );
         fixVersionsMismatching(packages, versionsMismatching);
 
         // Read in package.json files.
         const packageJson1Contents = readFileSync(
           'package1/package.json',
-          'utf8'
+          'utf8',
         );
         const packageJson2Contents = readFileSync(
           'package2/package.json',
-          'utf8'
+          'utf8',
         );
         const packageJson1 = JSON.parse(packageJson1Contents) as PackageJson;
         const packageJson2 = JSON.parse(packageJson2Contents) as PackageJson;
 
         expect(
-          packageJson1.dependencies && packageJson1.dependencies['foo']
+          packageJson1.dependencies && packageJson1.dependencies['foo'],
         ).toStrictEqual('^1.5.0');
 
         expect(
-          packageJson2.dependencies && packageJson2.dependencies['foo']
+          packageJson2.dependencies && packageJson2.dependencies['foo'],
         ).toStrictEqual('^1.5.0');
       });
     });

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* eslint node/shebang:"off" -- shebang needed so compiled code gets interpreted as JS */
+/* eslint n/hashbang:"off" -- shebang needed so compiled code gets interpreted as JS */
 
 import { run } from '../lib/cli.js';
 
