@@ -26,6 +26,26 @@
 
 
 
+
+## v5.0.0 (2024-12-05)
+
+#### :boom: Breaking Change
+* [#707](https://github.com/bmish/check-dependency-version-consistency/pull/707) Drop support for Node 16, 19, 21 ([@ddzz](https://github.com/ddzz))
+
+#### :rocket: Enhancement
+* [#711](https://github.com/bmish/check-dependency-version-consistency/pull/711) Update commander to v12 ([@bmish](https://github.com/bmish))
+* [#710](https://github.com/bmish/check-dependency-version-consistency/pull/710) Update globby to v14 ([@bmish](https://github.com/bmish))
+
+#### :house: Internal
+* [#712](https://github.com/bmish/check-dependency-version-consistency/pull/712) Use ES2023 target for TypeScript ([@bmish](https://github.com/bmish))
+* [#709](https://github.com/bmish/check-dependency-version-consistency/pull/709) Update internal dependencies ([@bmish](https://github.com/bmish))
+* [#708](https://github.com/bmish/check-dependency-version-consistency/pull/708) Update to eslint v9 with flat config ([@bmish](https://github.com/bmish))
+
+#### Committers: 2
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+- Darius Dzien ([@ddzz](https://github.com/ddzz))
+
+
 ## v4.1.1 (2024-12-05)
 
 #### :bug: Bug Fix
