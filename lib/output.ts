@@ -41,9 +41,9 @@ export function dependenciesToMismatchSummary(
           );
           const packageListSentence =
             usageCount > 3
-              ? `${packageNames.slice(0, 3).join(', ')}, and ${
-                  usageCount - 3
-                } other${usageCount - 3 === 1 ? '' : 's'}`
+              ? `${packageNames.slice(0, 3).join(', ')}, and ${String(
+                  usageCount - 3,
+                )} other${usageCount - 3 === 1 ? '' : 's'}`
               : packageNames.join(', ');
           return [
             chalk.redBright(versionObject.version),
@@ -59,7 +59,7 @@ export function dependenciesToMismatchSummary(
     .join('');
 
   return [
-    `Found ${mismatchingDependencyVersions.length} ${
+    `Found ${String(mismatchingDependencyVersions.length)} ${
       mismatchingDependencyVersions.length === 1 ? 'dependency' : 'dependencies'
     } with mismatching versions across the workspace. Fix with \`--fix\`.`,
     tables,
@@ -95,7 +95,7 @@ export function dependenciesToFixedSummary(dependencies: Dependencies): string {
     })
     .sort((a, b) => a.dependency.localeCompare(b.dependency));
 
-  return `Fixed versions for ${dependenciesAndFixedVersions.length} ${
+  return `Fixed versions for ${String(dependenciesAndFixedVersions.length)} ${
     dependenciesAndFixedVersions.length === 1 ? 'dependency' : 'dependencies'
   }: ${dependenciesAndFixedVersions
     .map((object) => `${object.dependency}@${object.version}`)
