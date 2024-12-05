@@ -25,6 +25,20 @@
 
 
 
+
+## v4.1.1 (2024-12-05)
+
+#### :bug: Bug Fix
+* [#705](https://github.com/bmish/check-dependency-version-consistency/pull/705) Update commander to v11 ([@bmish](https://github.com/bmish))
+
+#### :house: Internal
+* [#706](https://github.com/bmish/check-dependency-version-consistency/pull/706) Refresh lockfile ([@bmish](https://github.com/bmish))
+* [#704](https://github.com/bmish/check-dependency-version-consistency/pull/704) Test under Node 22 and Node 23 ([@bmish](https://github.com/bmish))
+
+#### Committers: 1
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+
+
 ## v4.1.0 (2023-05-31)
 
 #### :rocket: Enhancement
