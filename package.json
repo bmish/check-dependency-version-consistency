@@ -62,7 +62,7 @@
     "@types/edit-json-file": "^1.7.0",
     "@types/jest": "^29.5.1",
     "@types/mock-fs": "^4.13.1",
-    "@types/node": "^22.10.1",
+    "@types/node": "^24.0.2",
     "@types/semver": "^7.5.0",
     "eslint": "^9.0.0",
     "eslint-config-prettier": "^10.0.1",
