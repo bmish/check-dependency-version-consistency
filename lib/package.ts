@@ -70,7 +70,7 @@ export class Package {
     }
 
     if (this.pnpmWorkspacePackages) {
-      // eslint-disable-next-line unicorn/no-instanceof-array -- using Array.isArray() loses type information about the array.
+      // eslint-disable-next-line unicorn/no-instanceof-builtins -- using Array.isArray() loses type information about the array.
       if (!(this.pnpmWorkspacePackages instanceof Array)) {
         throw new TypeError(
           'pnpm-workspace.yaml `packages` is not a string array.',
