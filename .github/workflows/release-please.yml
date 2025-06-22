@@ -27,8 +27,8 @@ jobs:
           registry-url: https://registry.npmjs.org
         if: ${{ steps.release.outputs.release_created }}
       - run: |
-          npm install --force
-          npm publish --provenance
+          yarn install --non-interactive
+          yarn publish --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         if: ${{ steps.release.outputs.release_created }}
