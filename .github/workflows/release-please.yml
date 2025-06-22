@@ -19,7 +19,6 @@ jobs:
         id: release
         with:
           release-type: node
-          config-file: release-please-config.json
       - uses: actions/checkout@v4
         if: ${{ steps.release.outputs.release_created }}
       - uses: actions/setup-node@v4
