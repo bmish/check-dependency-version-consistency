@@ -1,6 +1,14 @@
 # Changelog
 
 
+## 5.0.1 (2025-06-22)
+
+
+### Bug Fixes
+
+* no-op for testing release-please ([#850](https://github.com/bmish/check-dependency-version-consistency/issues/850)) ([bfdb500](https://github.com/bmish/check-dependency-version-consistency/commit/bfdb50028c9bfc7e1124a46d45eefc5c58fece5b))
+
+
 ## v5.0.0 (2024-12-05)
 
 #### :boom: Breaking Change
