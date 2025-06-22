@@ -1,6 +1,13 @@
 # Changelog
 
 
+## 1.0.0 (2025-06-22)
+
+
+### Bug Fixes
+
+* allow workspace prefix for local package ([#520](https://github.com/bmish/check-dependency-version-consistency/issues/520)) ([4a005e1](https://github.com/bmish/check-dependency-version-consistency/commit/4a005e1cacf72d237dc74e9fd092e66659023303))
+
 ## v5.0.0 (2024-12-05)
 
 #### :boom: Breaking Change
