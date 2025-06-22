@@ -1,6 +1,19 @@
 # Changelog
 
 
+## 5.0.1 (2025-06-22)
+
+
+### Bug Fixes
+
+* allow workspace prefix for local package ([#520](https://github.com/bmish/check-dependency-version-consistency/issues/520)) ([4a005e1](https://github.com/bmish/check-dependency-version-consistency/commit/4a005e1cacf72d237dc74e9fd092e66659023303))
+* no-op for testing release-please ([#850](https://github.com/bmish/check-dependency-version-consistency/issues/850)) ([bfdb500](https://github.com/bmish/check-dependency-version-consistency/commit/bfdb50028c9bfc7e1124a46d45eefc5c58fece5b))
+
+
+### Miscellaneous Chores
+
+* prepare for 5.0.1 release ([f323ac9](https://github.com/bmish/check-dependency-version-consistency/commit/f323ac90951c03e79b7f88f3ff7ed114a08a2786))
+
 ## v5.0.0 (2024-12-05)
 
 #### :boom: Breaking Change
