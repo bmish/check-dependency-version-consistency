@@ -42,7 +42,7 @@
     "lint:package-json-sorting": "sort-package-json --check",
     "lint:package-json-sorting:fix": "sort-package-json package.json",
     "lint:types": "tsc",
-    "prepublishOnly": "yarn build",
+    "prepublishOnly": "npm run build",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --colors --coverage"
   },
   "dependencies": {
