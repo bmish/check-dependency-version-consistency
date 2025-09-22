@@ -1,6 +1,13 @@
 # Changelog
 
 
+## [5.0.2](https://github.com/bmish/check-dependency-version-consistency/compare/v5.0.1...v5.0.2) (2025-09-22)
+
+
+### Bug Fixes
+
+* no-op for testing release-please ([#865](https://github.com/bmish/check-dependency-version-consistency/issues/865)) ([2a81ab6](https://github.com/bmish/check-dependency-version-consistency/commit/2a81ab6d8ca34358b98fbac34372d2d2b932f2f1))
+
 ## 5.0.1 (2025-06-22)
 
 
