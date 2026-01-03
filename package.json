@@ -62,6 +62,7 @@
     "@types/mock-fs": "^4.13.1",
     "@types/node": "^25.0.0",
     "@types/semver": "^7.5.0",
+    "@typescript/native-preview": "^7.0.0-dev.20250601",
     "@vitest/coverage-v8": "^4.0.0",
     "@vitest/eslint-plugin": "^1.2.1",
     "eslint": "^9.39.2",
@@ -76,7 +77,6 @@
     "npm-run-all": "^4.1.5",
     "prettier": "^3.7.4",
     "sort-package-json": "^3.6.0",
-    "@typescript/native-preview": "^7.0.0-dev.20250601",
     "typescript": "^5.0.4",
     "typescript-eslint": "^8.51.0",
     "vitest": "^4.0.0"
