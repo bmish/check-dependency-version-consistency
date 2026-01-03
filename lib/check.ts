@@ -4,7 +4,8 @@ import {
   filterOutIgnoredDependencies,
   fixVersionsMismatching,
 } from './dependency-versions.js';
-import { DEPENDENCY_TYPE, Dependencies, Options } from './types.js';
+import { DEPENDENCY_TYPE } from './types.js';
+import type { Dependencies, Options } from './types.js';
 import { getPackages } from './workspace.js';
 import { DEFAULT_DEP_TYPES } from './defaults.js';
 

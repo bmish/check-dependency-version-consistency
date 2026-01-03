@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
-import { PackageJson } from 'type-fest';
+import type { PackageJson } from 'type-fest';
 import { load } from 'js-yaml';
 
 /*
@@ -33,8 +33,10 @@ export class Package {
       const pnpmWorkspaceContents = readFileSync(pnpmWorkspacePath, 'utf8');
       const pnpmWorkspaceYaml = load(pnpmWorkspaceContents) as {
         packages?: readonly string[];
-      };
-      this.pnpmWorkspacePackages = pnpmWorkspaceYaml.packages;
+      } | null;
+      if (pnpmWorkspaceYaml?.packages !== undefined) {
+        this.pnpmWorkspacePackages = pnpmWorkspaceYaml.packages;
+      }
     }
   }
 

@@ -101,6 +101,10 @@ describe('CDVC', function () {
           },
         ],
       });
+
+      expect(() => cdvc.getDependency('nonexistent')).toThrow(
+        'Dependency "nonexistent" not found',
+      );
     });
   });
 
@@ -846,10 +850,12 @@ describe('CDVC', function () {
       ) as PackageJson;
 
       expect(
-        actualPackageJson1.dependencies && actualPackageJson1.dependencies.foo,
+        actualPackageJson1.dependencies &&
+          actualPackageJson1.dependencies['foo'],
       ).toStrictEqual('^1.5.0');
       expect(
-        actualPackageJson2.dependencies && actualPackageJson2.dependencies.foo,
+        actualPackageJson2.dependencies &&
+          actualPackageJson2.dependencies['foo'],
       ).toStrictEqual('^1.5.0');
     });
   });

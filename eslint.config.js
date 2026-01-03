@@ -1,11 +1,11 @@
 // @ts-check
 
 import js from '@eslint/js';
-import eslintPluginN from 'eslint-plugin-n';
 import eslintPluginVitest from '@vitest/eslint-plugin';
-import eslintPluginUnicorn from 'eslint-plugin-unicorn';
-import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'; // eslint-disable-line import/extensions -- false positive
 import * as eslintPluginImport from 'eslint-plugin-import';
+import eslintPluginN from 'eslint-plugin-n';
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'; // eslint-disable-line import/extensions -- false positive
+import eslintPluginUnicorn from 'eslint-plugin-unicorn';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
@@ -35,6 +35,7 @@ export default tseslint.config(
       'unicorn/no-useless-undefined': 'off', // We use a lot of `return undefined` to satisfy the `consistent-return` rule.
 
       // typescript-eslint rules:
+      '@typescript-eslint/consistent-type-imports': 'error',
       '@typescript-eslint/prefer-readonly': 'error',
       '@typescript-eslint/require-array-sort-compare': 'error',
 
