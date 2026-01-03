@@ -36,7 +36,6 @@
     "useDefineForClassFields": true,
 
     // Project Setup
-    "baseUrl": ".",
     "types": ["node", "vitest/globals"]
   },
   "include": ["bin/**/*", "lib/**/*", "test/**/*", "vitest.config.ts"]
