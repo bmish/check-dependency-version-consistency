@@ -1,6 +1,29 @@
 # Changelog
 
 
+## [6.0.0](https://github.com/bmish/check-dependency-version-consistency/compare/v5.0.1...v6.0.0) (2026-01-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* Require Node 20, 22, 24+ ([#900](https://github.com/bmish/check-dependency-version-consistency/issues/900))
+
+### Features
+
+* Require Node 20, 22, 24+ ([#900](https://github.com/bmish/check-dependency-version-consistency/issues/900)) ([e18b851](https://github.com/bmish/check-dependency-version-consistency/commit/e18b851f06ff54c4404bb32f3e4d7cb77584aa73))
+
+
+### Bug Fixes
+
+* Misc cleanup ([#957](https://github.com/bmish/check-dependency-version-consistency/issues/957)) ([d970898](https://github.com/bmish/check-dependency-version-consistency/commit/d97089881ff1440a1cf87884b5c0a17804b6eb95))
+* Modernize TypeScript config ([#954](https://github.com/bmish/check-dependency-version-consistency/issues/954)) ([ec5a876](https://github.com/bmish/check-dependency-version-consistency/commit/ec5a87647aaf44a578a257dc1e4b55fd9cb20718))
+* no-op for testing release-please ([#865](https://github.com/bmish/check-dependency-version-consistency/issues/865)) ([2a81ab6](https://github.com/bmish/check-dependency-version-consistency/commit/2a81ab6d8ca34358b98fbac34372d2d2b932f2f1))
+* Switch from Jest to Vitest ([#953](https://github.com/bmish/check-dependency-version-consistency/issues/953)) ([61a58cf](https://github.com/bmish/check-dependency-version-consistency/commit/61a58cf8bd21e9e89ce2458d1547f19b89b8f055))
+* Switch from tsc to tsgo for type-checking ([#955](https://github.com/bmish/check-dependency-version-consistency/issues/955)) ([bcc0af6](https://github.com/bmish/check-dependency-version-consistency/commit/bcc0af6a37ecdb1f68b09bdfbe15685221e63f70))
+* update most dependencies ([#951](https://github.com/bmish/check-dependency-version-consistency/issues/951)) ([bbd7c56](https://github.com/bmish/check-dependency-version-consistency/commit/bbd7c56b0fed8bd43a08cdc61f4e8bb504f45a12))
+* Update to Jest 30 ([#952](https://github.com/bmish/check-dependency-version-consistency/issues/952)) ([89bb650](https://github.com/bmish/check-dependency-version-consistency/commit/89bb6505dd45c63b5b7ee6fd30f6c6e9ba0e5906))
+* Upgrade to Globby 16 ([#956](https://github.com/bmish/check-dependency-version-consistency/issues/956)) ([a3fa8b1](https://github.com/bmish/check-dependency-version-consistency/commit/a3fa8b10b8fb8c218b17ae429ae3ed4e3ae32ff4))
+
 ## 5.0.1 (2025-06-22)
 
 
