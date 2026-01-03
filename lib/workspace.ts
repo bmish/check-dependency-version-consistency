@@ -102,7 +102,13 @@ function expandWorkspaces(
   root: string,
   workspacePatterns: readonly string[],
 ): readonly string[] {
-  return workspacePatterns.flatMap((workspace) => {
+  // Separate negation patterns (exclusions) from inclusion patterns
+  const inclusionPatterns = workspacePatterns.filter((p) => !p.startsWith('!'));
+  const exclusionPatterns = workspacePatterns
+    .filter((p) => p.startsWith('!'))
+    .map((p) => p.slice(1)); // Remove the leading '!'
+
+  return inclusionPatterns.flatMap((workspace) => {
     if (!workspace.includes('*')) {
       return [workspace];
     }
@@ -111,7 +117,7 @@ function expandWorkspaces(
     return globbySync(workspace, {
       onlyDirectories: true,
       cwd: root,
-      ignore: ['**/node_modules'],
+      ignore: ['**/node_modules', ...exclusionPatterns],
     });
   });
 }
