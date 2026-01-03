@@ -2,6 +2,7 @@
 
 import js from '@eslint/js';
 import eslintPluginN from 'eslint-plugin-n';
+import eslintPluginVitest from '@vitest/eslint-plugin';
 import eslintPluginUnicorn from 'eslint-plugin-unicorn';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'; // eslint-disable-line import/extensions -- false positive
 import * as eslintPluginImport from 'eslint-plugin-import';
@@ -14,6 +15,7 @@ export default tseslint.config(
   eslintPluginN.configs['flat/recommended'],
   eslintPluginPrettierRecommended,
   eslintPluginUnicorn.configs['flat/recommended'],
+  eslintPluginVitest.configs.recommended,
   ...tseslint.configs.strictTypeChecked,
 
   // Individual rules:
