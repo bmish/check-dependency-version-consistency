@@ -73,6 +73,10 @@ export const FIXTURE_PATH_WORKSPACE_PNPM_PACKAGES_WRONG_TYPE = join(
   FIXTURE_PATH,
   'workspace-pnpm-packages-wrong-type',
 );
+export const FIXTURE_PATH_WORKSPACE_PNPM_NO_PACKAGES_FIELD = join(
+  FIXTURE_PATH,
+  'workspace-pnpm-no-packages-field',
+);
 export const FIXTURE_PATH_NESTED_WORKSPACES = join(
   FIXTURE_PATH,
   'nested-workspaces',

@@ -1,32 +1,42 @@
 {
   "compilerOptions": {
-    "allowJs": false,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "baseUrl": ".",
+    // Language and Environment
+    "target": "ES2023",
+    "lib": ["ES2023"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+
+    // Emit
     "declaration": true,
-    "experimentalDecorators": true,
-    "lib": [
-      "es2023"
-    ],
-    "module": "ES2022",
-    "moduleResolution": "bundler",
+    "outDir": "dist",
     "noEmitOnError": true,
+
+    // Type Checking - Strict Mode
+    "strict": true,
     "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
     "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "outDir": "dist",
-    "target": "es2023",
-    "types": [
-      "node",
-      "vitest/globals"
-    ]
+    "exactOptionalPropertyTypes": true,
+
+    // Modules
+    "allowJs": false,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "verbatimModuleSyntax": true,
+
+    // Interop and Compatibility
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "useDefineForClassFields": true,
+
+    // Project Setup
+    "baseUrl": ".",
+    "types": ["node", "vitest/globals"]
   },
-  "include": [
-    "bin/**/*",
-    "lib/**/*",
-    "test/**/*",
-    "vitest.config.ts"
-  ]
+  "include": ["bin/**/*", "lib/**/*", "test/**/*", "vitest.config.ts"]
 }

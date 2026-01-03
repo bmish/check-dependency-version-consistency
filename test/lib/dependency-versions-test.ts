@@ -459,26 +459,26 @@ describe('Utils | dependency-versions', function () {
         // foo
         // updates the package1 `foo` version to the latest version
         expect(
-          packageJson1.dependencies && packageJson1.dependencies.foo,
+          packageJson1.dependencies && packageJson1.dependencies['foo'],
         ).toStrictEqual('^2.0.0');
         // does not change package2 `foo` version since already at latest version
         expect(
-          packageJson2.dependencies && packageJson2.dependencies.foo,
+          packageJson2.dependencies && packageJson2.dependencies['foo'],
         ).toStrictEqual('^2.0.0');
         // updates the root package `foo` version to the latest version
         expect(
           packageJsonRoot.devDependencies &&
-            packageJsonRoot.devDependencies.foo,
+            packageJsonRoot.devDependencies['foo'],
         ).toStrictEqual('^2.0.0');
 
         // bar
         // does not change package1 `bar` version due to abnormal version present
         expect(
-          packageJson1.dependencies && packageJson1.dependencies.bar,
+          packageJson1.dependencies && packageJson1.dependencies['bar'],
         ).toStrictEqual('^3.0.0');
         // does not change package2 `bar` version due to abnormal version present
         expect(
-          packageJson2.dependencies && packageJson2.dependencies.bar,
+          packageJson2.dependencies && packageJson2.dependencies['bar'],
         ).toStrictEqual('invalidVersion');
 
         // a.b.c

@@ -201,12 +201,15 @@ export function calculateDependenciesAndVersions(
       const localPackageVersions = versionObjectsForDep
         .filter((versionObject) => versionObject.isLocalPackageVersion)
         .map((versionObject) => versionObject.version);
+      const localPackageVersion = localPackageVersions[0];
       const allVersionsHaveWorkspacePrefix = versions.every((version) =>
         version.startsWith('workspace:'),
       );
-      const hasIncompatibilityWithLocalPackageVersion = versions.some(
-        (version) => !semver.satisfies(localPackageVersions[0], version),
-      );
+      const hasIncompatibilityWithLocalPackageVersion =
+        localPackageVersion !== undefined &&
+        versions.some(
+          (version) => !semver.satisfies(localPackageVersion, version),
+        );
       if (
         localPackageVersions.length === 1 &&
         !allVersionsHaveWorkspacePrefix &&

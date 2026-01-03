@@ -4,7 +4,8 @@ import { join, dirname } from 'node:path';
 import type { PackageJson } from 'type-fest';
 import { fileURLToPath } from 'node:url';
 import { CDVC } from './cdvc.js';
-import { DEPENDENCY_TYPE, Options } from './types.js';
+import { DEPENDENCY_TYPE } from './types.js';
+import type { Options } from './types.js';
 import { DEFAULT_DEP_TYPES } from './defaults.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));

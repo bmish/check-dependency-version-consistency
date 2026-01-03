@@ -3,7 +3,7 @@ import {
   dependenciesToFixedSummary,
   dependenciesToMismatchSummary,
 } from './output.js';
-import { Dependencies, Options } from './types.js';
+import type { Dependencies, Options } from './types.js';
 
 /** Relevant public data about a dependency. */
 type Dependency = {
@@ -52,12 +52,16 @@ export class CDVC {
   }
 
   public getDependency(name: string): Dependency {
+    const dep = this.dependencies[name];
+    if (!dep) {
+      throw new Error(`Dependency "${name}" not found`);
+    }
     // Convert underlying dependency data object with relevant public data.
     return {
       name,
-      isFixable: this.dependencies[name].isFixable,
-      isMismatching: this.dependencies[name].isMismatching,
-      versions: this.dependencies[name].versions.map((version) => ({
+      isFixable: dep.isFixable,
+      isMismatching: dep.isMismatching,
+      versions: dep.versions.map((version) => ({
         version: version.version,
         packages: version.packages.map((package_) => ({
           pathRelative: package_.pathRelative,
