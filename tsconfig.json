@@ -24,6 +24,7 @@
 
     // Modules
     "allowJs": false,
+    "erasableSyntaxOnly": true,
     "esModuleInterop": true,
     "isolatedModules": true,
     "resolveJsonModule": true,

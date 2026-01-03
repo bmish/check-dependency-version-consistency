@@ -13,16 +13,19 @@ export type Dependencies = Record<
   }
 >;
 
-export enum DEPENDENCY_TYPE {
-  'dependencies' = 'dependencies',
-  'devDependencies' = 'devDependencies',
-  'optionalDependencies' = 'optionalDependencies',
-  'peerDependencies' = 'peerDependencies',
-  'resolutions' = 'resolutions',
-}
+export const DEPENDENCY_TYPE = {
+  dependencies: 'dependencies',
+  devDependencies: 'devDependencies',
+  optionalDependencies: 'optionalDependencies',
+  peerDependencies: 'peerDependencies',
+  resolutions: 'resolutions',
+} as const;
+
+export type DependencyType =
+  (typeof DEPENDENCY_TYPE)[keyof typeof DEPENDENCY_TYPE];
 
 export type Options = {
-  depType?: readonly `${DEPENDENCY_TYPE}`[]; // Allow strings so the enum type doesn't always have to be used.
+  depType?: readonly DependencyType[];
   fix?: boolean;
   ignoreDep?: readonly string[];
   ignoreDepPattern?: readonly string[];

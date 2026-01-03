@@ -10,6 +10,7 @@ import {
   versionRangeToRange,
 } from './semver.js';
 import { DEPENDENCY_TYPE } from './types.js';
+import type { DependencyType } from './types.js';
 
 type DependenciesToVersionsSeen = Map<
   string,
@@ -43,7 +44,7 @@ type DependencyAndVersions = {
  */
 export function calculateVersionsForEachDependency(
   packages: readonly Package[],
-  depType: readonly DEPENDENCY_TYPE[] = DEFAULT_DEP_TYPES,
+  depType: readonly DependencyType[] = DEFAULT_DEP_TYPES,
 ): DependenciesToVersionsSeen {
   const dependenciesToVersionsSeen: DependenciesToVersionsSeen = new Map<
     string,
@@ -63,7 +64,7 @@ export function calculateVersionsForEachDependency(
 function recordDependencyVersionsForPackageJson(
   dependenciesToVersionsSeen: DependenciesToVersionsSeen,
   package_: Package,
-  depType: readonly DEPENDENCY_TYPE[],
+  depType: readonly DependencyType[],
 ) {
   if (package_.packageJson.name && package_.packageJson.version) {
     recordDependencyVersion(
@@ -315,7 +316,7 @@ export function filterOutIgnoredDependencies(
 function writeDependencyVersion(
   packageJsonPath: string,
   packageJsonEndsInNewline: boolean,
-  type: DEPENDENCY_TYPE,
+  type: DependencyType,
   dependencyName: string,
   newVersion: string,
 ) {
