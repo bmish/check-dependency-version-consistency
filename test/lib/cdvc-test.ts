@@ -575,7 +575,7 @@ describe('CDVC', function () {
               depType: ['fake'],
             }),
         ).toThrowErrorMatchingInlineSnapshot(
-          '"Invalid depType provided. Choices are: dependencies, devDependencies, optionalDependencies, peerDependencies, resolutions."',
+          '[Error: Invalid depType provided. Choices are: dependencies, devDependencies, optionalDependencies, peerDependencies, resolutions.]',
         );
       });
     });

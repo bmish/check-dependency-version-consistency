@@ -357,7 +357,7 @@ describe('Utils | dependency-versions', function () {
           [],
         ),
       ).toThrowErrorMatchingInlineSnapshot(
-        '"Specified option \'--ignore-dep nonexistentDep\', but no version mismatches detected for this dependency."',
+        "[Error: Specified option '--ignore-dep nonexistentDep', but no version mismatches detected for this dependency.]",
       );
     });
 
@@ -374,7 +374,7 @@ describe('Utils | dependency-versions', function () {
           [new RegExp('nonexistentDep')],
         ),
       ).toThrowErrorMatchingInlineSnapshot(
-        '"Specified option \'--ignore-dep-pattern /nonexistentDep/\', but no matching dependencies with version mismatches detected."',
+        "[Error: Specified option '--ignore-dep-pattern /nonexistentDep/', but no matching dependencies with version mismatches detected.]",
       );
     });
 

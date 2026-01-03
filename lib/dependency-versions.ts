@@ -177,11 +177,12 @@ function recordDependencyVersion(
     dependenciesToVersionsSeen.set(dependency, []);
   }
   const list = dependenciesToVersionsSeen.get(dependency);
-  /* istanbul ignore if */
+  /* v8 ignore start */
   if (list) {
     // `list` should always exist at this point, this if statement is just to please TypeScript.
     list.push({ package: package_, version, isLocalPackageVersion });
   }
+  /* v8 ignore stop */
 }
 
 export function calculateDependenciesAndVersions(
