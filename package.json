@@ -48,13 +48,13 @@
   "dependencies": {
     "@types/js-yaml": "^4.0.5",
     "chalk": "^5.2.0",
-    "commander": "^13.0.0",
+    "commander": "^14.0.1",
     "edit-json-file": "^1.7.0",
     "globby": "^14.0.0",
     "js-yaml": "^4.1.0",
     "semver": "^7.5.1",
     "table": "^6.8.1",
-    "type-fest": "^4.30.0"
+    "type-fest": "^5.0.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.29.0",
