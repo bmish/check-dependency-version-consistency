@@ -1,15 +1,15 @@
 import editJsonFile from 'edit-json-file';
+import semver from 'semver';
+import { DEFAULT_DEP_TYPES } from './defaults.js';
 import { Package } from './package.js';
 import {
   compareVersionRanges,
   compareVersionRangesSafe,
-  versionRangeToRange,
-  getIncreasedLatestVersion,
   getHighestRangeType,
+  getIncreasedLatestVersion,
+  versionRangeToRange,
 } from './semver.js';
-import semver from 'semver';
 import { DEPENDENCY_TYPE } from './types.js';
-import { DEFAULT_DEP_TYPES } from './defaults.js';
 
 type DependenciesToVersionsSeen = Map<
   string,
@@ -189,7 +189,7 @@ export function calculateDependenciesAndVersions(
 ): readonly DependencyAndVersions[] {
   // Loop through all dependencies seen.
   return [...dependencyVersions.entries()]
-    .sort((a, b) => a[0].localeCompare(b[0]))
+    .toSorted((a, b) => a[0].localeCompare(b[0]))
     .flatMap(([dependency, versionObjectsForDep]) => {
       // Check what versions we have seen for this dependency.
       let versions = versionObjectsForDep
@@ -217,7 +217,7 @@ export function calculateDependenciesAndVersions(
       }
 
       // Calculate unique versions seen for this dependency.
-      const uniqueVersions = [...new Set(versions)].sort(
+      const uniqueVersions = [...new Set(versions)].toSorted(
         compareVersionRangesSafe,
       );
 
@@ -248,7 +248,7 @@ function versionsObjectsWithSortedPackages(
       version,
       packages: matchingVersionObjects
         .map((object) => object.package)
-        .sort((a, b) => Package.comparator(a, b)),
+        .toSorted((a, b) => Package.comparator(a, b)),
     };
   });
 }

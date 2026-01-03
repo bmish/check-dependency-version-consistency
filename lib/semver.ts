@@ -53,7 +53,7 @@ export function versionRangeToRange(versionRange: string): string {
 }
 
 export function getLatestVersion(versions: readonly string[]): string {
-  const sortedVersions = [...versions].sort(compareVersionRanges);
+  const sortedVersions = [...versions].toSorted(compareVersionRanges);
   if (sortedVersions.length === 0) {
     throw new Error('No versions provided.');
   }
@@ -62,7 +62,7 @@ export function getLatestVersion(versions: readonly string[]): string {
 
 // Example input: ['~', '^'], output: '^'
 export function getHighestRangeType(ranges: readonly string[]): string {
-  const sorted = [...ranges].sort(compareRanges);
+  const sorted = [...ranges].toSorted(compareRanges);
   if (sorted.length === 0) {
     throw new Error('No ranges provided.');
   }

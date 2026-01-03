@@ -1,10 +1,10 @@
 import chalk from 'chalk';
+import { table } from 'table';
 import {
   compareVersionRangesSafe,
   getIncreasedLatestVersion,
 } from './semver.js';
-import { table } from 'table';
-import { Dependencies } from './types.js';
+import type { Dependencies } from './types.js';
 
 /**
  * Returns human-readable tables describing mismatching dependency versions.
@@ -33,7 +33,7 @@ export function dependenciesToMismatchSummary(
       );
 
       const rows = [...object.versions]
-        .sort((a, b) => compareVersionRangesSafe(b.version, a.version))
+        .toSorted((a, b) => compareVersionRangesSafe(b.version, a.version))
         .map((versionObject) => {
           const usageCount = versionObject.packages.length;
           const packageNames = versionObject.packages.map(
@@ -93,7 +93,7 @@ export function dependenciesToFixedSummary(dependencies: Dependencies): string {
         version,
       };
     })
-    .sort((a, b) => a.dependency.localeCompare(b.dependency));
+    .toSorted((a, b) => a.dependency.localeCompare(b.dependency));
 
   return `Fixed versions for ${String(dependenciesAndFixedVersions.length)} ${
     dependenciesAndFixedVersions.length === 1 ? 'dependency' : 'dependencies'
