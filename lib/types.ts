@@ -19,7 +19,7 @@ export const DEPENDENCY_TYPE = {
   optionalDependencies: 'optionalDependencies',
   peerDependencies: 'peerDependencies',
   resolutions: 'resolutions',
-} as const;
+} as const satisfies Record<string, string>;
 
 export type DependencyType =
   (typeof DEPENDENCY_TYPE)[keyof typeof DEPENDENCY_TYPE];
