@@ -18,6 +18,7 @@ import {
   FIXTURE_PATH_VALID_WITH_WORKSPACE_PREFIX,
   FIXTURE_PATH_INCONSISTENT_WITH_WORKSPACE_PREFIX,
 } from '../fixtures/index.js';
+import { DEPENDENCY_TYPE } from '../../lib/types.js';
 import mockFs from 'mock-fs';
 import { readFileSync } from 'node:fs';
 import type { PackageJson } from 'type-fest';
@@ -919,6 +920,225 @@ describe('Utils | dependency-versions', function () {
         expect(
           packageJson2.dependencies && packageJson2.dependencies['foo'],
         ).toStrictEqual('^1.5.0');
+      });
+    });
+
+    describe('dryrun with optionalDependencies, peerDependencies, resolutions', function () {
+      beforeEach(function () {
+        mockFs({
+          'package.json': JSON.stringify({
+            workspaces: ['*'],
+            resolutions: {
+              foo: '^1.0.0',
+            },
+          }),
+          package1: {
+            'package.json': JSON.stringify({
+              name: 'package1',
+              optionalDependencies: {
+                foo: '^2.0.0',
+              },
+              peerDependencies: {
+                bar: '^1.0.0',
+              },
+            }),
+          },
+          package2: {
+            'package.json': JSON.stringify({
+              name: 'package2',
+              optionalDependencies: {
+                foo: '^1.0.0',
+              },
+              peerDependencies: {
+                bar: '^2.0.0',
+              },
+              resolutions: {
+                foo: '^2.0.0',
+              },
+            }),
+          },
+        });
+      });
+
+      afterEach(function () {
+        mockFs.restore();
+      });
+
+      it('does not write changes with dryrun=true', function () {
+        const packages = getPackagesHelper('.');
+        const depTypes = [
+          DEPENDENCY_TYPE.optionalDependencies,
+          DEPENDENCY_TYPE.peerDependencies,
+          DEPENDENCY_TYPE.resolutions,
+        ];
+        const versionsMismatching = calculateDependenciesAndVersions(
+          calculateVersionsForEachDependency(packages, depTypes),
+        );
+        const { fixable } = fixVersionsMismatching(
+          packages,
+          versionsMismatching,
+          true, // dryrun
+        );
+
+        // Read in package.json files - they should be unchanged.
+        const packageJsonRootContents = readFileSync('package.json', 'utf8');
+        const packageJson1Contents = readFileSync(
+          'package1/package.json',
+          'utf8',
+        );
+        const packageJson2Contents = readFileSync(
+          'package2/package.json',
+          'utf8',
+        );
+        const packageJsonRoot = JSON.parse(
+          packageJsonRootContents,
+        ) as PackageJson;
+        const packageJson1 = JSON.parse(packageJson1Contents) as PackageJson;
+        const packageJson2 = JSON.parse(packageJson2Contents) as PackageJson;
+
+        // Files should remain unchanged since dryrun=true
+        expect(packageJsonRoot.resolutions?.['foo']).toStrictEqual('^1.0.0');
+        expect(packageJson1.optionalDependencies?.['foo']).toStrictEqual(
+          '^2.0.0',
+        );
+        expect(packageJson1.peerDependencies?.['bar']).toStrictEqual('^1.0.0');
+        expect(packageJson2.optionalDependencies?.['foo']).toStrictEqual(
+          '^1.0.0',
+        );
+        expect(packageJson2.peerDependencies?.['bar']).toStrictEqual('^2.0.0');
+        expect(packageJson2.resolutions?.['foo']).toStrictEqual('^2.0.0');
+
+        // But fixable should still report what would have been fixed
+        expect(fixable.length).toBeGreaterThan(0);
+      });
+    });
+  });
+
+  describe('#calculateVersionsForEachDependency', function () {
+    describe('handles falsy dependency versions', function () {
+      afterEach(function () {
+        mockFs.restore();
+      });
+
+      it('skips empty string devDependencies versions', function () {
+        mockFs({
+          'package.json': JSON.stringify({
+            workspaces: ['*'],
+          }),
+          package1: {
+            'package.json': JSON.stringify({
+              name: 'package1',
+              devDependencies: {
+                foo: '',
+                bar: '^1.0.0',
+              },
+            }),
+          },
+        });
+
+        const packages = getPackagesHelper('.');
+        const dependencyVersions = calculateVersionsForEachDependency(packages);
+        const dependenciesAndVersions =
+          calculateDependenciesAndVersions(dependencyVersions);
+
+        // foo with empty version should be skipped
+        expect(
+          dependenciesAndVersions.find((d) => d.dependency === 'foo'),
+        ).toBeUndefined();
+        // bar should still be present
+        expect(
+          dependenciesAndVersions.find((d) => d.dependency === 'bar'),
+        ).toBeDefined();
+      });
+
+      it('skips empty string optionalDependencies versions', function () {
+        mockFs({
+          'package.json': JSON.stringify({
+            workspaces: ['*'],
+          }),
+          package1: {
+            'package.json': JSON.stringify({
+              name: 'package1',
+              optionalDependencies: {
+                foo: '',
+                bar: '^1.0.0',
+              },
+            }),
+          },
+        });
+
+        const packages = getPackagesHelper('.');
+        const dependencyVersions = calculateVersionsForEachDependency(packages);
+        const dependenciesAndVersions =
+          calculateDependenciesAndVersions(dependencyVersions);
+
+        expect(
+          dependenciesAndVersions.find((d) => d.dependency === 'foo'),
+        ).toBeUndefined();
+        expect(
+          dependenciesAndVersions.find((d) => d.dependency === 'bar'),
+        ).toBeDefined();
+      });
+
+      it('skips empty string peerDependencies versions', function () {
+        mockFs({
+          'package.json': JSON.stringify({
+            workspaces: ['*'],
+          }),
+          package1: {
+            'package.json': JSON.stringify({
+              name: 'package1',
+              peerDependencies: {
+                foo: '',
+                bar: '^1.0.0',
+              },
+            }),
+          },
+        });
+
+        const packages = getPackagesHelper('.');
+        const dependencyVersions = calculateVersionsForEachDependency(
+          packages,
+          [DEPENDENCY_TYPE.peerDependencies],
+        );
+        const dependenciesAndVersions =
+          calculateDependenciesAndVersions(dependencyVersions);
+
+        expect(
+          dependenciesAndVersions.find((d) => d.dependency === 'foo'),
+        ).toBeUndefined();
+        expect(
+          dependenciesAndVersions.find((d) => d.dependency === 'bar'),
+        ).toBeDefined();
+      });
+
+      it('skips empty string resolutions versions', function () {
+        mockFs({
+          'package.json': JSON.stringify({
+            workspaces: ['*'],
+            resolutions: {
+              foo: '',
+              bar: '^1.0.0',
+            },
+          }),
+          package1: {
+            'package.json': JSON.stringify({
+              name: 'package1',
+            }),
+          },
+        });
+
+        const packages = getPackagesHelper('.');
+        const dependencyVersions = calculateVersionsForEachDependency(packages);
+        const dependenciesAndVersions =
+          calculateDependenciesAndVersions(dependencyVersions);
+
+        expect(
+          dependenciesAndVersions.find((d) => d.dependency === 'foo'),
+        ).toBeUndefined();
+        expect(
+          dependenciesAndVersions.find((d) => d.dependency === 'bar'),
+        ).toBeDefined();
       });
     });
   });
