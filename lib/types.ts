@@ -1,4 +1,4 @@
-import { Package } from './package.js';
+import type { Package } from './package.js';
 
 /** Map of dependency name to information about the dependency. */
 export type Dependencies = Record<
