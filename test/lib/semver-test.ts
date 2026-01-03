@@ -41,10 +41,10 @@ describe('Utils | semver', function () {
     it('throws with invalid ranges', function () {
       expect(() =>
         compareVersionRanges('foo', '~6.0.0'),
-      ).toThrowErrorMatchingInlineSnapshot('"Invalid Version: foo"');
+      ).toThrowErrorMatchingInlineSnapshot('[Error: Invalid Version: foo]');
       expect(() =>
         compareVersionRanges('~6.0.0', 'foo'),
-      ).toThrowErrorMatchingInlineSnapshot('"Invalid Version: foo"');
+      ).toThrowErrorMatchingInlineSnapshot('[Error: Invalid Version: foo]');
     });
   });
 
@@ -100,9 +100,9 @@ describe('Utils | semver', function () {
     it('throws with invalid version', function () {
       expect(() =>
         getLatestVersion(['1.2.3', 'foo']),
-      ).toThrowErrorMatchingInlineSnapshot('"Invalid Version: foo"');
+      ).toThrowErrorMatchingInlineSnapshot('[Error: Invalid Version: foo]');
       expect(() => getLatestVersion([])).toThrowErrorMatchingInlineSnapshot(
-        '"No versions provided."',
+        '[Error: No versions provided.]',
       );
     });
   });
@@ -115,7 +115,7 @@ describe('Utils | semver', function () {
       expect(getHighestRangeType(['~', '^'])).toStrictEqual('^');
       expect(getHighestRangeType(['^', '~'])).toStrictEqual('^');
       expect(() => getHighestRangeType([])).toThrowErrorMatchingInlineSnapshot(
-        '"No ranges provided."',
+        '[Error: No ranges provided.]',
       );
     });
   });

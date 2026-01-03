@@ -78,7 +78,7 @@ describe('Utils | workspace', function () {
       expect(() =>
         getPackages(FIXTURE_PATH_VALID, ['does-not-exist'], [], [], []),
       ).toThrowErrorMatchingInlineSnapshot(
-        '"Specified option \'--ignore-package does-not-exist\', but no such package detected in workspace."',
+        "[Error: Specified option '--ignore-package does-not-exist', but no such package detected in workspace.]",
       );
     });
 
@@ -108,7 +108,7 @@ describe('Utils | workspace', function () {
       expect(() =>
         getPackages(FIXTURE_PATH_VALID, [], [new RegExp('fake')], [], []),
       ).toThrowErrorMatchingInlineSnapshot(
-        '"Specified option \'--ignore-package-pattern /fake/\', but no matching packages detected in workspace."',
+        "[Error: Specified option '--ignore-package-pattern /fake/', but no matching packages detected in workspace.]",
       );
     });
 
@@ -135,7 +135,7 @@ describe('Utils | workspace', function () {
       expect(() =>
         getPackages(FIXTURE_PATH_VALID, [], [], ['fake'], []),
       ).toThrowErrorMatchingInlineSnapshot(
-        '"Specified option \'--ignore-path fake\', but no matching paths detected in workspace."',
+        "[Error: Specified option '--ignore-path fake', but no matching paths detected in workspace.]",
       );
     });
 
@@ -166,7 +166,7 @@ describe('Utils | workspace', function () {
       expect(() =>
         getPackages(FIXTURE_PATH_VALID, [], [], [], [new RegExp('fake')]),
       ).toThrowErrorMatchingInlineSnapshot(
-        '"Specified option \'--ignore-path-pattern /fake/\', but no matching paths detected in workspace."',
+        "[Error: Specified option '--ignore-path-pattern /fake/', but no matching paths detected in workspace.]",
       );
     });
 
@@ -218,7 +218,7 @@ describe('Utils | workspace', function () {
       expect(() =>
         getPackages(FIXTURE_PATH_NO_PACKAGE_JSON, [], [], [], []),
       ).toThrowErrorMatchingInlineSnapshot(
-        '"No package.json found at provided path."',
+        '[Error: No package.json found at provided path.]',
       );
     });
 
@@ -226,7 +226,7 @@ describe('Utils | workspace', function () {
       expect(() =>
         getPackages(FIXTURE_PATH_NOT_A_WORKSPACE, [], [], [], []),
       ).toThrowErrorMatchingInlineSnapshot(
-        '"Package at provided path has no workspaces specified."',
+        '[Error: Package at provided path has no workspaces specified.]',
       );
     });
 
@@ -234,7 +234,7 @@ describe('Utils | workspace', function () {
       expect(() =>
         getPackages(FIXTURE_PATH_WORKSPACE_NOT_AN_ARRAY, [], [], [], []),
       ).toThrowErrorMatchingInlineSnapshot(
-        '"package.json `workspaces` is not a string array."',
+        '[TypeError: package.json `workspaces` is not a string array.]',
       );
     });
 
@@ -248,7 +248,7 @@ describe('Utils | workspace', function () {
           [],
         ),
       ).toThrowErrorMatchingInlineSnapshot(
-        '"package.json `workspaces.packages` is not a string array."',
+        '[TypeError: package.json `workspaces.packages` is not a string array.]',
       );
     });
 
@@ -262,7 +262,7 @@ describe('Utils | workspace', function () {
           [],
         ),
       ).toThrowErrorMatchingInlineSnapshot(
-        '"pnpm-workspace.yaml `packages` is not a string array."',
+        '[TypeError: pnpm-workspace.yaml `packages` is not a string array.]',
       );
     });
   });
