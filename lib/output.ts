@@ -6,15 +6,20 @@ import {
 } from './semver.js';
 import type { Dependencies } from './types.js';
 
+/** Extracts the mismatching dependencies along with the versions seen of each. */
+function getMismatchingVersions(dependencies: Dependencies) {
+  return Object.entries(dependencies)
+    .filter(([, value]) => value.isMismatching)
+    .map(([dependency, value]) => ({ dependency, versions: value.versions }));
+}
+
 /**
  * Returns human-readable tables describing mismatching dependency versions.
  */
 export function dependenciesToMismatchSummary(
   dependencies: Dependencies,
 ): string {
-  const mismatchingDependencyVersions = Object.entries(dependencies)
-    .filter(([, value]) => value.isMismatching)
-    .map(([dependency, value]) => ({ dependency, versions: value.versions }));
+  const mismatchingDependencyVersions = getMismatchingVersions(dependencies);
 
   if (mismatchingDependencyVersions.length === 0) {
     throw new Error('No mismatching versions to output.');
@@ -70,9 +75,7 @@ export function dependenciesToMismatchSummary(
  * Returns a summary of the mismatching dependency versions that were fixed.
  */
 export function dependenciesToFixedSummary(dependencies: Dependencies): string {
-  const mismatchingDependencyVersions = Object.entries(dependencies)
-    .filter(([, value]) => value.isMismatching)
-    .map(([dependency, value]) => ({ dependency, versions: value.versions }));
+  const mismatchingDependencyVersions = getMismatchingVersions(dependencies);
 
   if (mismatchingDependencyVersions.length === 0) {
     throw new Error('No fixes to output.');
