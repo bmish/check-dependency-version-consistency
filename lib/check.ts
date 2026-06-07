@@ -31,9 +31,7 @@ export function check(
   dependencies: Dependencies;
 } {
   if (
-    options &&
-    options.depType &&
-    options.depType.some((dt) => !Object.keys(DEPENDENCY_TYPE).includes(dt))
+    options?.depType?.some((dt) => !Object.keys(DEPENDENCY_TYPE).includes(dt))
   ) {
     throw new Error(
       `Invalid depType provided. Choices are: ${Object.keys(
@@ -54,7 +52,7 @@ export function check(
 
     // Fallback to default if no depType(s) provided.
     depType:
-      options && options.depType && options.depType.length > 0
+      options?.depType && options.depType.length > 0
         ? options.depType
         : DEFAULT_DEP_TYPES,
   };
