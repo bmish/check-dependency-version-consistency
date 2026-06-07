@@ -335,7 +335,6 @@ function writeDependencyVersion(
   );
 }
 
-// eslint-disable-next-line complexity
 export function fixVersionsMismatching(
   packages: readonly Package[],
   mismatchingVersions: readonly DependencyAndVersions[],
@@ -388,97 +387,27 @@ export function fixVersionsMismatching(
     // Update the dependency version in each package.json.
     let isFixed = false;
     for (const package_ of packages) {
-      if (
-        package_.packageJson.devDependencies &&
-        package_.packageJson.devDependencies[mismatchingVersion.dependency] &&
-        package_.packageJson.devDependencies[mismatchingVersion.dependency] !==
-          fixedVersion
-      ) {
-        if (!dryrun) {
-          writeDependencyVersion(
-            package_.pathPackageJson,
-            package_.packageJsonEndsInNewline,
-            DEPENDENCY_TYPE.devDependencies,
-            mismatchingVersion.dependency,
-            fixedVersion,
-          );
+      for (const type of [
+        DEPENDENCY_TYPE.devDependencies,
+        DEPENDENCY_TYPE.dependencies,
+        DEPENDENCY_TYPE.optionalDependencies,
+        DEPENDENCY_TYPE.peerDependencies,
+        DEPENDENCY_TYPE.resolutions,
+      ]) {
+        const currentVersion =
+          package_.packageJson[type]?.[mismatchingVersion.dependency];
+        if (currentVersion && currentVersion !== fixedVersion) {
+          if (!dryrun) {
+            writeDependencyVersion(
+              package_.pathPackageJson,
+              package_.packageJsonEndsInNewline,
+              type,
+              mismatchingVersion.dependency,
+              fixedVersion,
+            );
+          }
+          isFixed = true;
         }
-        isFixed = true;
-      }
-
-      if (
-        package_.packageJson.dependencies &&
-        package_.packageJson.dependencies[mismatchingVersion.dependency] &&
-        package_.packageJson.dependencies[mismatchingVersion.dependency] !==
-          fixedVersion
-      ) {
-        if (!dryrun) {
-          writeDependencyVersion(
-            package_.pathPackageJson,
-            package_.packageJsonEndsInNewline,
-            DEPENDENCY_TYPE.dependencies,
-            mismatchingVersion.dependency,
-            fixedVersion,
-          );
-        }
-        isFixed = true;
-      }
-
-      if (
-        package_.packageJson.optionalDependencies &&
-        package_.packageJson.optionalDependencies[
-          mismatchingVersion.dependency
-        ] &&
-        package_.packageJson.optionalDependencies[
-          mismatchingVersion.dependency
-        ] !== fixedVersion
-      ) {
-        if (!dryrun) {
-          writeDependencyVersion(
-            package_.pathPackageJson,
-            package_.packageJsonEndsInNewline,
-            DEPENDENCY_TYPE.optionalDependencies,
-            mismatchingVersion.dependency,
-            fixedVersion,
-          );
-        }
-        isFixed = true;
-      }
-
-      if (
-        package_.packageJson.peerDependencies &&
-        package_.packageJson.peerDependencies[mismatchingVersion.dependency] &&
-        package_.packageJson.peerDependencies[mismatchingVersion.dependency] !==
-          fixedVersion
-      ) {
-        if (!dryrun) {
-          writeDependencyVersion(
-            package_.pathPackageJson,
-            package_.packageJsonEndsInNewline,
-            DEPENDENCY_TYPE.peerDependencies,
-            mismatchingVersion.dependency,
-            fixedVersion,
-          );
-        }
-        isFixed = true;
-      }
-
-      if (
-        package_.packageJson.resolutions &&
-        package_.packageJson.resolutions[mismatchingVersion.dependency] &&
-        package_.packageJson.resolutions[mismatchingVersion.dependency] !==
-          fixedVersion
-      ) {
-        if (!dryrun) {
-          writeDependencyVersion(
-            package_.pathPackageJson,
-            package_.packageJsonEndsInNewline,
-            DEPENDENCY_TYPE.resolutions,
-            mismatchingVersion.dependency,
-            fixedVersion,
-          );
-        }
-        isFixed = true;
       }
     }
 
