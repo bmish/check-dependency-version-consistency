@@ -89,13 +89,6 @@ export class Package {
     return existsSync(packageJsonPath);
   }
 
-  static some(
-    packages: readonly Package[],
-    callback: (package_: Package) => boolean,
-  ): boolean {
-    return packages.some((package_) => callback(package_));
-  }
-
   static comparator(package1: Package, package2: Package) {
     return package1.name.localeCompare(package2.name);
   }
