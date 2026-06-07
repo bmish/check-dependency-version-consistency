@@ -60,7 +60,6 @@ export function calculateVersionsForEachDependency(
   return dependenciesToVersionsSeen;
 }
 
-// eslint-disable-next-line complexity
 function recordDependencyVersionsForPackageJson(
   dependenciesToVersionsSeen: DependenciesToVersionsSeen,
   package_: Package,
@@ -76,84 +75,9 @@ function recordDependencyVersionsForPackageJson(
     );
   }
 
-  if (
-    depType.includes(DEPENDENCY_TYPE.dependencies) &&
-    package_.packageJson.dependencies
-  ) {
+  for (const type of depType) {
     for (const [dependency, dependencyVersion] of Object.entries(
-      package_.packageJson.dependencies,
-    )) {
-      if (dependencyVersion) {
-        recordDependencyVersion(
-          dependenciesToVersionsSeen,
-          dependency,
-          dependencyVersion,
-          package_,
-        );
-      }
-    }
-  }
-
-  if (
-    depType.includes(DEPENDENCY_TYPE.devDependencies) &&
-    package_.packageJson.devDependencies
-  ) {
-    for (const [dependency, dependencyVersion] of Object.entries(
-      package_.packageJson.devDependencies,
-    )) {
-      if (dependencyVersion) {
-        recordDependencyVersion(
-          dependenciesToVersionsSeen,
-          dependency,
-          dependencyVersion,
-          package_,
-        );
-      }
-    }
-  }
-
-  if (
-    depType.includes(DEPENDENCY_TYPE.optionalDependencies) &&
-    package_.packageJson.optionalDependencies
-  ) {
-    for (const [dependency, dependencyVersion] of Object.entries(
-      package_.packageJson.optionalDependencies,
-    )) {
-      if (dependencyVersion) {
-        recordDependencyVersion(
-          dependenciesToVersionsSeen,
-          dependency,
-          dependencyVersion,
-          package_,
-        );
-      }
-    }
-  }
-
-  if (
-    depType.includes(DEPENDENCY_TYPE.peerDependencies) &&
-    package_.packageJson.peerDependencies
-  ) {
-    for (const [dependency, dependencyVersion] of Object.entries(
-      package_.packageJson.peerDependencies,
-    )) {
-      if (dependencyVersion) {
-        recordDependencyVersion(
-          dependenciesToVersionsSeen,
-          dependency,
-          dependencyVersion,
-          package_,
-        );
-      }
-    }
-  }
-
-  if (
-    depType.includes(DEPENDENCY_TYPE.resolutions) &&
-    package_.packageJson.resolutions
-  ) {
-    for (const [dependency, dependencyVersion] of Object.entries(
-      package_.packageJson.resolutions,
+      package_.packageJson[type] ?? {},
     )) {
       if (dependencyVersion) {
         recordDependencyVersion(
