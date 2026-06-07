@@ -12,9 +12,16 @@ import {
 import { DEPENDENCY_TYPE } from './types.js';
 import type { DependencyType } from './types.js';
 
+/** A version of a dependency seen in a particular package. */
+type VersionSeen = {
+  package: Package;
+  version: string;
+  isLocalPackageVersion: boolean;
+};
+
 type DependenciesToVersionsSeen = Map<
   string,
-  { package: Package; version: string; isLocalPackageVersion: boolean }[] // Array can't be readonly since we are adding to it.
+  VersionSeen[] // Array can't be readonly since we are adding to it.
 >;
 
 /** A dependency, the versions present of it, and the packages each of those versions are seen in. */
@@ -48,7 +55,7 @@ export function calculateVersionsForEachDependency(
 ): DependenciesToVersionsSeen {
   const dependenciesToVersionsSeen: DependenciesToVersionsSeen = new Map<
     string,
-    { package: Package; version: string; isLocalPackageVersion: boolean }[]
+    VersionSeen[]
   >();
   for (const package_ of packages) {
     recordDependencyVersionsForPackageJson(
@@ -239,11 +246,7 @@ export function calculateDependenciesAndVersions(
 
 function versionsObjectsWithSortedPackages(
   versions: readonly string[],
-  versionObjects: readonly {
-    package: Package;
-    version: string;
-    isLocalPackageVersion: boolean;
-  }[],
+  versionObjects: readonly VersionSeen[],
 ) {
   return versions.map((version) => {
     const matchingVersionObjects = versionObjects.filter(
