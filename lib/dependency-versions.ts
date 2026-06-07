@@ -174,16 +174,12 @@ function recordDependencyVersion(
   package_: Package,
   isLocalPackageVersion = false,
 ) {
-  if (!dependenciesToVersionsSeen.has(dependency)) {
-    dependenciesToVersionsSeen.set(dependency, []);
+  let list = dependenciesToVersionsSeen.get(dependency);
+  if (!list) {
+    list = [];
+    dependenciesToVersionsSeen.set(dependency, list);
   }
-  const list = dependenciesToVersionsSeen.get(dependency);
-  /* v8 ignore start */
-  if (list) {
-    // `list` should always exist at this point, this if statement is just to please TypeScript.
-    list.push({ package: package_, version, isLocalPackageVersion });
-  }
-  /* v8 ignore stop */
+  list.push({ package: package_, version, isLocalPackageVersion });
 }
 
 export function calculateDependenciesAndVersions(
