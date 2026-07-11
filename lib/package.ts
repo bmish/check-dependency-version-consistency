@@ -1,12 +1,10 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
+// Keep in `dependencies` (not `devDependencies`): emitted into published `.d.ts`
+// reachable from the public `CDVC` API; moving it breaks consumers with
+// `skipLibCheck: false` (see #959, #985).
 import type { PackageJson } from 'type-fest';
 import { load } from 'js-yaml';
-
-// Keep `type-fest` in `dependencies` (not `devDependencies`): `PackageJson` is
-// emitted into published `.d.ts` files and is reachable from the public `CDVC`
-// API type graph. Moving it breaks consumer typechecking when `skipLibCheck`
-// is false (see #959, #985).
 
 /*
  * Class to represent all of the information we need to know about a package in a workspace.
