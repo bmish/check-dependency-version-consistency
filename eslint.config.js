@@ -1,17 +1,18 @@
 // @ts-check
 
 import js from '@eslint/js';
+import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript';
 import eslintPluginVitest from '@vitest/eslint-plugin';
-import * as eslintPluginImport from 'eslint-plugin-import';
+import { importX } from 'eslint-plugin-import-x';
 import eslintPluginN from 'eslint-plugin-n';
-import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'; // eslint-disable-line import/extensions -- false positive
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import eslintPluginUnicorn from 'eslint-plugin-unicorn';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   // Configs:
   js.configs.recommended,
-  eslintPluginImport.flatConfigs.typescript,
+  importX.flatConfigs.typescript,
   eslintPluginN.configs['flat/recommended'],
   eslintPluginPrettierRecommended,
   eslintPluginUnicorn.configs['flat/recommended'],
@@ -20,6 +21,12 @@ export default tseslint.config(
 
   // Individual rules:
   {
+    settings: {
+      // Prefer the modern resolver API over flatConfigs.typescript's legacy `typescript: true`.
+      'import-x/resolver': undefined,
+      'import-x/resolver-next': [createTypeScriptImportResolver()],
+    },
+
     rules: {
       'n/no-missing-import': 'off', // bug with recognizing node: prefix https://github.com/mysticatea/eslint-plugin-node/issues/275
 
@@ -104,29 +111,35 @@ export default tseslint.config(
       'sort-vars': 'error',
       yoda: 'error',
 
-      // import rules:
-      'import/default': 'error',
-      'import/export': 'error',
-      'import/extensions': ['error', 'always'],
-      'import/first': 'error',
-      'import/named': 'error',
-      'import/namespace': 'error',
-      'import/newline-after-import': 'error',
-      'import/no-absolute-path': 'error',
-      'import/no-cycle': 'error',
-      'import/no-deprecated': 'error',
-      'import/no-duplicates': 'error',
-      'import/no-dynamic-require': 'error',
-      'import/no-mutable-exports': 'error',
-      'import/no-named-as-default': 'error',
-      'import/no-named-as-default-member': 'error',
-      'import/no-named-default': 'error',
-      'import/no-self-import': 'error',
-      'import/no-unassigned-import': 'error',
-      'import/no-unresolved': 'off',
-      'import/no-unused-modules': 'error',
-      'import/no-useless-path-segments': 'error',
-      'import/no-webpack-loader-syntax': 'error',
+      // import-x rules:
+      'import-x/default': 'error',
+      'import-x/export': 'error',
+      // Require .js specifiers (NodeNext); don't require .ts because imports resolve via extensionAlias.
+      'import-x/extensions': [
+        'error',
+        'ignorePackages',
+        { js: 'always', ts: 'never', cts: 'never', mts: 'never' },
+      ],
+      'import-x/first': 'error',
+      'import-x/named': 'error',
+      'import-x/namespace': 'error',
+      'import-x/newline-after-import': 'error',
+      'import-x/no-absolute-path': 'error',
+      'import-x/no-cycle': 'error',
+      'import-x/no-deprecated': 'error',
+      'import-x/no-duplicates': 'error',
+      'import-x/no-dynamic-require': 'error',
+      'import-x/no-mutable-exports': 'error',
+      'import-x/no-named-as-default': 'error',
+      // Noisy with CJS default-export interop (semver, mock-fs, typescript-eslint).
+      'import-x/no-named-as-default-member': 'off',
+      'import-x/no-named-default': 'error',
+      'import-x/no-self-import': 'error',
+      'import-x/no-unassigned-import': 'error',
+      'import-x/no-unresolved': 'off',
+      'import-x/no-unused-modules': 'error',
+      'import-x/no-useless-path-segments': 'error',
+      'import-x/no-webpack-loader-syntax': 'error',
     },
 
     // typescript-eslint parser options:

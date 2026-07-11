@@ -64,10 +64,11 @@
     "@types/semver": "^7.5.0",
     "@typescript/native-preview": "^7.0.0-dev.20250601",
     "@vitest/coverage-v8": "^4.0.0",
-    "@vitest/eslint-plugin": "^1.2.1",
+    "@vitest/eslint-plugin": "^1.6.23",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.5",
-    "eslint-plugin-import": "^2.32.0",
+    "eslint-import-resolver-typescript": "^4.4.5",
+    "eslint-plugin-import-x": "^4.17.1",
     "eslint-plugin-n": "^17.2.0",
     "eslint-plugin-prettier": "^5.5.0",
     "eslint-plugin-unicorn": "^62.0.0",
@@ -78,7 +79,7 @@
     "prettier": "^3.7.4",
     "sort-package-json": "^3.6.0",
     "typescript": "^5.0.4",
-    "typescript-eslint": "^8.51.0",
+    "typescript-eslint": "^8.63.0",
     "vitest": "^4.0.0"
   },
   "engines": {
