@@ -1,4 +1,4 @@
-import chalk from 'chalk';
+import { styleText } from 'node:util';
 import { table } from 'table';
 import {
   compareVersionRangesSafe,
@@ -27,7 +27,11 @@ export function dependenciesToMismatchSummary(
 
   const tables = mismatchingDependencyVersions
     .map((object) => {
-      const headers = [chalk.bold(object.dependency), 'Usages', 'Packages'];
+      const headers = [
+        styleText('bold', object.dependency),
+        'Usages',
+        'Packages',
+      ];
 
       const usageCounts = object.versions.map(
         (versionObject) => versionObject.packages.length,
@@ -51,10 +55,10 @@ export function dependenciesToMismatchSummary(
                 )} other${usageCount - 3 === 1 ? '' : 's'}`
               : packageNames.join(', ');
           return [
-            chalk.redBright(versionObject.version),
+            styleText('redBright', versionObject.version),
             // Bold the usage count if it's the latest, as long as it's not the only usage count present.
             usageCount === latestUsageCount && hasMultipleUsageCounts
-              ? chalk.bold(usageCount)
+              ? styleText('bold', String(usageCount))
               : usageCount,
             packageListSentence,
           ];
