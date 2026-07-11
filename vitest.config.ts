@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/extensions -- vitest doesn't export .js
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
