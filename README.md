@@ -176,6 +176,10 @@ const result = {
 
 See [`lib/cli.ts`](./lib/cli.ts) for an example of how to use it.
 
+## Maintenance notes
+
+* **`type-fest` must stay in `dependencies`**, not `devDependencies`. It is only imported as a type, but `PackageJson` is emitted into published `.d.ts` files and is reachable from the public `CDVC` API. Moving it breaks TypeScript consumers when `skipLibCheck` is false (see [#959](https://github.com/bmish/check-dependency-version-consistency/pull/959), [#985](https://github.com/bmish/check-dependency-version-consistency/pull/985)).
+
 ## Related
 
 * [npm-package-json-lint](https://github.com/tclindner/npm-package-json-lint) — use this complementary tool to enforce that your dependency versions use consistent range types (i.e. [prefer-caret-version-dependencies](https://npmpackagejsonlint.org/docs/rules/dependencies/prefer-caret-version-dependencies), [prefer-caret-version-devDependencies](https://npmpackagejsonlint.org/docs/rules/dependencies/prefer-caret-version-devDependencies))

@@ -8,6 +8,8 @@ import { DEPENDENCY_TYPE } from './types.js';
 import type { Options } from './types.js';
 import { DEFAULT_DEP_TYPES } from './defaults.js';
 
+// See note in `package.ts` — `type-fest` must remain a runtime dependency.
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 function getCurrentPackageVersion(): string {
