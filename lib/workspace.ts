@@ -20,81 +20,74 @@ export function getPackages(
 
   const packages = accumulatePackages(root, ['.']);
 
-  for (const ignoredPackage of ignorePackages) {
-    if (
-      !Package.some(packages, (package_) => package_.name === ignoredPackage) // eslint-disable-line unicorn/no-array-method-this-argument,unicorn/no-array-callback-reference -- false positive
-    ) {
-      throw new Error(
-        `Specified option '--ignore-package ${ignoredPackage}', but no such package detected in workspace.`,
-      );
-    }
-  }
-
-  for (const ignoredPackagePattern of ignorePackagePatterns) {
-    if (
-      // eslint-disable-next-line unicorn/no-array-method-this-argument,unicorn/no-array-callback-reference -- false positive
-      !Package.some(packages, (package_) =>
-        ignoredPackagePattern.test(package_.name),
-      )
-    ) {
-      throw new Error(
-        `Specified option '--ignore-package-pattern ${String(
-          ignoredPackagePattern,
-        )}', but no matching packages detected in workspace.`,
-      );
-    }
-  }
-
-  for (const ignoredPath of ignorePaths) {
-    if (
-      // eslint-disable-next-line unicorn/no-array-method-this-argument,unicorn/no-array-callback-reference -- false positive
-      !Package.some(packages, (package_) =>
-        package_.pathRelative.includes(ignoredPath),
-      )
-    ) {
-      throw new Error(
-        `Specified option '--ignore-path ${ignoredPath}', but no matching paths detected in workspace.`,
-      );
-    }
-  }
-
-  for (const ignoredPathPattern of ignorePathPatterns) {
-    if (
-      // eslint-disable-next-line unicorn/no-array-method-this-argument,unicorn/no-array-callback-reference -- false positive
-      !Package.some(packages, (package_) =>
-        ignoredPathPattern.test(package_.pathRelative),
-      )
-    ) {
-      throw new Error(
-        `Specified option '--ignore-path-pattern ${String(
-          ignoredPathPattern,
-        )}', but no matching paths detected in workspace.`,
-      );
-    }
-  }
+  // Ensure each ignore option matches at least one package, otherwise it's likely a mistake.
+  assertEachMatches(
+    packages,
+    ignorePackages,
+    (package_, name) => package_.name === name,
+    (name) =>
+      `Specified option '--ignore-package ${name}', but no such package detected in workspace.`,
+  );
+  assertEachMatches(
+    packages,
+    ignorePackagePatterns,
+    (package_, pattern) => pattern.test(package_.name),
+    (pattern) =>
+      `Specified option '--ignore-package-pattern ${String(
+        pattern,
+      )}', but no matching packages detected in workspace.`,
+  );
+  assertEachMatches(
+    packages,
+    ignorePaths,
+    (package_, path) => package_.pathRelative.includes(path),
+    (path) =>
+      `Specified option '--ignore-path ${path}', but no matching paths detected in workspace.`,
+  );
+  assertEachMatches(
+    packages,
+    ignorePathPatterns,
+    (package_, pattern) => pattern.test(package_.pathRelative),
+    (pattern) =>
+      `Specified option '--ignore-path-pattern ${String(
+        pattern,
+      )}', but no matching paths detected in workspace.`,
+  );
 
   if (
-    ignorePackages.length > 0 ||
-    ignorePackagePatterns.length > 0 ||
-    ignorePaths.length > 0 ||
-    ignorePathPatterns.length > 0
+    ignorePackages.length === 0 &&
+    ignorePackagePatterns.length === 0 &&
+    ignorePaths.length === 0 &&
+    ignorePathPatterns.length === 0
   ) {
-    return packages.filter(
-      (package_) =>
-        !ignorePackages.includes(package_.name) &&
-        !ignorePackagePatterns.some((ignorePackagePattern) =>
-          package_.name.match(ignorePackagePattern),
-        ) &&
-        !ignorePaths.some((ignorePath) =>
-          package_.pathRelative.includes(ignorePath),
-        ) &&
-        !ignorePathPatterns.some((ignorePathPattern) =>
-          package_.pathRelative.match(ignorePathPattern),
-        ),
+    // Nothing to ignore. Return early to avoid touching `package_.name`, which throws for unnamed packages.
+    return packages;
+  }
+
+  function isIgnored(package_: Package): boolean {
+    return (
+      ignorePackages.includes(package_.name) ||
+      ignorePackagePatterns.some((pattern) => pattern.test(package_.name)) ||
+      ignorePaths.some((path) => package_.pathRelative.includes(path)) ||
+      ignorePathPatterns.some((pattern) => pattern.test(package_.pathRelative))
     );
   }
 
-  return packages;
+  return packages.filter((package_) => !isIgnored(package_));
+}
+
+/** Throws if any of the provided ignore entries matches no package in the workspace. */
+function assertEachMatches<T>(
+  packages: readonly Package[],
+  entries: readonly T[],
+  matches: (package_: Package, entry: T) => boolean,
+  makeError: (entry: T) => string,
+): void {
+  for (const entry of entries) {
+    if (!packages.some((package_) => matches(package_, entry))) {
+      throw new Error(makeError(entry));
+    }
+  }
 }
 
 // Expand workspace globs into concrete paths.
