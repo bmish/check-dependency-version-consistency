@@ -12,9 +12,16 @@ import {
 import { DEPENDENCY_TYPE } from './types.js';
 import type { DependencyType } from './types.js';
 
+/** A version of a dependency seen in a particular package. */
+type VersionSeen = {
+  package: Package;
+  version: string;
+  isLocalPackageVersion: boolean;
+};
+
 type DependenciesToVersionsSeen = Map<
   string,
-  { package: Package; version: string; isLocalPackageVersion: boolean }[] // Array can't be readonly since we are adding to it.
+  VersionSeen[] // Array can't be readonly since we are adding to it.
 >;
 
 /** A dependency, the versions present of it, and the packages each of those versions are seen in. */
@@ -48,7 +55,7 @@ export function calculateVersionsForEachDependency(
 ): DependenciesToVersionsSeen {
   const dependenciesToVersionsSeen: DependenciesToVersionsSeen = new Map<
     string,
-    { package: Package; version: string; isLocalPackageVersion: boolean }[]
+    VersionSeen[]
   >();
   for (const package_ of packages) {
     recordDependencyVersionsForPackageJson(
@@ -60,7 +67,6 @@ export function calculateVersionsForEachDependency(
   return dependenciesToVersionsSeen;
 }
 
-// eslint-disable-next-line complexity
 function recordDependencyVersionsForPackageJson(
   dependenciesToVersionsSeen: DependenciesToVersionsSeen,
   package_: Package,
@@ -76,84 +82,9 @@ function recordDependencyVersionsForPackageJson(
     );
   }
 
-  if (
-    depType.includes(DEPENDENCY_TYPE.dependencies) &&
-    package_.packageJson.dependencies
-  ) {
+  for (const type of depType) {
     for (const [dependency, dependencyVersion] of Object.entries(
-      package_.packageJson.dependencies,
-    )) {
-      if (dependencyVersion) {
-        recordDependencyVersion(
-          dependenciesToVersionsSeen,
-          dependency,
-          dependencyVersion,
-          package_,
-        );
-      }
-    }
-  }
-
-  if (
-    depType.includes(DEPENDENCY_TYPE.devDependencies) &&
-    package_.packageJson.devDependencies
-  ) {
-    for (const [dependency, dependencyVersion] of Object.entries(
-      package_.packageJson.devDependencies,
-    )) {
-      if (dependencyVersion) {
-        recordDependencyVersion(
-          dependenciesToVersionsSeen,
-          dependency,
-          dependencyVersion,
-          package_,
-        );
-      }
-    }
-  }
-
-  if (
-    depType.includes(DEPENDENCY_TYPE.optionalDependencies) &&
-    package_.packageJson.optionalDependencies
-  ) {
-    for (const [dependency, dependencyVersion] of Object.entries(
-      package_.packageJson.optionalDependencies,
-    )) {
-      if (dependencyVersion) {
-        recordDependencyVersion(
-          dependenciesToVersionsSeen,
-          dependency,
-          dependencyVersion,
-          package_,
-        );
-      }
-    }
-  }
-
-  if (
-    depType.includes(DEPENDENCY_TYPE.peerDependencies) &&
-    package_.packageJson.peerDependencies
-  ) {
-    for (const [dependency, dependencyVersion] of Object.entries(
-      package_.packageJson.peerDependencies,
-    )) {
-      if (dependencyVersion) {
-        recordDependencyVersion(
-          dependenciesToVersionsSeen,
-          dependency,
-          dependencyVersion,
-          package_,
-        );
-      }
-    }
-  }
-
-  if (
-    depType.includes(DEPENDENCY_TYPE.resolutions) &&
-    package_.packageJson.resolutions
-  ) {
-    for (const [dependency, dependencyVersion] of Object.entries(
-      package_.packageJson.resolutions,
+      package_.packageJson[type] ?? {},
     )) {
       if (dependencyVersion) {
         recordDependencyVersion(
@@ -174,16 +105,12 @@ function recordDependencyVersion(
   package_: Package,
   isLocalPackageVersion = false,
 ) {
-  if (!dependenciesToVersionsSeen.has(dependency)) {
-    dependenciesToVersionsSeen.set(dependency, []);
+  let list = dependenciesToVersionsSeen.get(dependency);
+  if (!list) {
+    list = [];
+    dependenciesToVersionsSeen.set(dependency, list);
   }
-  const list = dependenciesToVersionsSeen.get(dependency);
-  /* v8 ignore start */
-  if (list) {
-    // `list` should always exist at this point, this if statement is just to please TypeScript.
-    list.push({ package: package_, version, isLocalPackageVersion });
-  }
-  /* v8 ignore stop */
+  list.push({ package: package_, version, isLocalPackageVersion });
 }
 
 export function calculateDependenciesAndVersions(
@@ -239,11 +166,7 @@ export function calculateDependenciesAndVersions(
 
 function versionsObjectsWithSortedPackages(
   versions: readonly string[],
-  versionObjects: readonly {
-    package: Package;
-    version: string;
-    isLocalPackageVersion: boolean;
-  }[],
+  versionObjects: readonly VersionSeen[],
 ) {
   return versions.map((version) => {
     const matchingVersionObjects = versionObjects.filter(
@@ -335,7 +258,6 @@ function writeDependencyVersion(
   );
 }
 
-// eslint-disable-next-line complexity
 export function fixVersionsMismatching(
   packages: readonly Package[],
   mismatchingVersions: readonly DependencyAndVersions[],
@@ -388,97 +310,27 @@ export function fixVersionsMismatching(
     // Update the dependency version in each package.json.
     let isFixed = false;
     for (const package_ of packages) {
-      if (
-        package_.packageJson.devDependencies &&
-        package_.packageJson.devDependencies[mismatchingVersion.dependency] &&
-        package_.packageJson.devDependencies[mismatchingVersion.dependency] !==
-          fixedVersion
-      ) {
-        if (!dryrun) {
-          writeDependencyVersion(
-            package_.pathPackageJson,
-            package_.packageJsonEndsInNewline,
-            DEPENDENCY_TYPE.devDependencies,
-            mismatchingVersion.dependency,
-            fixedVersion,
-          );
+      for (const type of [
+        DEPENDENCY_TYPE.devDependencies,
+        DEPENDENCY_TYPE.dependencies,
+        DEPENDENCY_TYPE.optionalDependencies,
+        DEPENDENCY_TYPE.peerDependencies,
+        DEPENDENCY_TYPE.resolutions,
+      ]) {
+        const currentVersion =
+          package_.packageJson[type]?.[mismatchingVersion.dependency];
+        if (currentVersion && currentVersion !== fixedVersion) {
+          if (!dryrun) {
+            writeDependencyVersion(
+              package_.pathPackageJson,
+              package_.packageJsonEndsInNewline,
+              type,
+              mismatchingVersion.dependency,
+              fixedVersion,
+            );
+          }
+          isFixed = true;
         }
-        isFixed = true;
-      }
-
-      if (
-        package_.packageJson.dependencies &&
-        package_.packageJson.dependencies[mismatchingVersion.dependency] &&
-        package_.packageJson.dependencies[mismatchingVersion.dependency] !==
-          fixedVersion
-      ) {
-        if (!dryrun) {
-          writeDependencyVersion(
-            package_.pathPackageJson,
-            package_.packageJsonEndsInNewline,
-            DEPENDENCY_TYPE.dependencies,
-            mismatchingVersion.dependency,
-            fixedVersion,
-          );
-        }
-        isFixed = true;
-      }
-
-      if (
-        package_.packageJson.optionalDependencies &&
-        package_.packageJson.optionalDependencies[
-          mismatchingVersion.dependency
-        ] &&
-        package_.packageJson.optionalDependencies[
-          mismatchingVersion.dependency
-        ] !== fixedVersion
-      ) {
-        if (!dryrun) {
-          writeDependencyVersion(
-            package_.pathPackageJson,
-            package_.packageJsonEndsInNewline,
-            DEPENDENCY_TYPE.optionalDependencies,
-            mismatchingVersion.dependency,
-            fixedVersion,
-          );
-        }
-        isFixed = true;
-      }
-
-      if (
-        package_.packageJson.peerDependencies &&
-        package_.packageJson.peerDependencies[mismatchingVersion.dependency] &&
-        package_.packageJson.peerDependencies[mismatchingVersion.dependency] !==
-          fixedVersion
-      ) {
-        if (!dryrun) {
-          writeDependencyVersion(
-            package_.pathPackageJson,
-            package_.packageJsonEndsInNewline,
-            DEPENDENCY_TYPE.peerDependencies,
-            mismatchingVersion.dependency,
-            fixedVersion,
-          );
-        }
-        isFixed = true;
-      }
-
-      if (
-        package_.packageJson.resolutions &&
-        package_.packageJson.resolutions[mismatchingVersion.dependency] &&
-        package_.packageJson.resolutions[mismatchingVersion.dependency] !==
-          fixedVersion
-      ) {
-        if (!dryrun) {
-          writeDependencyVersion(
-            package_.pathPackageJson,
-            package_.packageJsonEndsInNewline,
-            DEPENDENCY_TYPE.resolutions,
-            mismatchingVersion.dependency,
-            fixedVersion,
-          );
-        }
-        isFixed = true;
       }
     }
 
