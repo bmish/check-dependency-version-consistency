@@ -1,8 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
-// Keep in `dependencies` (not `devDependencies`): emitted into published `.d.ts`
-// reachable from the public `CDVC` API; moving it breaks consumers with
-// `skipLibCheck: false` (see #959, #985).
+// Keep in `dependencies` (not `devDependencies`): emitted into published `.d.ts` reachable from the public `CDVC` API; moving it breaks consumers with `skipLibCheck: false` (see #959, #985).
 import type { PackageJson } from 'type-fest';
 import { load } from 'js-yaml';
 
