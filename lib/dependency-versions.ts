@@ -1,7 +1,6 @@
-import { readFileSync, writeFileSync } from 'node:fs';
 import semver from 'semver';
-import type { PackageJson } from 'type-fest';
 import { DEFAULT_DEP_TYPES } from './defaults.js';
+import { editJsonFile } from './edit-json-file.js';
 import { Package } from './package.js';
 import {
   compareVersionRanges,
@@ -237,12 +236,6 @@ export function filterOutIgnoredDependencies(
   return mismatchingVersions;
 }
 
-/** Detect JSON indent from file contents. Returns spaces/tabs string, or 0 for compact JSON. */
-export function detectJsonIndent(contents: string): string | number {
-  const match = /\n([ \t]+)"/.exec(contents);
-  return match?.[1] ?? 0;
-}
-
 function writeDependencyVersion(
   packageJsonPath: string,
   packageJsonEndsInNewline: boolean,
@@ -250,23 +243,9 @@ function writeDependencyVersion(
   dependencyName: string,
   newVersion: string,
 ) {
-  const contents = readFileSync(packageJsonPath, 'utf8');
-  const packageJson = JSON.parse(contents) as PackageJson;
-  // Caller only invokes this when the dependency already exists under `type`.
-  packageJson[type] = {
-    ...packageJson[type],
-    [dependencyName]: newVersion,
-  };
-
-  let output = JSON.stringify(
-    packageJson,
-    undefined,
-    detectJsonIndent(contents),
-  );
-  if (packageJsonEndsInNewline) {
-    output += '\n';
-  }
-  writeFileSync(packageJsonPath, output);
+  editJsonFile(packageJsonPath, {
+    endsWithNewline: packageJsonEndsInNewline,
+  }).set([type, dependencyName], newVersion);
 }
 
 export function fixVersionsMismatching(

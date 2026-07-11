@@ -1,7 +1,6 @@
 import {
   calculateVersionsForEachDependency,
   calculateDependenciesAndVersions,
-  detectJsonIndent,
   filterOutIgnoredDependencies,
   fixVersionsMismatching,
 } from '../../lib/dependency-versions.js';
@@ -388,20 +387,6 @@ describe('Utils | dependency-versions', function () {
       expect(
         filterOutIgnoredDependencies(dependencyVersions, [], []).length,
       ).toStrictEqual(3);
-    });
-  });
-
-  describe('#detectJsonIndent', function () {
-    it('detects two-space indent', function () {
-      expect(detectJsonIndent('{\n  "name": "foo"\n}\n')).toBe('  ');
-    });
-
-    it('detects tab indent', function () {
-      expect(detectJsonIndent('{\n\t"name": "foo"\n}\n')).toBe('\t');
-    });
-
-    it('returns 0 for compact JSON', function () {
-      expect(detectJsonIndent('{"name":"foo"}')).toBe(0);
     });
   });
 
