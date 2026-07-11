@@ -1,6 +1,7 @@
 import {
   calculateVersionsForEachDependency,
   calculateDependenciesAndVersions,
+  detectJsonIndent,
   filterOutIgnoredDependencies,
   fixVersionsMismatching,
 } from '../../lib/dependency-versions.js';
@@ -390,6 +391,20 @@ describe('Utils | dependency-versions', function () {
     });
   });
 
+  describe('#detectJsonIndent', function () {
+    it('detects two-space indent', function () {
+      expect(detectJsonIndent('{\n  "name": "foo"\n}\n')).toBe('  ');
+    });
+
+    it('detects tab indent', function () {
+      expect(detectJsonIndent('{\n\t"name": "foo"\n}\n')).toBe('\t');
+    });
+
+    it('returns 0 for compact JSON', function () {
+      expect(detectJsonIndent('{"name":"foo"}')).toBe(0);
+    });
+  });
+
   describe('#fixVersionsMismatching', function () {
     describe('inconsistent dependency versions', function () {
       beforeEach(function () {
@@ -514,6 +529,10 @@ describe('Utils | dependency-versions', function () {
           packageJson2.devDependencies &&
             packageJson2.devDependencies['@types/one'],
         ).toStrictEqual('1.0.1');
+
+        // Preserves trailing newline only when the original file had one.
+        expect(packageJson1Contents.endsWith('\n')).toBe(false);
+        expect(packageJson2Contents.endsWith('\n')).toBe(true);
 
         // Check return value.
         expect(notFixable).toStrictEqual([
@@ -861,6 +880,98 @@ describe('Utils | dependency-versions', function () {
             ],
           },
         ]);
+      });
+    });
+
+    describe('preserves formatting', function () {
+      afterEach(function () {
+        mockFs.restore();
+      });
+
+      it('preserves two-space indent and trailing newline', function () {
+        mockFs({
+          'package.json': JSON.stringify({ workspaces: ['*'] }, undefined, 2),
+          package1: {
+            'package.json': `${JSON.stringify(
+              {
+                name: 'package1',
+                dependencies: { foo: '^1.0.0' },
+              },
+              undefined,
+              2,
+            )}\n`,
+          },
+          package2: {
+            'package.json': `${JSON.stringify(
+              {
+                name: 'package2',
+                dependencies: { foo: '^2.0.0' },
+              },
+              undefined,
+              2,
+            )}\n`,
+          },
+        });
+
+        const packages = getPackagesHelper('.');
+        fixVersionsMismatching(
+          packages,
+          calculateDependenciesAndVersions(
+            calculateVersionsForEachDependency(packages),
+          ),
+        );
+
+        const packageJson1Contents = readFileSync(
+          'package1/package.json',
+          'utf8',
+        );
+        expect(packageJson1Contents).toBe(
+          `${JSON.stringify(
+            {
+              name: 'package1',
+              dependencies: { foo: '^2.0.0' },
+            },
+            undefined,
+            2,
+          )}\n`,
+        );
+      });
+
+      it('preserves compact JSON without trailing newline', function () {
+        mockFs({
+          'package.json': JSON.stringify({ workspaces: ['*'] }),
+          package1: {
+            'package.json': JSON.stringify({
+              name: 'package1',
+              dependencies: { foo: '^1.0.0' },
+            }),
+          },
+          package2: {
+            'package.json': JSON.stringify({
+              name: 'package2',
+              dependencies: { foo: '^2.0.0' },
+            }),
+          },
+        });
+
+        const packages = getPackagesHelper('.');
+        fixVersionsMismatching(
+          packages,
+          calculateDependenciesAndVersions(
+            calculateVersionsForEachDependency(packages),
+          ),
+        );
+
+        const packageJson1Contents = readFileSync(
+          'package1/package.json',
+          'utf8',
+        );
+        expect(packageJson1Contents).toBe(
+          JSON.stringify({
+            name: 'package1',
+            dependencies: { foo: '^2.0.0' },
+          }),
+        );
       });
     });
 

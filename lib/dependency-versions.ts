@@ -1,5 +1,6 @@
-import editJsonFile from 'edit-json-file';
+import { readFileSync, writeFileSync } from 'node:fs';
 import semver from 'semver';
+import type { PackageJson } from 'type-fest';
 import { DEFAULT_DEP_TYPES } from './defaults.js';
 import { Package } from './package.js';
 import {
@@ -236,6 +237,12 @@ export function filterOutIgnoredDependencies(
   return mismatchingVersions;
 }
 
+/** Detect JSON indent from file contents. Returns spaces/tabs string, or 0 for compact JSON. */
+export function detectJsonIndent(contents: string): string | number {
+  const match = /\n([ \t]+)"/.exec(contents);
+  return match?.[1] ?? 0;
+}
+
 function writeDependencyVersion(
   packageJsonPath: string,
   packageJsonEndsInNewline: boolean,
@@ -243,19 +250,23 @@ function writeDependencyVersion(
   dependencyName: string,
   newVersion: string,
 ) {
-  const packageJsonEditor = editJsonFile(packageJsonPath, {
-    autosave: true,
-    stringify_eol: packageJsonEndsInNewline, // If a newline at end of file exists, keep it.
-  });
+  const contents = readFileSync(packageJsonPath, 'utf8');
+  const packageJson = JSON.parse(contents) as PackageJson;
+  // Caller only invokes this when the dependency already exists under `type`.
+  packageJson[type] = {
+    ...packageJson[type],
+    [dependencyName]: newVersion,
+  };
 
-  packageJsonEditor.set(
-    `${type}.${dependencyName.replaceAll(
-      '.', // Escape dots to avoid creating unwanted nested properties.
-      String.raw`\.`,
-    )}`,
-    newVersion,
-    { preservePaths: false }, // Disable `preservePaths` so that nested dependency names (i.e. @types/jest) won't prevent the intentional dot in the path we provide from working.
+  let output = JSON.stringify(
+    packageJson,
+    undefined,
+    detectJsonIndent(contents),
   );
+  if (packageJsonEndsInNewline) {
+    output += '\n';
+  }
+  writeFileSync(packageJsonPath, output);
 }
 
 export function fixVersionsMismatching(
