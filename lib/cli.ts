@@ -1,7 +1,8 @@
 import { Command, Argument } from 'commander';
 import { readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
-// See note on the `type-fest` import in `package.ts`.
+// Keep in `dependencies` (not `devDependencies`): see note on the `type-fest`
+// import in `package.ts`.
 import type { PackageJson } from 'type-fest';
 import { fileURLToPath } from 'node:url';
 import { CDVC } from './cdvc.js';
