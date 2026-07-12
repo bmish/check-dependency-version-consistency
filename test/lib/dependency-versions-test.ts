@@ -17,6 +17,7 @@ import {
   FIXTURE_PATH_VALID_WITH_COMMENTS,
   FIXTURE_PATH_VALID_WITH_WORKSPACE_PREFIX,
   FIXTURE_PATH_INCONSISTENT_WITH_WORKSPACE_PREFIX,
+  FIXTURE_PATH_SELF_REFERENCE,
 } from '../fixtures/index.js';
 import { DEPENDENCY_TYPE } from '../../lib/types.js';
 import mockFs from 'mock-fs';
@@ -280,6 +281,58 @@ describe('Utils | dependency-versions', function () {
               ],
             },
           ],
+        },
+      ]);
+    });
+
+    it('ignores non-semver self-references but records semver self-deps', function () {
+      const dependencyVersions = calculateVersionsForEachDependency(
+        getPackagesHelper(FIXTURE_PATH_SELF_REFERENCE),
+      );
+      const dependenciesAndVersions =
+        calculateDependenciesAndVersions(dependencyVersions);
+      const dependenciesAndVersionsWithMismatches =
+        dependenciesAndVersions.filter(({ versions }) => versions.length > 1);
+      expect(dependenciesAndVersionsWithMismatches).toStrictEqual([]);
+
+      // file:./ self-reference should not appear among package1's recorded versions.
+      expect(
+        dependencyVersions.get('package1')?.map((entry) => ({
+          version: entry.version,
+          isLocalPackageVersion: entry.isLocalPackageVersion,
+          path: entry.package.path,
+        })),
+      ).toStrictEqual([
+        {
+          version: '1.2.3',
+          isLocalPackageVersion: true,
+          path: join(FIXTURE_PATH_SELF_REFERENCE, 'package1'),
+        },
+      ]);
+
+      // Semver self-dep should still be recorded for package2 (along with
+      // package1's dependency on package2).
+      expect(
+        dependencyVersions.get('package2')?.map((entry) => ({
+          version: entry.version,
+          isLocalPackageVersion: entry.isLocalPackageVersion,
+          path: entry.package.path,
+        })),
+      ).toStrictEqual([
+        {
+          version: '^1.0.0',
+          isLocalPackageVersion: false,
+          path: join(FIXTURE_PATH_SELF_REFERENCE, 'package1'),
+        },
+        {
+          version: '1.0.0',
+          isLocalPackageVersion: true,
+          path: join(FIXTURE_PATH_SELF_REFERENCE, 'package2'),
+        },
+        {
+          version: '^1.0.0',
+          isLocalPackageVersion: false,
+          path: join(FIXTURE_PATH_SELF_REFERENCE, 'package2'),
         },
       ]);
     });
