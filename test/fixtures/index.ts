@@ -105,3 +105,5 @@ export const FIXTURE_PATH_INCONSISTENT_WITH_WORKSPACE_PREFIX = join(
   FIXTURE_PATH,
   'inconsistent-with-workspace-prefix',
 );
+
+export const FIXTURE_PATH_SELF_REFERENCE = join(FIXTURE_PATH, 'self-reference');
