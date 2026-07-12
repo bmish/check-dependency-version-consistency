@@ -18,6 +18,7 @@ import {
   FIXTURE_PATH_VALID_WITH_WORKSPACE_PREFIX,
   FIXTURE_PATH_INCONSISTENT_WITH_WORKSPACE_PREFIX,
 } from '../fixtures/index.js';
+import type { Package } from '../../lib/package.js';
 import { DEPENDENCY_TYPE } from '../../lib/types.js';
 import mockFs from 'mock-fs';
 import { readFileSync } from 'node:fs';
@@ -56,25 +57,31 @@ describe('Utils | dependency-versions', function () {
             {
               version: '^7.8.9',
               packages: [
-                expect.objectContaining({
-                  path: join(
-                    FIXTURE_PATH_INCONSISTENT_VERSIONS,
-                    '@scope1',
-                    'package1',
-                  ),
-                }),
+                {
+                  package: expect.objectContaining({
+                    path: join(
+                      FIXTURE_PATH_INCONSISTENT_VERSIONS,
+                      '@scope1',
+                      'package1',
+                    ),
+                  }) as Package,
+                  type: DEPENDENCY_TYPE.devDependencies,
+                },
               ],
             },
             {
               version: '^8.0.0',
               packages: [
-                expect.objectContaining({
-                  path: join(
-                    FIXTURE_PATH_INCONSISTENT_VERSIONS,
-                    '@scope1',
-                    'package2',
-                  ),
-                }),
+                {
+                  package: expect.objectContaining({
+                    path: join(
+                      FIXTURE_PATH_INCONSISTENT_VERSIONS,
+                      '@scope1',
+                      'package2',
+                    ),
+                  }) as Package,
+                  type: DEPENDENCY_TYPE.devDependencies,
+                },
               ],
             },
           ],
@@ -85,35 +92,47 @@ describe('Utils | dependency-versions', function () {
             {
               version: '1.2.0',
               packages: [
-                expect.objectContaining({
-                  path: join(FIXTURE_PATH_INCONSISTENT_VERSIONS),
-                }),
-                expect.objectContaining({
-                  path: join(
-                    FIXTURE_PATH_INCONSISTENT_VERSIONS,
-                    '@scope1',
-                    'package2',
-                  ),
-                }),
-                expect.objectContaining({
-                  path: join(
-                    FIXTURE_PATH_INCONSISTENT_VERSIONS,
-                    '@scope1',
-                    'package3',
-                  ),
-                }),
+                {
+                  package: expect.objectContaining({
+                    path: join(FIXTURE_PATH_INCONSISTENT_VERSIONS),
+                  }) as Package,
+                  type: DEPENDENCY_TYPE.devDependencies,
+                },
+                {
+                  package: expect.objectContaining({
+                    path: join(
+                      FIXTURE_PATH_INCONSISTENT_VERSIONS,
+                      '@scope1',
+                      'package2',
+                    ),
+                  }) as Package,
+                  type: DEPENDENCY_TYPE.dependencies,
+                },
+                {
+                  package: expect.objectContaining({
+                    path: join(
+                      FIXTURE_PATH_INCONSISTENT_VERSIONS,
+                      '@scope1',
+                      'package3',
+                    ),
+                  }) as Package,
+                  type: DEPENDENCY_TYPE.dependencies,
+                },
               ],
             },
             {
               version: '1.3.0',
               packages: [
-                expect.objectContaining({
-                  path: join(
-                    FIXTURE_PATH_INCONSISTENT_VERSIONS,
-                    '@scope1',
-                    'package1',
-                  ),
-                }),
+                {
+                  package: expect.objectContaining({
+                    path: join(
+                      FIXTURE_PATH_INCONSISTENT_VERSIONS,
+                      '@scope1',
+                      'package1',
+                    ),
+                  }) as Package,
+                  type: DEPENDENCY_TYPE.dependencies,
+                },
               ],
             },
           ],
@@ -161,23 +180,29 @@ describe('Utils | dependency-versions', function () {
             {
               version: '^0.0.0',
               packages: [
-                expect.objectContaining({
-                  path: join(
-                    FIXTURE_PATH_INCONSISTENT_LOCAL_PACKAGE_VERSION,
-                    'package1',
-                  ),
-                }),
+                {
+                  package: expect.objectContaining({
+                    path: join(
+                      FIXTURE_PATH_INCONSISTENT_LOCAL_PACKAGE_VERSION,
+                      'package1',
+                    ),
+                  }) as Package,
+                  type: DEPENDENCY_TYPE.dependencies,
+                },
               ],
             },
             {
               version: '1.0.0',
               packages: [
-                expect.objectContaining({
-                  path: join(
-                    FIXTURE_PATH_INCONSISTENT_LOCAL_PACKAGE_VERSION,
-                    'package2',
-                  ),
-                }),
+                {
+                  package: expect.objectContaining({
+                    path: join(
+                      FIXTURE_PATH_INCONSISTENT_LOCAL_PACKAGE_VERSION,
+                      'package2',
+                    ),
+                  }) as Package,
+                  type: undefined,
+                },
               ],
             },
           ],
@@ -200,25 +225,34 @@ describe('Utils | dependency-versions', function () {
             {
               version: '^1.2.0',
               packages: [
-                expect.objectContaining({
-                  path: FIXTURE_PATH_RESOLUTIONS,
-                }),
+                {
+                  package: expect.objectContaining({
+                    path: FIXTURE_PATH_RESOLUTIONS,
+                  }) as Package,
+                  type: DEPENDENCY_TYPE.devDependencies,
+                },
               ],
             },
             {
               version: '1.3.0',
               packages: [
-                expect.objectContaining({
-                  path: join(FIXTURE_PATH_RESOLUTIONS, 'package1'),
-                }),
+                {
+                  package: expect.objectContaining({
+                    path: join(FIXTURE_PATH_RESOLUTIONS, 'package1'),
+                  }) as Package,
+                  type: DEPENDENCY_TYPE.dependencies,
+                },
               ],
             },
             {
               version: '^2.0.0',
               packages: [
-                expect.objectContaining({
-                  path: FIXTURE_PATH_RESOLUTIONS,
-                }),
+                {
+                  package: expect.objectContaining({
+                    path: FIXTURE_PATH_RESOLUTIONS,
+                  }) as Package,
+                  type: DEPENDENCY_TYPE.resolutions,
+                },
               ],
             },
           ],
@@ -263,20 +297,26 @@ describe('Utils | dependency-versions', function () {
             {
               version: 'workspace:*',
               packages: [
-                expect.objectContaining({
-                  path: FIXTURE_PATH_INCONSISTENT_WITH_WORKSPACE_PREFIX,
-                }),
+                {
+                  package: expect.objectContaining({
+                    path: FIXTURE_PATH_INCONSISTENT_WITH_WORKSPACE_PREFIX,
+                  }) as Package,
+                  type: DEPENDENCY_TYPE.dependencies,
+                },
               ],
             },
             {
               version: 'workspace:^',
               packages: [
-                expect.objectContaining({
-                  path: join(
-                    FIXTURE_PATH_INCONSISTENT_WITH_WORKSPACE_PREFIX,
-                    'package2',
-                  ),
-                }),
+                {
+                  package: expect.objectContaining({
+                    path: join(
+                      FIXTURE_PATH_INCONSISTENT_WITH_WORKSPACE_PREFIX,
+                      'package2',
+                    ),
+                  }) as Package,
+                  type: DEPENDENCY_TYPE.dependencies,
+                },
               ],
             },
           ],
@@ -524,17 +564,23 @@ describe('Utils | dependency-versions', function () {
               {
                 version: '^3.0.0',
                 packages: [
-                  expect.objectContaining({
-                    path: join('@scope1', 'package1'),
-                  }),
+                  {
+                    package: expect.objectContaining({
+                      path: join('@scope1', 'package1'),
+                    }) as Package,
+                    type: DEPENDENCY_TYPE.dependencies,
+                  },
                 ],
               },
               {
                 version: 'invalidVersion',
                 packages: [
-                  expect.objectContaining({
-                    path: join('@scope1', 'package2'),
-                  }),
+                  {
+                    package: expect.objectContaining({
+                      path: join('@scope1', 'package2'),
+                    }) as Package,
+                    type: DEPENDENCY_TYPE.dependencies,
+                  },
                 ],
               },
             ],
@@ -548,17 +594,23 @@ describe('Utils | dependency-versions', function () {
               {
                 version: '1.0.0',
                 packages: [
-                  expect.objectContaining({
-                    path: join('@scope1', 'package2'),
-                  }),
+                  {
+                    package: expect.objectContaining({
+                      path: join('@scope1', 'package2'),
+                    }) as Package,
+                    type: DEPENDENCY_TYPE.devDependencies,
+                  },
                 ],
               },
               {
                 version: '1.0.1',
                 packages: [
-                  expect.objectContaining({
-                    path: join('@scope1', 'package1'),
-                  }),
+                  {
+                    package: expect.objectContaining({
+                      path: join('@scope1', 'package1'),
+                    }) as Package,
+                    type: DEPENDENCY_TYPE.devDependencies,
+                  },
                 ],
               },
             ],
@@ -569,17 +621,23 @@ describe('Utils | dependency-versions', function () {
               {
                 version: '5.0.0',
                 packages: [
-                  expect.objectContaining({
-                    path: join('@scope1', 'package1'),
-                  }),
+                  {
+                    package: expect.objectContaining({
+                      path: join('@scope1', 'package1'),
+                    }) as Package,
+                    type: DEPENDENCY_TYPE.dependencies,
+                  },
                 ],
               },
               {
                 version: '~5.5.0',
                 packages: [
-                  expect.objectContaining({
-                    path: join('@scope1', 'package2'),
-                  }),
+                  {
+                    package: expect.objectContaining({
+                      path: join('@scope1', 'package2'),
+                    }) as Package,
+                    type: DEPENDENCY_TYPE.dependencies,
+                  },
                 ],
               },
             ],
@@ -590,20 +648,29 @@ describe('Utils | dependency-versions', function () {
               {
                 version: '^1.0.0',
                 packages: [
-                  expect.objectContaining({
-                    path: '.',
-                  }),
-                  expect.objectContaining({
-                    path: join('@scope1', 'package1'),
-                  }),
+                  {
+                    package: expect.objectContaining({
+                      path: '.',
+                    }) as Package,
+                    type: DEPENDENCY_TYPE.devDependencies,
+                  },
+                  {
+                    package: expect.objectContaining({
+                      path: join('@scope1', 'package1'),
+                    }) as Package,
+                    type: DEPENDENCY_TYPE.dependencies,
+                  },
                 ],
               },
               {
                 version: '^2.0.0',
                 packages: [
-                  expect.objectContaining({
-                    path: join('@scope1', 'package2'),
-                  }),
+                  {
+                    package: expect.objectContaining({
+                      path: join('@scope1', 'package2'),
+                    }) as Package,
+                    type: DEPENDENCY_TYPE.dependencies,
+                  },
                 ],
               },
             ],
@@ -614,17 +681,23 @@ describe('Utils | dependency-versions', function () {
               {
                 version: '^4.0.0',
                 packages: [
-                  expect.objectContaining({
-                    path: join('@scope1', 'package2'),
-                  }),
+                  {
+                    package: expect.objectContaining({
+                      path: join('@scope1', 'package2'),
+                    }) as Package,
+                    type: DEPENDENCY_TYPE.devDependencies,
+                  },
                 ],
               },
               {
                 version: '^4.1.0',
                 packages: [
-                  expect.objectContaining({
-                    path: join('@scope1', 'package1'),
-                  }),
+                  {
+                    package: expect.objectContaining({
+                      path: join('@scope1', 'package1'),
+                    }) as Package,
+                    type: DEPENDENCY_TYPE.devDependencies,
+                  },
                 ],
               },
             ],
@@ -723,15 +796,36 @@ describe('Utils | dependency-versions', function () {
             versions: [
               {
                 version: '^0.0.0',
-                packages: [expect.objectContaining({ path: 'package3' })],
+                packages: [
+                  {
+                    package: expect.objectContaining({
+                      path: 'package3',
+                    }) as Package,
+                    type: DEPENDENCY_TYPE.dependencies,
+                  },
+                ],
               },
               {
                 version: '1.0.0',
-                packages: [expect.objectContaining({ path: 'package1' })],
+                packages: [
+                  {
+                    package: expect.objectContaining({
+                      path: 'package1',
+                    }) as Package,
+                    type: undefined,
+                  },
+                ],
               },
               {
                 version: '^2.0.0',
-                packages: [expect.objectContaining({ path: 'package2' })],
+                packages: [
+                  {
+                    package: expect.objectContaining({
+                      path: 'package2',
+                    }) as Package,
+                    type: DEPENDENCY_TYPE.dependencies,
+                  },
+                ],
               },
             ],
           },
@@ -745,17 +839,23 @@ describe('Utils | dependency-versions', function () {
               {
                 version: '^1.0.0',
                 packages: [
-                  expect.objectContaining({
-                    path: 'package1',
-                  }),
+                  {
+                    package: expect.objectContaining({
+                      path: 'package1',
+                    }) as Package,
+                    type: DEPENDENCY_TYPE.dependencies,
+                  },
                 ],
               },
               {
                 version: '2.0.0',
                 packages: [
-                  expect.objectContaining({
-                    path: 'package2',
-                  }),
+                  {
+                    package: expect.objectContaining({
+                      path: 'package2',
+                    }) as Package,
+                    type: undefined,
+                  },
                 ],
               },
             ],
@@ -837,25 +937,34 @@ describe('Utils | dependency-versions', function () {
               {
                 version: '^1.0.0',
                 packages: [
-                  expect.objectContaining({
-                    path: '.',
-                  }),
+                  {
+                    package: expect.objectContaining({
+                      path: '.',
+                    }) as Package,
+                    type: DEPENDENCY_TYPE.resolutions,
+                  },
                 ],
               },
               {
                 version: '^1.2.0',
                 packages: [
-                  expect.objectContaining({
-                    path: '.',
-                  }),
+                  {
+                    package: expect.objectContaining({
+                      path: '.',
+                    }) as Package,
+                    type: DEPENDENCY_TYPE.devDependencies,
+                  },
                 ],
               },
               {
                 version: '^2.0.0',
                 packages: [
-                  expect.objectContaining({
-                    path: 'package1',
-                  }),
+                  {
+                    package: expect.objectContaining({
+                      path: 'package1',
+                    }) as Package,
+                    type: DEPENDENCY_TYPE.dependencies,
+                  },
                 ],
               },
             ],

@@ -3,7 +3,7 @@ import {
   dependenciesToFixedSummary,
   dependenciesToMismatchSummary,
 } from './output.js';
-import type { Dependencies, Options } from './types.js';
+import type { Dependencies, DependencyType, Options } from './types.js';
 
 /** Relevant public data about a dependency. */
 type Dependency = {
@@ -12,7 +12,10 @@ type Dependency = {
   isMismatching: boolean;
   versions: readonly {
     version: string;
-    packages: readonly { pathRelative: string }[];
+    packages: readonly {
+      pathRelative: string;
+      type?: DependencyType;
+    }[];
   }[];
 };
 
@@ -64,7 +67,8 @@ export class CDVC {
       versions: dep.versions.map((version) => ({
         version: version.version,
         packages: version.packages.map((package_) => ({
-          pathRelative: package_.pathRelative,
+          pathRelative: package_.package.pathRelative,
+          ...(package_.type === undefined ? {} : { type: package_.type }),
         })),
       })),
     };
