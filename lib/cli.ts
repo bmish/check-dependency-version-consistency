@@ -1,5 +1,5 @@
 import { Command, Argument } from 'commander';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 // Keep in `dependencies` (not `devDependencies`): see note on the `type-fest` import in `package.ts`.
 import type { PackageJson } from 'type-fest';
@@ -12,8 +12,14 @@ import { DEFAULT_DEP_TYPES } from './defaults.js';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 function getCurrentPackageVersion(): string {
+  // From dist/lib/ this is the package root; under vitest (source lib/) it is not.
+  const distributionRelativePath = join(__dirname, '..', '..', 'package.json');
+  const sourceRelativePath = join(__dirname, '..', 'package.json');
+  const packageJsonPath = existsSync(distributionRelativePath)
+    ? distributionRelativePath
+    : sourceRelativePath;
   const packageJson = JSON.parse(
-    readFileSync(join(__dirname, '..', '..', 'package.json'), 'utf8'), // Relative to compiled version of this file in the dist folder.
+    readFileSync(packageJsonPath, 'utf8'),
   ) as PackageJson;
   if (!packageJson.version) {
     throw new Error('Could not find package.json `version`');
@@ -44,7 +50,7 @@ function collectCSV(
 }
 
 // Setup CLI.
-export function run() {
+export function run(argv: readonly string[] = process.argv) {
   const program = new Command();
 
   program
@@ -124,7 +130,7 @@ export function run() {
         process.exitCode = 1;
       }
     })
-    .parse(process.argv);
+    .parse(argv);
 
   return program;
 }
