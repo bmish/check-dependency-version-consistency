@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { MockInstance } from 'vitest';
-import { readFileSync, readdirSync, statSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import mockFs from 'mock-fs';
 import { run } from '../../lib/cli.js';
@@ -24,25 +24,12 @@ const DISTRIBUTION_RELATIVE_PACKAGE_JSON = join(
 );
 const SOURCE_RELATIVE_PACKAGE_JSON = join(CLI_DIR, '..', 'package.json');
 
-/** Recursively load a directory into a mock-fs compatible object. */
-function loadDirectoryForMockFs(
-  directory: string,
-): Record<string, string | Record<string, unknown>> {
-  const result: Record<string, string | Record<string, unknown>> = {};
-  for (const entry of readdirSync(directory)) {
-    const fullPath = join(directory, entry);
-    result[entry] = statSync(fullPath).isDirectory()
-      ? loadDirectoryForMockFs(fullPath)
-      : readFileSync(fullPath, 'utf8');
-  }
-  return result;
-}
-
 /** mockFs that keeps the real package.json readable for getCurrentPackageVersion. */
 function mockWorkspaceFromFixture(fixturePath: string) {
+  // Pre-read fixture + repo package.json before mocking so writes stay in the mock FS.
   mockFs({
     [REPO_PACKAGE_JSON_PATH]: REPO_PACKAGE_JSON,
-    [MOCK_WORKSPACE_PATH]: loadDirectoryForMockFs(fixturePath),
+    [MOCK_WORKSPACE_PATH]: mockFs.load(fixturePath),
   });
 }
 
@@ -141,7 +128,6 @@ describe('cli', function () {
 
   describe('--fix', function () {
     it('prints a fixed summary and leaves exitCode unset when all mismatches are fixable', function () {
-      // Pre-read fixture + repo package.json before mocking so writes stay in the mock FS.
       mockWorkspaceFromFixture(FIXTURE_PATH_INCONSISTENT_VERSIONS);
 
       run(['node', 'cdvc.js', MOCK_WORKSPACE_PATH, '--fix']);
