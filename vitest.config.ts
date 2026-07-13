@@ -6,7 +6,7 @@ export default defineConfig({
     include: ['test/**/*-test.ts'],
     coverage: {
       include: ['lib/**/*.ts'],
-      exclude: ['lib/index.ts', 'lib/cli.ts'],
+      exclude: ['lib/index.ts'],
       thresholds: {
         branches: 100,
         functions: 100,
