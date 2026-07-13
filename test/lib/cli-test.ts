@@ -12,6 +12,9 @@ import {
 
 const REPO_PACKAGE_JSON_PATH = join(process.cwd(), 'package.json');
 const REPO_PACKAGE_JSON = readFileSync(REPO_PACKAGE_JSON_PATH, 'utf8');
+const REPO_PACKAGE_VERSION = (
+  JSON.parse(REPO_PACKAGE_JSON) as { version: string }
+).version;
 const MOCK_WORKSPACE_PATH = '/mock-workspace';
 
 // Paths getCurrentPackageVersion resolves under vitest (source lib/, not dist/lib/).
@@ -169,7 +172,7 @@ describe('cli', function () {
       const written = stdoutWriteSpy.mock.calls
         .map((call) => String(call[0]))
         .join('');
-      expect(written).toContain('6.0.0');
+      expect(written).toContain(REPO_PACKAGE_VERSION);
       expect(exitSpy).toHaveBeenCalled();
     });
 
@@ -178,7 +181,9 @@ describe('cli', function () {
         [DISTRIBUTION_RELATIVE_PACKAGE_JSON]: JSON.stringify({
           version: '9.9.9',
         }),
-        [SOURCE_RELATIVE_PACKAGE_JSON]: JSON.stringify({ version: '6.0.0' }),
+        [SOURCE_RELATIVE_PACKAGE_JSON]: JSON.stringify({
+          version: REPO_PACKAGE_VERSION,
+        }),
       });
       const { stdoutWriteSpy } = spyVersionExit();
 
