@@ -1,4 +1,5 @@
 import {
+  FIXTURE_PATH_INCONSISTENT_LOCAL_PACKAGE_VERSION,
   FIXTURE_PATH_INCONSISTENT_VERSIONS,
   FIXTURE_PATH_OPTIONAL_DEPENDENCIES,
   FIXTURE_PATH_PEER_DEPENDENCIES,
@@ -29,10 +30,22 @@ describe('CDVC', function () {
           versions: [
             {
               packages: [
-                { pathRelative: path.join('@scope1', 'package1') },
-                { pathRelative: path.join('@scope1', 'package2') },
-                { pathRelative: path.join('@scope2', 'deps-only') },
-                { pathRelative: 'package1' },
+                {
+                  pathRelative: path.join('@scope1', 'package1'),
+                  type: DEPENDENCY_TYPE.dependencies,
+                },
+                {
+                  pathRelative: path.join('@scope1', 'package2'),
+                  type: DEPENDENCY_TYPE.dependencies,
+                },
+                {
+                  pathRelative: path.join('@scope2', 'deps-only'),
+                  type: DEPENDENCY_TYPE.dependencies,
+                },
+                {
+                  pathRelative: 'package1',
+                  type: DEPENDENCY_TYPE.dependencies,
+                },
               ],
               version: '^4.5.6',
             },
@@ -45,10 +58,22 @@ describe('CDVC', function () {
           versions: [
             {
               packages: [
-                { pathRelative: path.join('@scope1', 'package1') },
-                { pathRelative: path.join('@scope1', 'package2') },
-                { pathRelative: path.join('@scope2', 'dev-deps-only') },
-                { pathRelative: 'package1' },
+                {
+                  pathRelative: path.join('@scope1', 'package1'),
+                  type: DEPENDENCY_TYPE.devDependencies,
+                },
+                {
+                  pathRelative: path.join('@scope1', 'package2'),
+                  type: DEPENDENCY_TYPE.devDependencies,
+                },
+                {
+                  pathRelative: path.join('@scope2', 'dev-deps-only'),
+                  type: DEPENDENCY_TYPE.devDependencies,
+                },
+                {
+                  pathRelative: 'package1',
+                  type: DEPENDENCY_TYPE.devDependencies,
+                },
               ],
               version: '^7.8.9',
             },
@@ -61,11 +86,23 @@ describe('CDVC', function () {
           versions: [
             {
               packages: [
-                { pathRelative: '' },
-                { pathRelative: path.join('@scope1', 'package1') },
-                { pathRelative: path.join('@scope1', 'package2') },
-                { pathRelative: path.join('@scope2', 'deps-only') },
-                { pathRelative: 'package1' },
+                { pathRelative: '', type: DEPENDENCY_TYPE.devDependencies },
+                {
+                  pathRelative: path.join('@scope1', 'package1'),
+                  type: DEPENDENCY_TYPE.dependencies,
+                },
+                {
+                  pathRelative: path.join('@scope1', 'package2'),
+                  type: DEPENDENCY_TYPE.dependencies,
+                },
+                {
+                  pathRelative: path.join('@scope2', 'deps-only'),
+                  type: DEPENDENCY_TYPE.dependencies,
+                },
+                {
+                  pathRelative: 'package1',
+                  type: DEPENDENCY_TYPE.dependencies,
+                },
               ],
               version: '1.2.3',
             },
@@ -77,7 +114,12 @@ describe('CDVC', function () {
           name: 'foo1',
           versions: [
             {
-              packages: [{ pathRelative: 'package1' }],
+              packages: [
+                {
+                  pathRelative: 'package1',
+                  type: DEPENDENCY_TYPE.dependencies,
+                },
+              ],
               version: '^1.0.0',
             },
           ],
@@ -91,11 +133,20 @@ describe('CDVC', function () {
         versions: [
           {
             packages: [
-              { pathRelative: '' },
-              { pathRelative: path.join('@scope1', 'package1') },
-              { pathRelative: path.join('@scope1', 'package2') },
-              { pathRelative: path.join('@scope2', 'deps-only') },
-              { pathRelative: 'package1' },
+              { pathRelative: '', type: DEPENDENCY_TYPE.devDependencies },
+              {
+                pathRelative: path.join('@scope1', 'package1'),
+                type: DEPENDENCY_TYPE.dependencies,
+              },
+              {
+                pathRelative: path.join('@scope1', 'package2'),
+                type: DEPENDENCY_TYPE.dependencies,
+              },
+              {
+                pathRelative: path.join('@scope2', 'deps-only'),
+                type: DEPENDENCY_TYPE.dependencies,
+              },
+              { pathRelative: 'package1', type: DEPENDENCY_TYPE.dependencies },
             ],
             version: '1.2.3',
           },
@@ -124,8 +175,14 @@ describe('CDVC', function () {
           versions: [
             {
               packages: [
-                { pathRelative: path.join('@scope1', 'package1') },
-                { pathRelative: path.join('@scope1', 'package2') },
+                {
+                  pathRelative: path.join('@scope1', 'package1'),
+                  type: DEPENDENCY_TYPE.dependencies,
+                },
+                {
+                  pathRelative: path.join('@scope1', 'package2'),
+                  type: DEPENDENCY_TYPE.dependencies,
+                },
               ],
               version: '^4.5.6',
             },
@@ -137,11 +194,21 @@ describe('CDVC', function () {
           name: 'baz',
           versions: [
             {
-              packages: [{ pathRelative: path.join('@scope1', 'package1') }],
+              packages: [
+                {
+                  pathRelative: path.join('@scope1', 'package1'),
+                  type: DEPENDENCY_TYPE.devDependencies,
+                },
+              ],
               version: '^7.8.9',
             },
             {
-              packages: [{ pathRelative: path.join('@scope1', 'package2') }],
+              packages: [
+                {
+                  pathRelative: path.join('@scope1', 'package2'),
+                  type: DEPENDENCY_TYPE.devDependencies,
+                },
+              ],
               version: '^8.0.0',
             },
           ],
@@ -153,14 +220,25 @@ describe('CDVC', function () {
           versions: [
             {
               packages: [
-                { pathRelative: '' },
-                { pathRelative: path.join('@scope1', 'package2') },
-                { pathRelative: path.join('@scope1', 'package3') },
+                { pathRelative: '', type: DEPENDENCY_TYPE.devDependencies },
+                {
+                  pathRelative: path.join('@scope1', 'package2'),
+                  type: DEPENDENCY_TYPE.dependencies,
+                },
+                {
+                  pathRelative: path.join('@scope1', 'package3'),
+                  type: DEPENDENCY_TYPE.dependencies,
+                },
               ],
               version: '1.2.0',
             },
             {
-              packages: [{ pathRelative: path.join('@scope1', 'package1') }],
+              packages: [
+                {
+                  pathRelative: path.join('@scope1', 'package1'),
+                  type: DEPENDENCY_TYPE.dependencies,
+                },
+              ],
               version: '1.3.0',
             },
           ],
@@ -187,11 +265,21 @@ describe('CDVC', function () {
             name: 'baz',
             versions: [
               {
-                packages: [{ pathRelative: path.join('@scope1', 'package1') }],
+                packages: [
+                  {
+                    pathRelative: path.join('@scope1', 'package1'),
+                    type: DEPENDENCY_TYPE.devDependencies,
+                  },
+                ],
                 version: '^7.8.9',
               },
               {
-                packages: [{ pathRelative: path.join('@scope1', 'package2') }],
+                packages: [
+                  {
+                    pathRelative: path.join('@scope1', 'package2'),
+                    type: DEPENDENCY_TYPE.devDependencies,
+                  },
+                ],
                 version: '^8.0.0',
               },
             ],
@@ -202,7 +290,9 @@ describe('CDVC', function () {
             name: 'foo',
             versions: [
               {
-                packages: [{ pathRelative: '' }],
+                packages: [
+                  { pathRelative: '', type: DEPENDENCY_TYPE.devDependencies },
+                ],
                 version: '1.2.0',
               },
             ],
@@ -229,8 +319,14 @@ describe('CDVC', function () {
             versions: [
               {
                 packages: [
-                  { pathRelative: path.join('@scope1', 'package1') },
-                  { pathRelative: path.join('@scope1', 'package2') },
+                  {
+                    pathRelative: path.join('@scope1', 'package1'),
+                    type: DEPENDENCY_TYPE.dependencies,
+                  },
+                  {
+                    pathRelative: path.join('@scope1', 'package2'),
+                    type: DEPENDENCY_TYPE.dependencies,
+                  },
                 ],
                 version: '^4.5.6',
               },
@@ -243,13 +339,24 @@ describe('CDVC', function () {
             versions: [
               {
                 packages: [
-                  { pathRelative: path.join('@scope1', 'package2') },
-                  { pathRelative: path.join('@scope1', 'package3') },
+                  {
+                    pathRelative: path.join('@scope1', 'package2'),
+                    type: DEPENDENCY_TYPE.dependencies,
+                  },
+                  {
+                    pathRelative: path.join('@scope1', 'package3'),
+                    type: DEPENDENCY_TYPE.dependencies,
+                  },
                 ],
                 version: '1.2.0',
               },
               {
-                packages: [{ pathRelative: path.join('@scope1', 'package1') }],
+                packages: [
+                  {
+                    pathRelative: path.join('@scope1', 'package1'),
+                    type: DEPENDENCY_TYPE.dependencies,
+                  },
+                ],
                 version: '1.3.0',
               },
             ],
@@ -275,7 +382,12 @@ describe('CDVC', function () {
             name: 'bar',
             versions: [
               {
-                packages: [{ pathRelative: '' }],
+                packages: [
+                  {
+                    pathRelative: '',
+                    type: DEPENDENCY_TYPE.optionalDependencies,
+                  },
+                ],
                 version: '^1.0.0',
               },
             ],
@@ -286,7 +398,12 @@ describe('CDVC', function () {
             name: 'foo',
             versions: [
               {
-                packages: [{ pathRelative: '' }],
+                packages: [
+                  {
+                    pathRelative: '',
+                    type: DEPENDENCY_TYPE.optionalDependencies,
+                  },
+                ],
                 version: '^2.0.0',
               },
             ],
@@ -363,8 +480,14 @@ describe('CDVC', function () {
                 {
                   version: '^1.0.0',
                   packages: [
-                    { pathRelative: '' },
-                    { pathRelative: 'package1' },
+                    {
+                      pathRelative: '',
+                      type: DEPENDENCY_TYPE.optionalDependencies,
+                    },
+                    {
+                      pathRelative: 'package1',
+                      type: DEPENDENCY_TYPE.dependencies,
+                    },
                   ],
                 },
               ],
@@ -376,15 +499,27 @@ describe('CDVC', function () {
               versions: [
                 {
                   version: '^1.0.0',
-                  packages: [{ pathRelative: '' }],
+                  packages: [
+                    {
+                      pathRelative: '',
+                      type: DEPENDENCY_TYPE.optionalDependencies,
+                    },
+                  ],
                 },
                 {
                   version: '^1.2.0',
-                  packages: [{ pathRelative: '' }],
+                  packages: [
+                    { pathRelative: '', type: DEPENDENCY_TYPE.devDependencies },
+                  ],
                 },
                 {
                   version: '^2.0.0',
-                  packages: [{ pathRelative: 'package1' }],
+                  packages: [
+                    {
+                      pathRelative: 'package1',
+                      type: DEPENDENCY_TYPE.dependencies,
+                    },
+                  ],
                 },
               ],
             },
@@ -410,7 +545,9 @@ describe('CDVC', function () {
             name: 'bar',
             versions: [
               {
-                packages: [{ pathRelative: '' }],
+                packages: [
+                  { pathRelative: '', type: DEPENDENCY_TYPE.peerDependencies },
+                ],
                 version: '^1.0.0',
               },
             ],
@@ -421,7 +558,9 @@ describe('CDVC', function () {
             name: 'foo',
             versions: [
               {
-                packages: [{ pathRelative: '' }],
+                packages: [
+                  { pathRelative: '', type: DEPENDENCY_TYPE.peerDependencies },
+                ],
                 version: '^2.0.0',
               },
             ],
@@ -503,8 +642,14 @@ describe('CDVC', function () {
                 {
                   version: '^1.0.0',
                   packages: [
-                    { pathRelative: '' },
-                    { pathRelative: 'package1' },
+                    {
+                      pathRelative: '',
+                      type: DEPENDENCY_TYPE.peerDependencies,
+                    },
+                    {
+                      pathRelative: 'package1',
+                      type: DEPENDENCY_TYPE.dependencies,
+                    },
                   ],
                 },
               ],
@@ -516,15 +661,27 @@ describe('CDVC', function () {
               versions: [
                 {
                   version: '^1.0.0',
-                  packages: [{ pathRelative: '' }],
+                  packages: [
+                    {
+                      pathRelative: '',
+                      type: DEPENDENCY_TYPE.peerDependencies,
+                    },
+                  ],
                 },
                 {
                   version: '^1.2.0',
-                  packages: [{ pathRelative: '' }],
+                  packages: [
+                    { pathRelative: '', type: DEPENDENCY_TYPE.devDependencies },
+                  ],
                 },
                 {
                   version: '^2.0.0',
-                  packages: [{ pathRelative: 'package1' }],
+                  packages: [
+                    {
+                      pathRelative: 'package1',
+                      type: DEPENDENCY_TYPE.dependencies,
+                    },
+                  ],
                 },
               ],
             },
@@ -550,7 +707,9 @@ describe('CDVC', function () {
             name: 'bar',
             versions: [
               {
-                packages: [{ pathRelative: '' }],
+                packages: [
+                  { pathRelative: '', type: DEPENDENCY_TYPE.resolutions },
+                ],
                 version: '^1.0.0',
               },
             ],
@@ -561,7 +720,9 @@ describe('CDVC', function () {
             name: 'foo',
             versions: [
               {
-                packages: [{ pathRelative: '' }],
+                packages: [
+                  { pathRelative: '', type: DEPENDENCY_TYPE.resolutions },
+                ],
                 version: '^2.0.0',
               },
             ],
@@ -604,8 +765,14 @@ describe('CDVC', function () {
           versions: [
             {
               packages: [
-                { pathRelative: path.join('@scope1', 'package1') },
-                { pathRelative: path.join('@scope1', 'package2') },
+                {
+                  pathRelative: path.join('@scope1', 'package1'),
+                  type: DEPENDENCY_TYPE.dependencies,
+                },
+                {
+                  pathRelative: path.join('@scope1', 'package2'),
+                  type: DEPENDENCY_TYPE.dependencies,
+                },
               ],
               version: '^4.5.6',
             },
@@ -617,11 +784,21 @@ describe('CDVC', function () {
           name: 'baz',
           versions: [
             {
-              packages: [{ pathRelative: path.join('@scope1', 'package1') }],
+              packages: [
+                {
+                  pathRelative: path.join('@scope1', 'package1'),
+                  type: DEPENDENCY_TYPE.devDependencies,
+                },
+              ],
               version: '^7.8.9',
             },
             {
-              packages: [{ pathRelative: path.join('@scope1', 'package2') }],
+              packages: [
+                {
+                  pathRelative: path.join('@scope1', 'package2'),
+                  type: DEPENDENCY_TYPE.devDependencies,
+                },
+              ],
               version: '^8.0.0',
             },
           ],
@@ -674,11 +851,21 @@ describe('CDVC', function () {
           name: 'foo',
           versions: [
             {
-              packages: [{ pathRelative: 'package1' }],
+              packages: [
+                {
+                  pathRelative: 'package1',
+                  type: DEPENDENCY_TYPE.dependencies,
+                },
+              ],
               version: '^1.0.0',
             },
             {
-              packages: [{ pathRelative: 'package2' }],
+              packages: [
+                {
+                  pathRelative: 'package2',
+                  type: DEPENDENCY_TYPE.dependencies,
+                },
+              ],
               version: '*',
             },
           ],
@@ -750,11 +937,21 @@ describe('CDVC', function () {
           name: 'foo',
           versions: [
             {
-              packages: [{ pathRelative: 'package1' }],
+              packages: [
+                {
+                  pathRelative: 'package1',
+                  type: DEPENDENCY_TYPE.dependencies,
+                },
+              ],
               version: '^1.0.0',
             },
             {
-              packages: [{ pathRelative: 'package2' }],
+              packages: [
+                {
+                  pathRelative: 'package2',
+                  type: DEPENDENCY_TYPE.dependencies,
+                },
+              ],
               version: '1.5.0',
             },
           ],
@@ -822,11 +1019,21 @@ describe('CDVC', function () {
           name: 'foo',
           versions: [
             {
-              packages: [{ pathRelative: 'package1' }],
+              packages: [
+                {
+                  pathRelative: 'package1',
+                  type: DEPENDENCY_TYPE.dependencies,
+                },
+              ],
               version: '^1.0.0',
             },
             {
-              packages: [{ pathRelative: 'package2' }],
+              packages: [
+                {
+                  pathRelative: 'package2',
+                  type: DEPENDENCY_TYPE.dependencies,
+                },
+              ],
               version: '1.5.0',
             },
           ],
@@ -857,6 +1064,65 @@ describe('CDVC', function () {
         actualPackageJson2.dependencies &&
           actualPackageJson2.dependencies['foo'],
       ).toStrictEqual('^1.5.0');
+    });
+  });
+
+  describe('dependency type in Node API', function () {
+    it('records two entries when the same dep appears under two types in one package', function () {
+      mockFs({
+        'package.json': JSON.stringify({
+          workspaces: ['*'],
+          dependencies: {
+            foo: '^1.0.0',
+          },
+          optionalDependencies: {
+            foo: '^1.0.0',
+          },
+        }),
+        package1: {
+          'package.json': JSON.stringify({
+            name: 'package1',
+          }),
+        },
+      });
+
+      try {
+        const cdvc = new CDVC('.');
+        expect(cdvc.getDependency('foo')).toStrictEqual({
+          isFixable: false,
+          isMismatching: false,
+          name: 'foo',
+          versions: [
+            {
+              packages: [
+                {
+                  pathRelative: '',
+                  type: DEPENDENCY_TYPE.dependencies,
+                },
+                {
+                  pathRelative: '',
+                  type: DEPENDENCY_TYPE.optionalDependencies,
+                },
+              ],
+              version: '^1.0.0',
+            },
+          ],
+        });
+      } finally {
+        mockFs.restore();
+      }
+    });
+
+    it('omits type for the local workspace package version entry', function () {
+      const cdvc = new CDVC(FIXTURE_PATH_INCONSISTENT_LOCAL_PACKAGE_VERSION);
+      const package2 = cdvc.getDependency('package2');
+      const localPackageEntry = package2.versions.find(
+        (version) => version.version === '1.0.0',
+      );
+      expect(localPackageEntry).toStrictEqual({
+        packages: [{ pathRelative: 'package2' }],
+        version: '1.0.0',
+      });
     });
   });
 });
