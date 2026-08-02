@@ -1,16 +1,18 @@
 import { styleText } from 'node:util';
 import { table } from 'table';
-import {
-  compareVersionRangesSafe,
-  getIncreasedLatestVersion,
-} from './semver.js';
+import { compareVersionRangesSafe } from './semver.js';
 import type { Dependencies } from './types.js';
 
 /** Extracts the mismatching dependencies along with the versions seen of each. */
 function getMismatchingVersions(dependencies: Dependencies) {
   return Object.entries(dependencies)
     .filter(([, value]) => value.isMismatching)
-    .map(([dependency, value]) => ({ dependency, versions: value.versions }));
+    .map(([dependency, value]) => ({
+      dependency,
+      versions: value.versions,
+      fixedVersion: value.fixedVersion,
+      isFixable: value.isFixable,
+    }));
 }
 
 /**
@@ -77,34 +79,31 @@ export function dependenciesToMismatchSummary(
 
 /**
  * Returns a summary of the mismatching dependency versions that were fixed.
+ * Uses the fix targets already decided during check (does not recompute versions).
  */
 export function dependenciesToFixedSummary(dependencies: Dependencies): string {
-  const mismatchingDependencyVersions = getMismatchingVersions(dependencies);
-
-  if (mismatchingDependencyVersions.length === 0) {
-    throw new Error('No fixes to output.');
-  }
-
-  const dependenciesAndFixedVersions = mismatchingDependencyVersions
+  const fixedDependencies = getMismatchingVersions(dependencies)
     .flatMap((mismatchingVersion) => {
-      let version;
-      try {
-        version = getIncreasedLatestVersion(
-          mismatchingVersion.versions.map((v) => v.version),
-        );
-      } catch {
-        return []; // Ignore this dependency since unable to get the version that we would have fixed it to.
+      if (
+        !mismatchingVersion.isFixable ||
+        mismatchingVersion.fixedVersion === undefined
+      ) {
+        return [];
       }
       return {
         dependency: mismatchingVersion.dependency,
-        version,
+        version: mismatchingVersion.fixedVersion,
       };
     })
     .toSorted((a, b) => a.dependency.localeCompare(b.dependency));
 
-  return `Fixed versions for ${String(dependenciesAndFixedVersions.length)} ${
-    dependenciesAndFixedVersions.length === 1 ? 'dependency' : 'dependencies'
-  }: ${dependenciesAndFixedVersions
+  if (fixedDependencies.length === 0) {
+    throw new Error('No fixes to output.');
+  }
+
+  return `Fixed versions for ${String(fixedDependencies.length)} ${
+    fixedDependencies.length === 1 ? 'dependency' : 'dependencies'
+  }: ${fixedDependencies
     .map((object) => `${object.dependency}@${object.version}`)
     .join(', ')}`;
 }

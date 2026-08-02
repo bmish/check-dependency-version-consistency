@@ -9,8 +9,7 @@ import {
   getIncreasedLatestVersion,
   versionRangeToRange,
 } from './semver.js';
-import { DEPENDENCY_TYPE } from './types.js';
-import type { DependencyType } from './types.js';
+import type { Dependencies, DependencyType } from './types.js';
 
 /** A version of a dependency seen in a particular package. */
 type VersionSeen = {
@@ -31,6 +30,12 @@ type DependencyAndVersions = {
     version: string;
     packages: readonly Package[];
   }[];
+};
+
+/** A mismatch with its resolved fix target, if any. */
+type MismatchWithFix = DependencyAndVersions & {
+  /** Version to write; absent when not fixable. */
+  fixedVersion?: string;
 };
 
 /**
@@ -236,6 +241,47 @@ export function filterOutIgnoredDependencies(
   return mismatchingVersions;
 }
 
+/**
+ * Decides the single version a mismatch should be fixed to, or `undefined` if not fixable.
+ * Local-package caps and range-type reattachment live here so write and summary share one decision.
+ */
+export function resolveFixedVersion(
+  mismatchingVersion: DependencyAndVersions,
+  packages: readonly Package[],
+): string | undefined {
+  const versions = mismatchingVersion.versions.map((object) => object.version);
+  let fixedVersion;
+  try {
+    fixedVersion = getIncreasedLatestVersion(versions);
+  } catch {
+    return undefined;
+  }
+
+  // If this dependency is from a local package and the version we want to fix to is higher than the actual package version, skip it.
+  const localPackage = packages.find(
+    (package_) => package_.name === mismatchingVersion.dependency,
+  );
+  if (
+    localPackage &&
+    localPackage.packageJson.version &&
+    compareVersionRanges(fixedVersion, localPackage.packageJson.version) > 0
+  ) {
+    return undefined;
+  }
+
+  if (localPackage && localPackage.packageJson.version === fixedVersion) {
+    // When fixing to the version of a local package, don't just use the bare package version, but include the highest range type we have seen.
+    const highestRangeTypeSeen = getHighestRangeType(
+      versions.map((versionRange) => versionRangeToRange(versionRange)),
+    );
+    fixedVersion = `${highestRangeTypeSeen}${String(
+      semver.coerce(fixedVersion),
+    )}`;
+  }
+
+  return fixedVersion;
+}
+
 function writeDependencyVersion(
   packageJsonPath: string,
   packageJsonEndsInNewline: boolean,
@@ -258,84 +304,63 @@ function writeDependencyVersion(
   );
 }
 
+function applyFixedVersion(
+  packages: readonly Package[],
+  dependency: string,
+  fixedVersion: string,
+  depType: readonly DependencyType[],
+  dryrun: boolean,
+): boolean {
+  let isFixed = false;
+  for (const package_ of packages) {
+    for (const type of depType) {
+      const currentVersion = package_.packageJson[type]?.[dependency];
+      if (currentVersion && currentVersion !== fixedVersion) {
+        if (!dryrun) {
+          writeDependencyVersion(
+            package_.pathPackageJson,
+            package_.packageJsonEndsInNewline,
+            type,
+            dependency,
+            fixedVersion,
+          );
+        }
+        isFixed = true;
+      }
+    }
+  }
+  return isFixed;
+}
+
 export function fixVersionsMismatching(
   packages: readonly Package[],
   mismatchingVersions: readonly DependencyAndVersions[],
   dryrun = false,
+  depType: readonly DependencyType[] = DEFAULT_DEP_TYPES,
 ): {
-  fixable: readonly DependencyAndVersions[];
+  fixable: readonly MismatchWithFix[];
   notFixable: readonly DependencyAndVersions[];
 } {
-  const fixable: DependencyAndVersions[] = [];
+  const fixable: MismatchWithFix[] = [];
   const notFixable: DependencyAndVersions[] = [];
   // Loop through each dependency that has a mismatching versions.
   for (const mismatchingVersion of mismatchingVersions) {
-    // Decide what version we should fix to.
-    const versions = mismatchingVersion.versions.map(
-      (object) => object.version,
-    );
-    let fixedVersion;
-    try {
-      fixedVersion = getIncreasedLatestVersion(versions);
-    } catch {
-      // Skip this dependency.
+    const fixedVersion = resolveFixedVersion(mismatchingVersion, packages);
+    if (fixedVersion === undefined) {
       notFixable.push(mismatchingVersion);
       continue;
     }
 
-    // If this dependency is from a local package and the version we want to fix to is higher than the actual package version, skip it.
-    const localPackage = packages.find(
-      (package_) => package_.name === mismatchingVersion.dependency,
+    const isFixed = applyFixedVersion(
+      packages,
+      mismatchingVersion.dependency,
+      fixedVersion,
+      depType,
+      dryrun,
     );
-    if (
-      localPackage &&
-      localPackage.packageJson.version &&
-      compareVersionRanges(fixedVersion, localPackage.packageJson.version) > 0
-    ) {
-      // Skip this dependency.
-      notFixable.push(mismatchingVersion);
-      continue;
-    }
-
-    if (localPackage && localPackage.packageJson.version === fixedVersion) {
-      // When fixing to the version of a local package, don't just use the bare package version, but include the highest range type we have seen.
-      const highestRangeTypeSeen = getHighestRangeType(
-        versions.map((versionRange) => versionRangeToRange(versionRange)),
-      );
-      fixedVersion = `${highestRangeTypeSeen}${String(
-        semver.coerce(fixedVersion),
-      )}`;
-    }
-
-    // Update the dependency version in each package.json.
-    let isFixed = false;
-    for (const package_ of packages) {
-      for (const type of [
-        DEPENDENCY_TYPE.devDependencies,
-        DEPENDENCY_TYPE.dependencies,
-        DEPENDENCY_TYPE.optionalDependencies,
-        DEPENDENCY_TYPE.peerDependencies,
-        DEPENDENCY_TYPE.resolutions,
-      ]) {
-        const currentVersion =
-          package_.packageJson[type]?.[mismatchingVersion.dependency];
-        if (currentVersion && currentVersion !== fixedVersion) {
-          if (!dryrun) {
-            writeDependencyVersion(
-              package_.pathPackageJson,
-              package_.packageJsonEndsInNewline,
-              type,
-              mismatchingVersion.dependency,
-              fixedVersion,
-            );
-          }
-          isFixed = true;
-        }
-      }
-    }
 
     if (isFixed) {
-      fixable.push(mismatchingVersion);
+      fixable.push({ ...mismatchingVersion, fixedVersion });
     }
   }
 
@@ -343,4 +368,72 @@ export function fixVersionsMismatching(
     fixable,
     notFixable,
   };
+}
+
+/**
+ * Build the full dependency inventory: collect, detect mismatches, ignore, resolve fix targets, optionally write.
+ * One deep interface for the check pipeline.
+ */
+export function buildDependencies(
+  packages: readonly Package[],
+  options: {
+    depType: readonly DependencyType[];
+    ignoreDep: readonly string[];
+    ignoreDepPattern: readonly RegExp[];
+    fix: boolean;
+  },
+): Dependencies {
+  const dependencyVersions = calculateVersionsForEachDependency(
+    packages,
+    options.depType,
+  );
+  const dependenciesAndVersions =
+    calculateDependenciesAndVersions(dependencyVersions);
+  const dependenciesAndVersionsWithMismatches = dependenciesAndVersions.filter(
+    ({ versions }) => versions.length > 1,
+  );
+
+  const dependenciesAndVersionsWithoutIgnored = filterOutIgnoredDependencies(
+    dependenciesAndVersions,
+    options.ignoreDep,
+    options.ignoreDepPattern,
+  );
+
+  const dependenciesAndVersionsMismatchesWithoutIgnored =
+    filterOutIgnoredDependencies(
+      dependenciesAndVersionsWithMismatches,
+      options.ignoreDep,
+      options.ignoreDepPattern,
+    );
+
+  const resultsAfterFix = fixVersionsMismatching(
+    packages,
+    dependenciesAndVersionsMismatchesWithoutIgnored,
+    !options.fix, // Do dry-run if not fixing.
+    options.depType,
+  );
+
+  const fixableByName = new Map(
+    resultsAfterFix.fixable.map((dep) => [dep.dependency, dep.fixedVersion]),
+  );
+  const mismatchingNames = new Set(
+    dependenciesAndVersionsMismatchesWithoutIgnored.map(
+      (dep) => dep.dependency,
+    ),
+  );
+
+  return Object.fromEntries(
+    dependenciesAndVersionsWithoutIgnored.map(({ dependency, versions }) => {
+      const fixedVersion = fixableByName.get(dependency);
+      return [
+        dependency,
+        {
+          isFixable: fixedVersion !== undefined,
+          isMismatching: mismatchingNames.has(dependency),
+          ...(fixedVersion === undefined ? {} : { fixedVersion }),
+          versions,
+        },
+      ];
+    }),
+  );
 }

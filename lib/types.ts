@@ -6,6 +6,8 @@ export type Dependencies = Record<
   {
     isFixable: boolean;
     isMismatching: boolean;
+    /** Version that `--fix` would write; set only when fixable. */
+    fixedVersion?: string;
     versions: readonly {
       version: string;
       packages: readonly Package[];

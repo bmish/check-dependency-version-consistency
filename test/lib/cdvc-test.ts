@@ -132,6 +132,7 @@ describe('CDVC', function () {
           ],
         },
         {
+          fixedVersion: '^8.0.0',
           isFixable: true,
           isMismatching: true,
           name: 'baz',
@@ -147,6 +148,7 @@ describe('CDVC', function () {
           ],
         },
         {
+          fixedVersion: '1.3.0',
           isFixable: true,
           isMismatching: true,
           name: 'foo',
@@ -182,6 +184,7 @@ describe('CDVC', function () {
         expect(cdvc.hasMismatchingDependenciesNotFixable).toBe(false);
         expect(dependencies).toStrictEqual([
           {
+            fixedVersion: '^8.0.0',
             isFixable: true,
             isMismatching: true,
             name: 'baz',
@@ -237,6 +240,7 @@ describe('CDVC', function () {
             ],
           },
           {
+            fixedVersion: '1.3.0',
             isFixable: true,
             isMismatching: true,
             name: 'foo',
@@ -371,6 +375,7 @@ describe('CDVC', function () {
             },
             {
               name: 'foo',
+              fixedVersion: '^2.0.0',
               isFixable: true,
               isMismatching: true,
               versions: [
@@ -511,6 +516,7 @@ describe('CDVC', function () {
             },
             {
               name: 'foo',
+              fixedVersion: '^2.0.0',
               isFixable: true,
               isMismatching: true,
               versions: [
@@ -612,6 +618,7 @@ describe('CDVC', function () {
           ],
         },
         {
+          fixedVersion: '^8.0.0',
           isFixable: true,
           isMismatching: true,
           name: 'baz',
@@ -745,6 +752,7 @@ describe('CDVC', function () {
 
       expect(cdvc.getDependencies()).toStrictEqual([
         {
+          fixedVersion: '^1.5.0',
           isFixable: true,
           isMismatching: true,
           name: 'foo',
@@ -817,6 +825,7 @@ describe('CDVC', function () {
 
       expect(cdvc.getDependencies()).toStrictEqual([
         {
+          fixedVersion: '^1.5.0',
           isFixable: true,
           isMismatching: true,
           name: 'foo',

@@ -544,6 +544,7 @@ describe('Utils | dependency-versions', function () {
         expect(fixable).toStrictEqual([
           {
             dependency: '@types/one',
+            fixedVersion: '1.0.1',
             versions: [
               {
                 version: '1.0.0',
@@ -565,6 +566,7 @@ describe('Utils | dependency-versions', function () {
           },
           {
             dependency: 'a.b.c',
+            fixedVersion: '~5.5.0',
             versions: [
               {
                 version: '5.0.0',
@@ -586,6 +588,7 @@ describe('Utils | dependency-versions', function () {
           },
           {
             dependency: 'foo',
+            fixedVersion: '^2.0.0',
             versions: [
               {
                 version: '^1.0.0',
@@ -610,6 +613,7 @@ describe('Utils | dependency-versions', function () {
           },
           {
             dependency: 'one.two.three',
+            fixedVersion: '^4.1.0',
             versions: [
               {
                 version: '^4.0.0',
@@ -741,6 +745,7 @@ describe('Utils | dependency-versions', function () {
           {
             // Fixable since updated to actual version of this local package.
             dependency: 'package2',
+            fixedVersion: '^2.0.0',
             versions: [
               {
                 version: '^1.0.0',
@@ -833,6 +838,7 @@ describe('Utils | dependency-versions', function () {
         expect(fixable).toStrictEqual([
           {
             dependency: 'foo',
+            fixedVersion: '^2.0.0',
             versions: [
               {
                 version: '^1.0.0',

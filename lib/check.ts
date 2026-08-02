@@ -1,9 +1,4 @@
-import {
-  calculateVersionsForEachDependency,
-  calculateDependenciesAndVersions,
-  filterOutIgnoredDependencies,
-  fixVersionsMismatching,
-} from './dependency-versions.js';
+import { buildDependencies } from './dependency-versions.js';
 import { DEPENDENCY_TYPE } from './types.js';
 import type { Dependencies, Options } from './types.js';
 import { getPackages } from './workspace.js';
@@ -57,7 +52,6 @@ export function check(
         : DEFAULT_DEP_TYPES,
   };
 
-  // Calculate.
   const packages = getPackages(
     path,
     optionsWithDefaults.ignorePackage,
@@ -66,54 +60,14 @@ export function check(
     optionsWithDefaults.ignorePathPattern.map((s) => new RegExp(s)),
   );
 
-  const dependencies = calculateVersionsForEachDependency(
-    packages,
-    optionsWithDefaults.depType.map((dt) => DEPENDENCY_TYPE[dt]), // Convert string to enum.
-  );
-  const dependenciesAndVersions =
-    calculateDependenciesAndVersions(dependencies);
-  const dependenciesAndVersionsWithMismatches = dependenciesAndVersions.filter(
-    ({ versions }) => versions.length > 1,
-  );
-
-  // Information about all dependencies.
-  const dependenciesAndVersionsWithoutIgnored = filterOutIgnoredDependencies(
-    dependenciesAndVersions,
-    optionsWithDefaults.ignoreDep,
-    optionsWithDefaults.ignoreDepPattern.map((s) => new RegExp(s)),
-  );
-
-  // Information about mismatches.
-  const dependenciesAndVersionsMismatchesWithoutIgnored =
-    filterOutIgnoredDependencies(
-      dependenciesAndVersionsWithMismatches,
-      optionsWithDefaults.ignoreDep,
-      optionsWithDefaults.ignoreDepPattern.map((s) => new RegExp(s)),
-    );
-  const resultsAfterFix = fixVersionsMismatching(
-    packages,
-    dependenciesAndVersionsMismatchesWithoutIgnored,
-    !optionsWithDefaults.fix, // Do dry-run if not fixing.
-  );
-  const versionsMismatchingFixable = resultsAfterFix.fixable;
-
   return {
-    // Information about all dependencies.
-    dependencies: Object.fromEntries(
-      dependenciesAndVersionsWithoutIgnored.map(({ dependency, versions }) => {
-        return [
-          dependency,
-          {
-            isFixable: versionsMismatchingFixable.some(
-              (dep) => dep.dependency === dependency,
-            ),
-            isMismatching: dependenciesAndVersionsMismatchesWithoutIgnored.some(
-              (dep) => dep.dependency === dependency,
-            ),
-            versions,
-          },
-        ];
-      }),
-    ),
+    dependencies: buildDependencies(packages, {
+      depType: optionsWithDefaults.depType.map((dt) => DEPENDENCY_TYPE[dt]),
+      ignoreDep: optionsWithDefaults.ignoreDep,
+      ignoreDepPattern: optionsWithDefaults.ignoreDepPattern.map(
+        (s) => new RegExp(s),
+      ),
+      fix: optionsWithDefaults.fix,
+    }),
   };
 }

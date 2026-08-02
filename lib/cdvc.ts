@@ -10,6 +10,8 @@ type Dependency = {
   name: string;
   isFixable: boolean;
   isMismatching: boolean;
+  /** Version that `--fix` would write; set only when fixable. */
+  fixedVersion?: string;
   versions: readonly {
     version: string;
     packages: readonly { pathRelative: string }[];
@@ -61,6 +63,9 @@ export class CDVC {
       name,
       isFixable: dep.isFixable,
       isMismatching: dep.isMismatching,
+      ...(dep.fixedVersion === undefined
+        ? {}
+        : { fixedVersion: dep.fixedVersion }),
       versions: dep.versions.map((version) => ({
         version: version.version,
         packages: version.packages.map((package_) => ({
