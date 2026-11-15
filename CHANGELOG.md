@@ -1,6 +1,13 @@
 # Changelog
 
 
+## [6.0.1](https://github.com/bmish/check-dependency-version-consistency/compare/v6.0.0...v6.0.1) (2026-11-15)
+
+
+### Bug Fixes
+
+* Avoid lower versions and npm alias rewrites with --fix ([#996](https://github.com/bmish/check-dependency-version-consistency/issues/996)) ([651b58c](https://github.com/bmish/check-dependency-version-consistency/commit/651b58c844e668c54bbcdf6db84fb0fbbdc4653c))
+
 ## [6.0.0](https://github.com/bmish/check-dependency-version-consistency/compare/v5.0.1...v6.0.0) (2026-01-03)
 
 
