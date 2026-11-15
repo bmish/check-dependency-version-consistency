@@ -9,11 +9,19 @@ export function compareVersionRangesSafe(a: string, b: string): 0 | -1 | 1 {
   }
 }
 
+// Coerce to normalized version without any range prefix, keeping any prerelease tag.
+// Specifiers like `npm:foo@^1.0.0`, git URLs, and file paths contain a version-like substring but aren't semver ranges.
+function coerceVersionRange(versionRange: string) {
+  if (!semver.validRange(versionRange)) {
+    return undefined;
+  }
+  return semver.coerce(versionRange, { includePrerelease: true }) ?? undefined;
+}
+
 // Compare semver version ranges like ^1.0.0, ~2.5.0, 3.0.0, etc.
 export function compareVersionRanges(a: string, b: string): 0 | -1 | 1 {
-  // Coerce to normalized version without any range prefix.
-  const aVersion = semver.coerce(a);
-  const bVersion = semver.coerce(b);
+  const aVersion = coerceVersionRange(a);
+  const bVersion = coerceVersionRange(b);
   if (!aVersion) {
     throw new Error(`Invalid Version: ${a}`);
   }
@@ -72,7 +80,7 @@ export function getHighestRangeType(ranges: readonly string[]): string {
 // Example input: ['1.5.0', '^1.0.0'], output: '^1.5.0'
 export function getIncreasedLatestVersion(versions: readonly string[]): string {
   const latestVersion = getLatestVersion(versions);
-  const latestVersionBare = semver.coerce(latestVersion);
+  const latestVersionBare = coerceVersionRange(latestVersion);
 
   let result = latestVersion;
   let resultBare = latestVersionBare;
@@ -81,7 +89,7 @@ export function getIncreasedLatestVersion(versions: readonly string[]): string {
       continue;
     }
 
-    const versionBare = semver.coerce(version);
+    const versionBare = coerceVersionRange(version);
 
     if (
       latestVersionBare &&
@@ -90,8 +98,15 @@ export function getIncreasedLatestVersion(versions: readonly string[]): string {
       semver.gt(latestVersionBare, versionBare) &&
       resultBare
     ) {
-      result = version.replace(String(versionBare), String(resultBare));
-      resultBare = semver.coerce(result);
+      // Partial versions like `^1.2` don't contain their coerced `1.2.0`, so the replacement can be a no-op that would lower the result.
+      const candidate = version.replace(
+        String(versionBare),
+        String(resultBare),
+      );
+      if (compareVersionRanges(candidate, result) >= 0) {
+        result = candidate;
+        resultBare = coerceVersionRange(result);
+      }
     }
   }
 

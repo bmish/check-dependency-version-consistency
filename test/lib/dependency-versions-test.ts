@@ -923,6 +923,64 @@ describe('Utils | dependency-versions', function () {
       });
     });
 
+    describe('npm alias', function () {
+      beforeEach(function () {
+        // Create a mock workspace filesystem for temporary usage in this test because changes will be written to some files.
+        mockFs({
+          'package.json': JSON.stringify({
+            workspaces: ['*'],
+          }),
+          package1: {
+            'package.json': JSON.stringify({
+              name: 'package1',
+              dependencies: {
+                foo: 'npm:bar@^2.0.0',
+              },
+            }),
+          },
+          package2: {
+            'package.json': JSON.stringify({
+              name: 'package2',
+              dependencies: {
+                foo: '^1.0.0',
+              },
+            }),
+          },
+        });
+      });
+
+      afterEach(function () {
+        mockFs.restore();
+      });
+
+      it('does not fix an inconsistency involving an npm alias', function () {
+        const packages = getPackagesHelper('.');
+        const versionsMismatching = calculateDependenciesAndVersions(
+          calculateVersionsForEachDependency(packages),
+        );
+        const { fixable, notFixable } = fixVersionsMismatching(
+          packages,
+          versionsMismatching,
+        );
+
+        const packageJson1 = JSON.parse(
+          readFileSync('package1/package.json', 'utf8'),
+        ) as PackageJson;
+        const packageJson2 = JSON.parse(
+          readFileSync('package2/package.json', 'utf8'),
+        ) as PackageJson;
+
+        expect(packageJson1.dependencies?.['foo']).toStrictEqual(
+          'npm:bar@^2.0.0',
+        );
+        expect(packageJson2.dependencies?.['foo']).toStrictEqual('^1.0.0');
+        expect(fixable).toStrictEqual([]);
+        expect(notFixable.map(({ dependency }) => dependency)).toStrictEqual([
+          'foo',
+        ]);
+      });
+    });
+
     describe('dryrun with optionalDependencies, peerDependencies, resolutions', function () {
       beforeEach(function () {
         mockFs({

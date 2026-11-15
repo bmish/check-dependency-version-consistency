@@ -21,6 +21,13 @@ describe('Utils | semver', function () {
       expect(compareVersionRanges('^5.0.0', '~5.0.0')).toStrictEqual(1);
       expect(compareVersionRanges('~5.0.0', '5.0.0')).toStrictEqual(1);
       expect(compareVersionRanges('~5.0.0', '~4.0.0')).toStrictEqual(1);
+      expect(compareVersionRanges('1.0.0', '1.0.0-rc.1')).toStrictEqual(1);
+      expect(compareVersionRanges('^1.0.0', '^1.0.0-rc.1')).toStrictEqual(1);
+      expect(compareVersionRanges('1.0.0', '^1.0.0-rc.1')).toStrictEqual(1);
+      expect(compareVersionRanges('^1.0.0-rc.2', '^1.0.0-rc.1')).toStrictEqual(
+        1,
+      );
+      expect(compareVersionRanges('^1.10', '^1.2')).toStrictEqual(1);
 
       // -1 (less than)
       expect(compareVersionRanges('4.0.0', '5.0.0')).toStrictEqual(-1);
@@ -28,6 +35,7 @@ describe('Utils | semver', function () {
       expect(compareVersionRanges('^4.0.0', '^5.0.0')).toStrictEqual(-1);
       expect(compareVersionRanges('~4.0.0', '~5.0.0')).toStrictEqual(-1);
       expect(compareVersionRanges('~5.0.0', '^5.0.0')).toStrictEqual(-1);
+      expect(compareVersionRanges('^1.0.0-rc.1', '^1.0.0')).toStrictEqual(-1);
 
       // 0 (equal)
       expect(compareVersionRanges('6', '6')).toStrictEqual(0);
@@ -45,6 +53,24 @@ describe('Utils | semver', function () {
       expect(() =>
         compareVersionRanges('~6.0.0', 'foo'),
       ).toThrowErrorMatchingInlineSnapshot('[Error: Invalid Version: foo]');
+    });
+
+    it('throws with non-semver specifiers that contain a version', function () {
+      expect(() =>
+        compareVersionRanges('npm:bar@^1.0.0', '^1.0.0'),
+      ).toThrowErrorMatchingInlineSnapshot(
+        '[Error: Invalid Version: npm:bar@^1.0.0]',
+      );
+      expect(() =>
+        compareVersionRanges('^1.0.0', 'github:user/repo#v1.2.3'),
+      ).toThrowErrorMatchingInlineSnapshot(
+        '[Error: Invalid Version: github:user/repo#v1.2.3]',
+      );
+      expect(() =>
+        compareVersionRanges('file:../foo-1.0.0', '^1.0.0'),
+      ).toThrowErrorMatchingInlineSnapshot(
+        '[Error: Invalid Version: file:../foo-1.0.0]',
+      );
     });
   });
 
@@ -170,6 +196,33 @@ describe('Utils | semver', function () {
       );
       expect(getIncreasedLatestVersion(['1.0.0', '1.0.0'])).toStrictEqual(
         '1.0.0',
+      );
+
+      // prerelease
+      expect(
+        getIncreasedLatestVersion(['^1.0.0', '^1.0.0-rc.1']),
+      ).toStrictEqual('^1.0.0');
+      expect(
+        getIncreasedLatestVersion(['^1.0.0-rc.1', '^1.0.0']),
+      ).toStrictEqual('^1.0.0');
+      expect(getIncreasedLatestVersion(['1.0.0', '^1.0.0-rc.1'])).toStrictEqual(
+        '^1.0.0',
+      );
+
+      // partial
+      expect(getIncreasedLatestVersion(['^1.2', '^1.10'])).toStrictEqual(
+        '^1.10',
+      );
+      expect(getIncreasedLatestVersion(['^1.5.0', '^1'])).toStrictEqual(
+        '^1.5.0',
+      );
+    });
+
+    it('throws with non-semver specifiers', function () {
+      expect(() =>
+        getIncreasedLatestVersion(['npm:bar@^1.0.0', '^1.0.0']),
+      ).toThrowErrorMatchingInlineSnapshot(
+        '[Error: Invalid Version: npm:bar@^1.0.0]',
       );
     });
   });
