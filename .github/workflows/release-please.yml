@@ -2,6 +2,8 @@ on:
   push:
     branches:
       - main
+  # Manually publish the current version on main, e.g. if a release's publish step failed.
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -20,13 +22,13 @@ jobs:
         with:
           release-type: node
       - uses: actions/checkout@v6
-        if: ${{ steps.release.outputs.release_created }}
+        if: ${{ steps.release.outputs.release_created || github.event_name == 'workflow_dispatch' }}
       - uses: actions/setup-node@v6
         with:
           node-version: lts/*
           registry-url: https://registry.npmjs.org
-        if: ${{ steps.release.outputs.release_created }}
+        if: ${{ steps.release.outputs.release_created || github.event_name == 'workflow_dispatch' }}
       - run: |
           npm ci
           npm publish
-        if: ${{ steps.release.outputs.release_created }}
+        if: ${{ steps.release.outputs.release_created || github.event_name == 'workflow_dispatch' }}
