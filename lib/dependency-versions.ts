@@ -86,7 +86,14 @@ function recordDependencyVersionsForPackageJson(
     for (const [dependency, dependencyVersion] of Object.entries(
       package_.packageJson[type] ?? {},
     )) {
-      if (dependencyVersion) {
+      if (
+        dependencyVersion &&
+        // Skip non-semver self-references (e.g. "foo": "file:./").
+        !(
+          dependency === package_.packageJson.name &&
+          !semver.validRange(dependencyVersion)
+        )
+      ) {
         recordDependencyVersion(
           dependenciesToVersionsSeen,
           dependency,

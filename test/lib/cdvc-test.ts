@@ -3,6 +3,7 @@ import {
   FIXTURE_PATH_OPTIONAL_DEPENDENCIES,
   FIXTURE_PATH_PEER_DEPENDENCIES,
   FIXTURE_PATH_RESOLUTIONS,
+  FIXTURE_PATH_SELF_REFERENCE,
   FIXTURE_PATH_VALID,
 } from '../fixtures/index.js';
 import { CDVC } from '../../lib/cdvc.js';
@@ -105,6 +106,14 @@ describe('CDVC', function () {
       expect(() => cdvc.getDependency('nonexistent')).toThrow(
         'Dependency "nonexistent" not found',
       );
+    });
+  });
+
+  describe('self-reference fixture', function () {
+    it('does not report mismatches for non-semver self-references', function () {
+      const cdvc = new CDVC(FIXTURE_PATH_SELF_REFERENCE);
+
+      expect(cdvc.hasMismatchingDependencies).toBe(false);
     });
   });
 
