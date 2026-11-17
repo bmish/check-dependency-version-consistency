@@ -8,7 +8,10 @@ export type Dependencies = Record<
     isMismatching: boolean;
     versions: readonly {
       version: string;
-      packages: readonly Package[];
+      packages: readonly {
+        package: Package;
+        type: DependencyType | undefined;
+      }[];
     }[];
   }
 >;

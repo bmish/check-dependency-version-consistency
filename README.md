@@ -141,11 +141,14 @@ const result = {
   name: 'eslint',
   versions: [
     {
-      packages: [{ pathRelative: 'packages/package1' }, { pathRelative: 'packages/package2' }],
+      packages: [
+        { pathRelative: 'packages/package1', type: 'dependencies' },
+        { pathRelative: 'packages/package2', type: 'devDependencies' },
+      ],
       version: '^7.0.0',
     },
     {
-      packages: [{ pathRelative: 'packages/package3' }],
+      packages: [{ pathRelative: 'packages/package3', type: 'dependencies' }],
       version: '^8.0.0',
     },
   ],
@@ -172,7 +175,7 @@ const result = {
 | `isFixable` | `true` if the mismatching versions of this dependency are autofixable. |
 | `isMismatching` | `true` if there are multiple versions of this dependency. |
 | `name` | The dependency's name. |
-| `versions` | A list of the versions present of this dependency and the packages each is found in, in the form of: `{ version: string, packages: { pathRelative: string }[] }`. |
+| `versions` | A list of the versions present of this dependency and the packages each is found in, in the form of: `{ version: string, packages: { pathRelative: string, type?: string }[] }`. `type` is the dependency type (`dependencies`, `devDependencies`, etc.) for that usage, and is omitted for the entry representing the local workspace package itself. |
 
 See [`lib/cli.ts`](./lib/cli.ts) for an example of how to use it.
 

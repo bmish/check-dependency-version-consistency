@@ -17,6 +17,7 @@ type VersionSeen = {
   package: Package;
   version: string;
   isLocalPackageVersion: boolean;
+  type: DependencyType | undefined;
 };
 
 type DependenciesToVersionsSeen = Map<
@@ -29,7 +30,10 @@ type DependencyAndVersions = {
   dependency: string;
   readonly versions: {
     version: string;
-    packages: readonly Package[];
+    packages: readonly {
+      package: Package;
+      type: DependencyType | undefined;
+    }[];
   }[];
 };
 
@@ -79,6 +83,7 @@ function recordDependencyVersionsForPackageJson(
       package_.packageJson.version,
       package_,
       true,
+      undefined,
     );
   }
 
@@ -92,6 +97,8 @@ function recordDependencyVersionsForPackageJson(
           dependency,
           dependencyVersion,
           package_,
+          false,
+          type,
         );
       }
     }
@@ -104,13 +111,14 @@ function recordDependencyVersion(
   version: string,
   package_: Package,
   isLocalPackageVersion = false,
+  type?: DependencyType,
 ) {
   let list = dependenciesToVersionsSeen.get(dependency);
   if (!list) {
     list = [];
     dependenciesToVersionsSeen.set(dependency, list);
   }
-  list.push({ package: package_, version, isLocalPackageVersion });
+  list.push({ package: package_, version, isLocalPackageVersion, type });
 }
 
 export function calculateDependenciesAndVersions(
@@ -175,8 +183,11 @@ function versionsObjectsWithSortedPackages(
     return {
       version,
       packages: matchingVersionObjects
-        .map((object) => object.package)
-        .toSorted((a, b) => Package.comparator(a, b)),
+        .map((object) => ({
+          package: object.package,
+          type: object.type,
+        }))
+        .toSorted((a, b) => Package.comparator(a.package, b.package)),
     };
   });
 }

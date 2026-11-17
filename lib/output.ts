@@ -46,7 +46,7 @@ export function dependenciesToMismatchSummary(
         .map((versionObject) => {
           const usageCount = versionObject.packages.length;
           const packageNames = versionObject.packages.map(
-            (package_) => package_.name,
+            (p) => p.package.name,
           );
           const packageListSentence =
             usageCount > 3
